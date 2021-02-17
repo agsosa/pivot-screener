@@ -1,0 +1,13 @@
+.header-title {
+    text-align: center;
+    font-size: large;
+    color:white;
+    font-size:xx-large;
+    font-family:monospace;
+    font-weight: bold;
+    background-color:#001529;
+}
+  
+.widget_container {
+    size: auto;
+}

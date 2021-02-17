@@ -1,10 +1,7 @@
-import '~antd/dist/antd.css';
-import logo from './logo.svg';
+import 'antd/dist/antd.css'; // or 'antd/dist/antd.less'
 import './App.css';
-
-function App() {
-  return (
-    <div className="App">
+import MainLayout from './components/MainLayout';
+/*
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
@@ -19,6 +16,11 @@ function App() {
           Learn React
         </a>
       </header>
+*/
+function App() {
+  return (
+    <div className="App">
+      <MainLayout />
     </div>
   );
 }
