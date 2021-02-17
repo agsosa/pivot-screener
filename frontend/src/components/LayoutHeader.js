@@ -1,17 +1,11 @@
-import { useRef, useEffect, createRef } from 'react';
-import { Layout } from 'antd';
+import { useEffect, createRef } from 'react';
 import './LayoutHeader.css';
-
-import { Button, Tooltip, Alert, Menu, Popover, Badge, List, Text } from 'antd';
-import { MessageFilled, RightOutlined, MenuFoldOutlined, BellOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
+import { Alert, Badge, Space } from 'antd';
+import { BellOutlined } from '@ant-design/icons';
 import { Row, Col } from 'antd';
-import tglogo from '../tg.png'; // with import
-
-const { Header } = Layout;
 
 export default function LayoutHeader(props) {
     const hRef = createRef();
-    const notifications = [];
 
     useEffect(() => {
         console.log("onMount")
@@ -71,36 +65,35 @@ export default function LayoutHeader(props) {
             </div> 
 
             <div className="header-title" style={{padding: 14}}>
-            
-            <Row>
-                <Col span={8}></Col>
-                <Col span={8} style={{padding:10, flex:1, display:'flex', justifyContent:'center'}}><a href="/" style={{fontSize:'XX-LARGE', color:'white'}}>Pivot Screener</a></Col>
-                <Col span={8} style={{padding:10, flex:1, display:'flex', justifyContent:'flex-end'}}>
+                <Row>
+                    <Col span={8}></Col>
+                    <Col span={8} style={{padding:10, flex:1, display:'flex', justifyContent:'center'}}><a href="/" style={{fontSize:'XX-LARGE', color:'white'}}>Pivot Screener</a></Col>
+                    <Col span={8} style={{padding:10, flex:1, display:'flex', justifyContent:'flex-end'}}>
 
-                    <div style={{marginRight:'15%', marginTop:'1%'}}>
-                    </div>
+                        <div style={{marginRight:'15%', marginTop:'1%'}}>
+                        </div>
 
-                    <div style={{marginRight:'2%'}}>
-                    <Badge
-                        count={5}
-                        dot
-                        offset={[-10, 10]}
-                        style={{width:10, height:10, display:'flex', justifyContent:'center', alignItems:'center', borderColor:'red', borderRadius:24, cursor: 'pointer', marginLeft:8}}
-                        >
-                        <BellOutlined style={{color:'#b2b0c7', fontSize:32}} />
-                        </Badge>
-                    </div>
-
-                </Col>
-            </Row>
-            
+                        <div style={{marginRight:'2%'}}>
+                        <Badge
+                            count={5}
+                            dot
+                            offset={[-10, 10]}
+                            style={{width:10, height:10, display:'flex', justifyContent:'center', alignItems:'center', borderColor:'red', borderRadius:24, cursor: 'pointer', marginLeft:8}}
+                            >
+                            <BellOutlined style={{color:'#b2b0c7', fontSize:32}} />
+                            </Badge>
+                        </div>
+                    </Col>
+                </Row>
             </div>
 
-            <Alert message={  
-                <>
-                <b>Camarilla Pivot Trading Telegram</b> • <a href="https://t.me/camarillacruisin" target="_blank" rel="noreferrer"><b>Click here to join the group!</b></a>
-                </>} type="warning" 
-            />
+            <Space vertical style={{alignSelf:'center', paddingTop:10}}>
+                <Alert message={  
+                    <>
+                    <b>Camarilla Pivot Trading Telegram</b> • <a href="https://t.me/camarillacruisin" target="_blank" rel="noreferrer"><b>Click here to join the group!</b></a>
+                    </>} type="warning" 
+                />
+            </Space>
         </>
     )
 }

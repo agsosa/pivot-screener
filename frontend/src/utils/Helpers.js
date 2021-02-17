@@ -10,7 +10,7 @@ export const percentage = (percent, total) => {
 
 export const distancePct = (a, b) => {
     //return  (100 * Math.abs( ( a - b ) / ( (a+b)/2 ) )).toFixed(2);
-    let c = a;
+    //let c = a;
    /* if (a < b) {
         a = b;
         b = c;
@@ -67,25 +67,11 @@ export const _delay = (timer) => {
     });
 };
 
-export const toFixed = (x) => {
-    if (Math.abs(x) < 1.0) {
-      var e = parseInt(x.toString().split('e-')[1]);
-      if (e) {
-          x *= Math.pow(10,e-1);
-          x = '0.' + (new Array(e)).join('0') + x.toString().substring(2);
-      }
-    } else {
-      var e = parseInt(x.toString().split('+')[1]);
-      if (e > 20) {
-          e -= 20;
-          x /= Math.pow(10,e);
-          x += (new Array(e+1)).join('0');
-      }
-    }
-    return x;
-}
-
 export const toFixedEx = (x) => {
     if (x <= 1) return x.toFixed(8);
     else return x.toFixed(2);
+}
+
+export function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
 }

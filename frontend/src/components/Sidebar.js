@@ -4,24 +4,16 @@ import {
   LineChartOutlined,
   ToolOutlined,
   MenuOutlined,
+  FundProjectionScreenOutlined,
   HomeOutlined,
 } from '@ant-design/icons';
 
-import { Button, Tooltip } from 'antd';
-import { MessageFilled } from '@ant-design/icons';
+import { markets } from '../utils/Markets';
 
 import { NavLink } from 'react-router-dom'
 
 const { Sider } = Layout;
 const { SubMenu } = Menu;
-
-const markets = [ 
-    { market: "Cryptocurrency", disabled: false },
-    { market: "Forex", disabled: true },
-    { market: "Commodities", disabled: true },
-    { market: "Indices", disabled: true },
-    { market: "Stocks", disabled: true },
-]
 
 export default function Sidebar(props) {
     const [collapsed, setCollapsed] = useState(false);
@@ -36,23 +28,23 @@ export default function Sidebar(props) {
             <div className="logo" />
             <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
             <Menu.Item key="1" icon={<HomeOutlined />}>
-                Home
+            <NavLink to="/">Home (Chart)</NavLink>
             </Menu.Item>
             <SubMenu key="sub1" icon={<MenuOutlined />} title="CPR">
                 {
                     markets.map(q => {
-                        return (<Menu.Item key={q.market+"_cpr"} disabled={q.disabled}>{q.market}</Menu.Item>)
+                        return (<Menu.Item key={q.market+"_cpr"} disabled={q.disabled}><NavLink to={"/cpr-screener/"+q.market.toLowerCase()}>{q.market}</NavLink></Menu.Item>)
                     })
                 }
             </SubMenu>
             <SubMenu key="sub2" icon={<LineChartOutlined />} title="Camarilla">
                 {
                     markets.map(q => {
-                        return (<Menu.Item key={q.market+"_cam"} disabled={q.disabled}>{q.market}</Menu.Item>)
+                        return (<Menu.Item key={q.market+"_cam"} disabled={q.disabled}><NavLink to={"/cam-screener/"+q.market.toLowerCase()}>{q.market}</NavLink></Menu.Item>)
                     })
                 }
             </SubMenu>
-            <Menu.Item key="8" icon={<ToolOutlined />}>
+            <Menu.Item key="8" disabled icon={<FundProjectionScreenOutlined />}>
                 <NavLink to="/live-feed">Live Feed</NavLink>
             </Menu.Item>
             <Menu.Item key="9" icon={<ToolOutlined />}>
