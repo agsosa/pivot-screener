@@ -2,6 +2,9 @@ import { useRef, useEffect, createRef } from 'react';
 import { Layout } from 'antd';
 import './LayoutHeader.css';
 
+import { Button, Tooltip } from 'antd';
+import { MessageFilled } from '@ant-design/icons';
+
 const { Header } = Layout;
 
 export default function LayoutHeader(props) {
@@ -64,7 +67,9 @@ export default function LayoutHeader(props) {
                 <div class="tradingview-widget-container" ref={hRef}><div class="tradingview-widget-container__widget"></div></div>
             </div> 
 
-            <div className="header-title" style={{padding: 14}}><a href="/" style={{color:'white'}}>Pivot Screener</a></div>
+            <div className="header-title" style={{padding: 14, flex:1, flexDirection:'column'}}>
+            <a href="/" style={{color:'white'}}>Pivot Screener</a>
+            </div>
         </>
     )
 }

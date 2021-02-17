@@ -1,15 +1,27 @@
 import React, { useState } from 'react';
-import { Layout, Menu, Breadcrumb } from 'antd';
+import { Layout, Menu } from 'antd';
 import {
-  DesktopOutlined,
-  PieChartOutlined,
-  FileOutlined,
-  TeamOutlined,
-  UserOutlined,
+  LineChartOutlined,
+  ToolOutlined,
+  MenuOutlined,
+  HomeOutlined,
 } from '@ant-design/icons';
 
-const { Header, Content, Footer, Sider } = Layout;
+import { Button, Tooltip } from 'antd';
+import { MessageFilled } from '@ant-design/icons';
+
+import { NavLink } from 'react-router-dom'
+
+const { Sider } = Layout;
 const { SubMenu } = Menu;
+
+const markets = [ 
+    { market: "Cryptocurrency", disabled: false },
+    { market: "Forex", disabled: true },
+    { market: "Commodities", disabled: true },
+    { market: "Indices", disabled: true },
+    { market: "Stocks", disabled: true },
+]
 
 export default function Sidebar(props) {
     const [collapsed, setCollapsed] = useState(false);
@@ -20,27 +32,34 @@ export default function Sidebar(props) {
     };
 
     return (
-        <Sider collapsible collapsed={collapsed} onCollapse={onCollapse}>
+        <Sider collapsible collapsed={collapsed} onCollapse={onCollapse} >
             <div className="logo" />
             <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
-            <Menu.Item key="1" icon={<PieChartOutlined />}>
-                Option 1
+            <Menu.Item key="1" icon={<HomeOutlined />}>
+                Home
             </Menu.Item>
-            <Menu.Item key="2" icon={<DesktopOutlined />}>
-                Option 2
-            </Menu.Item>
-            <SubMenu key="sub1" icon={<UserOutlined />} title="User">
-                <Menu.Item key="3">Tom</Menu.Item>
-                <Menu.Item key="4">Bill</Menu.Item>
-                <Menu.Item key="5">Alex</Menu.Item>
+            <SubMenu key="sub1" icon={<MenuOutlined />} title="CPR">
+                {
+                    markets.map(q => {
+                        return (<Menu.Item key={q.market+"_cpr"} disabled={q.disabled}>{q.market}</Menu.Item>)
+                    })
+                }
             </SubMenu>
-            <SubMenu key="sub2" icon={<TeamOutlined />} title="Team">
-                <Menu.Item key="6">Team 1</Menu.Item>
-                <Menu.Item key="8">Team 2</Menu.Item>
+            <SubMenu key="sub2" icon={<LineChartOutlined />} title="Camarilla">
+                {
+                    markets.map(q => {
+                        return (<Menu.Item key={q.market+"_cam"} disabled={q.disabled}>{q.market}</Menu.Item>)
+                    })
+                }
             </SubMenu>
-            <Menu.Item key="9" icon={<FileOutlined />}>
-                Files
+            <Menu.Item key="9" icon={<ToolOutlined />}>
+                <NavLink to="/calculator">Pivot Calculator</NavLink>
             </Menu.Item>
+
+            {!collapsed &&
+            <div style={{marginTop:20, position:'relative', marginLeft:"12%"}}><MessageFilled style={{marginRight:7}} />  
+            <a href="https://t.me/camarillacruisin" target="_blank" rel="noreferrer" style={{color:'#FFB400'}}>Join Telegram Group</a></div>
+            }
             </Menu>
         </Sider>
     );
