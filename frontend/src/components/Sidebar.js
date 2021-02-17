@@ -52,14 +52,12 @@ export default function Sidebar(props) {
                     })
                 }
             </SubMenu>
+            <Menu.Item key="8" icon={<ToolOutlined />}>
+                <NavLink to="/live-feed">Live Feed</NavLink>
+            </Menu.Item>
             <Menu.Item key="9" icon={<ToolOutlined />}>
                 <NavLink to="/calculator">Pivot Calculator</NavLink>
             </Menu.Item>
-
-            {!collapsed &&
-            <div style={{marginTop:20, position:'relative', marginLeft:"12%"}}><MessageFilled style={{marginRight:7}} />  
-            <a href="https://t.me/camarillacruisin" target="_blank" rel="noreferrer" style={{color:'#FFB400'}}>Join Telegram Group</a></div>
-            }
             </Menu>
         </Sider>
     );
