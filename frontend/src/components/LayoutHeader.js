@@ -1,74 +1,86 @@
-import { useEffect, createRef } from 'react';
+import { useEffect, createRef, useState } from 'react';
 import './LayoutHeader.css';
-import { Alert, Badge, Space } from 'antd';
+import { Alert, Badge, Space,notification  } from 'antd';
 import { BellOutlined } from '@ant-design/icons';
 import { Row, Col } from 'antd';
 
 export default function LayoutHeader(props) {
+    const [scriptMounted, setScriptMounted] = useState(false);
+
     const hRef = createRef();
 
-    useEffect(() => {
-        console.log("onMount")
-        const script = document.createElement('script');
-        script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-tickers.js'
-        script.async = true;
-        script.innerHTML = JSON.stringify(  {
-        "symbols": [
-            {
-            "proName": "FOREXCOM:SPXUSD",
-            "title": "S&P 500"
-            },
-            {
-            "proName": "FOREXCOM:NSXUSD",
-            "title": "Nasdaq 100"
-            },
-            {
-            "proName": "FX_IDC:EURUSD",
-            "title": "EUR/USD"
-            },
-            {
-            "description": "BTC/USDT",
-            "proName": "BINANCE:BTCUSDT"
-            },
-            {
-            "description": "ETH/USDT",
-            "proName": "BINANCE:ETHUSDT"
-            },
-            {
-            "description": "GOLD",
-            "proName": "OANDA:XAUUSD"
-            },
-            {
-            "description": "SILVER",
-            "proName": "OANDA:XAGUSD"
-            }
-        ],
-        "colorTheme": "dark",
-        "isTransparent": false,
-        "showSymbolLogo": true,
-        "locale": "en"
+    const openNotification = () => {
+        notification.open({
+          message: 'Error',
+          description:
+            'This feature is under development',
+          onClick: () => {
+          },
         });
+      };
 
-        //document.body.appendChild(script);
-        hRef.current.appendChild(script);
+    useEffect(() => {
+        if (!scriptMounted) {
 
-        return () => {
+            const script = document.createElement('script');
+            script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-tickers.js'
+            script.async = true;
+            script.innerHTML = JSON.stringify(  {
+            "symbols": [
+                {
+                "proName": "FOREXCOM:SPXUSD",
+                "title": "S&P 500"
+                },
+                {
+                "proName": "FOREXCOM:NSXUSD",
+                "title": "Nasdaq 100"
+                },
+                {
+                "proName": "FX_IDC:EURUSD",
+                "title": "EUR/USD"
+                },
+                {
+                "description": "BTC/USDT",
+                "proName": "BINANCE:BTCUSDT"
+                },
+                {
+                "description": "ETH/USDT",
+                "proName": "BINANCE:ETHUSDT"
+                },
+                {
+                "description": "GOLD",
+                "proName": "OANDA:XAUUSD"
+                },
+                {
+                "description": "SILVER",
+                "proName": "OANDA:XAGUSD"
+                }
+            ],
+            "colorTheme": "dark",
+            "isTransparent": true,
+            "showSymbolLogo": true,
+            "locale": "en"
+            });
 
+            hRef.current.appendChild(script); 
+            setScriptMounted(true);
         }
 
     }, [hRef]);
 
     return (
         <>
-            <div class="widget_container">
-                <div class="tradingview-widget-container" ref={hRef}><div class="tradingview-widget-container__widget"></div></div>
-            </div> 
 
-            <div className="header-title" style={{padding: 14}}>
+            <div className="header-title" style={{padding: 14, flex:1}}> 
+
+                <div class="widget_container">
+                    <div class="tradingview-widget-container" ref={hRef}><div class="tradingview-widget-container__widget"></div></div>
+                </div>
+
                 <Row>
                     <Col span={8}></Col>
-                    <Col span={8} style={{padding:10, flex:1, display:'flex', justifyContent:'center'}}><a href="/" style={{fontSize:'XX-LARGE', color:'white'}}>Pivot Screener</a></Col>
-                    <Col span={8} style={{padding:10, flex:1, display:'flex', justifyContent:'flex-end'}}>
+                    <Col span={8} style={{padding:5, flex:1, display:'flex', justifyContent:'center'}}><a href="/" style={{fontSize:'XXX-LARGE', color:'white'}}>Pivot Screener</a></Col>
+                    <Col span={8} style={{padding:15, flex:1, display:'flex', justifyContent:'flex-end'}}>
 
                         <div style={{marginRight:'15%', marginTop:'1%'}}>
                         </div>
@@ -80,7 +92,7 @@ export default function LayoutHeader(props) {
                             offset={[-10, 10]}
                             style={{width:10, height:10, display:'flex', justifyContent:'center', alignItems:'center', borderColor:'red', borderRadius:24, cursor: 'pointer', marginLeft:8}}
                             >
-                            <BellOutlined style={{color:'#b2b0c7', fontSize:32}} />
+                            <BellOutlined onClick={openNotification} style={{color:'white', fontSize:32}} />
                             </Badge>
                         </div>
                     </Col>
