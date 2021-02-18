@@ -42,43 +42,37 @@ const candlesticksValidation = {
     }),
 }
 
+// /api/candlesticks. Query parameters acepted: tickers, markets, timeframes (daily, monthly, weekly, hourly).
+// TODO: Mejorar documentacion de la API
 app.get('/api/candlesticks', validate(candlesticksValidation, {}, {}), (req, res, next) => {
     try {
-        
         let { tickers, markets, timeframes } = req.query;
 
-        if (tickers) tickers = tickers.split(",");//JSON.parse(tickers.split(","));
-        if (markets) markets = markets.split(",");//JSON.parse(markets.split(","));
-        if (timeframes) timeframes = timeframes.split(",");//JSON.parse(timeframes.split(","));
+        if (tickers) tickers = tickers.split(",");
+        if (markets) markets = markets.split(",");
+        if (timeframes) timeframes = timeframes.split(",");
 
         bTickers = tickers && Array.isArray(tickers);
         bMarkets = markets && Array.isArray(markets);
-        bTimeframes = timeframes && Array.isArray(bTimeframes);
+        bTimeframes = timeframes && Array.isArray(timeframes);
 
         bTickers && tickers.map(q => q.toLowerCase());
         bMarkets && markets.map(q => q.toLowerCase());
         bTimeframes && timeframes.map(q => q.toLowerCase());
 
-        let filtered = [...datamanager.data.tickersList];
-        filtered = filtered.filter(q => (bTickers ? tickers.includes(q.ticker.toLowerCase()) : true))
+        let filtered = JSON.parse(JSON.stringify(datamanager.data.tickersList));
 
-        if (bTimeframes)
-//|| (bMarkets && markets.includes(q.market.toLowerCase()))
+        // Filter by tickers and markets parameter
+        filtered = filtered.filter(q => (bTickers ? tickers.includes(q.ticker.toLowerCase()) : true) && (bMarkets ? markets.includes(q.market.toLowerCase()) : true))
 
-
-
-        // filter by markets
-        //if (markets && Array.isArray(markets)) filtered = [...datamanager.tickersList.filter(q => markets.includes(q.market))]; 
-
-        // filter by tickers
-        //if (tickers && Array.isArray(tickers)) filtered = [...filtered.filter(q => tickers.includes(q.ticker))];
-
-        // filter by timeframes
-        /*let byTimeframes = timeframes.includes('all') ? [...byTickers] : [...byTickers.map(q => {
-            Object.keys(q).forEach(k => {
-                if (k.includes("candle") && !timeframes.find(t => t+"Candles" == k)) delete(q.key);
-            })
-        })]*/
+        // Remove unwanted timeframes
+        if (bTimeframes) {
+            filtered.forEach(item => {
+                for (const k of Object.keys(item.candlesticks)) {
+                    if (!timeframes.find(t => t+"Candles" == k)) delete item.candlesticks[k];
+                }
+            });
+        }
     
         //res.send(jsonpack.pack(dataResult));
         res.json(filtered);

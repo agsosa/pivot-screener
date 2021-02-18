@@ -10,6 +10,7 @@ const binance = new Binance().options({
 
 const MARKET = "crypto_binancefut"
 let loop_interval = -1;
+let initialized = false;
 
 const timeframes = [ 
     { interval: '1d', objectName: 'daily', limit: 2 },
@@ -53,6 +54,7 @@ function fetchTickersList() {
                 let prom = fetch(url).then(function(response) {
                     // TODO: CHECK FOR ERRORS
                         response.json().then(data => {
+                            if(!data || data.length == 0) reject("Invalid data received from Binance "+tickerObj.ticker);
 
                             let formattedCandles = [];
                             
@@ -62,7 +64,8 @@ function fetchTickersList() {
                                     high: parseFloat(c[2]), 
                                     low: parseFloat(c[3]), 
                                     close: parseFloat(c[4]), 
-                                    time: (new Date(parseInt(c[6])))/1000})
+                                    time: parseInt(c[6])
+                                })
                             })
                             
                             candlesticksObj[t.objectName+"Candles"] = formattedCandles;
@@ -87,21 +90,23 @@ function fetchTickersList() {
 async function initialize() {
     return new Promise((resolve, reject) => {
         fetchTickersList().then(async () => {
+            // Calculate fetch interval time
             const total_tickers = datamanager.data.tickersList.length;
             const calculated_weight_per_ticker = timeframes.reduce((a, b) => a + (binanceLimitToWeight(b['limit']) || 0), 0);
             const calculated_weight_total = total_tickers * calculated_weight_per_ticker;
             const max_fetch_per_minute = 2400 / calculated_weight_total;
             const calculated_fetch_interval = 60 / max_fetch_per_minute;
+            const EXTRA_SECONDS = 3; // Safeguard
             
-            console.log(total_tickers);
+            /*console.log(total_tickers);
             console.log(calculated_weight_per_ticker);
             console.log(calculated_weight_total);
             console.log(max_fetch_per_minute);
-            console.log(calculated_fetch_interval)
+            console.log(calculated_fetch_interval)*/
 
-            loop_interval = calculated_fetch_interval+3;
-
-            console.log("Calculated fetch interval: "+calculated_fetch_interval+" (total weight per fetch: "+calculated_weight_total+")");
+            loop_interval = calculated_fetch_interval+EXTRA_SECONDS;
+            initialized = true;
+            console.log("Calculated fetch interval: "+loop_interval+" (total weight per fetch: "+calculated_weight_total+")");
 
             resolve();
         });
@@ -109,10 +114,13 @@ async function initialize() {
 }
 
 function loop() {
-    if (datamanager.data.isReady) {
+    if (initialized) {
         
         fetchTickersData().then(() => {
             console.log("loop() done. Next interval in "+loop_interval+" seconds");
+
+            if (!datamanager.data.isReady) datamanager.setReady();
+
             setTimeout(() => {
                 loop();
             }, 1000*loop_interval);
