@@ -3,9 +3,8 @@ import axios from 'axios';
 const BASE_URL = "http://localhost:4000/api/";
 
 export function fetchTickers() {
-    //console.log("hola3")
     const QUERY = "candlesticks?timeframes=daily,weekly,monthly&tickers=adausdt,btcusdt"
-    console.log(BASE_URL+QUERY);
+    //console.log(BASE_URL+QUERY);
 
     return new Promise((resolve, reject) => {
         axios.get(BASE_URL+QUERY)

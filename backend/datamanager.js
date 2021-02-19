@@ -16,6 +16,7 @@ function addTicker(tickerObj) {  //{ ticker: str, market: <market str>} // Avail
 
 function updateTickerCandlesticks(tickerObj, candlesticksObj) {
     //let obj = tickersList.find(q => q.ticker == tickerObj.ticker && q.market == tickerObj.market);
+    
     tickerObj.candlesticks = candlesticksObj;
 
     /*if (tickerObj.ticker == "BTCUSDT") {

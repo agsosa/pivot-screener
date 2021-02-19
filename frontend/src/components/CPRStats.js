@@ -3,17 +3,18 @@ import { Card, Statistic, Row, Col, Progress, Space, Badge } from 'antd';
 import { ArrowUpOutlined, ArrowDownOutlined, PauseOutlined } from '@ant-design/icons';
 import { useMst } from '../models/Root';
 import { observer } from "mobx-react-lite"
+import moment from 'moment';
 
 const CPRStats = observer((props) => {
-    const { tickers, test, fetchTickers } = useMst(store => ({
+    const { tickers, fetchTickers, remainingCloseTime } = useMst(store => ({
         tickers: store.tickers,
         test: store.test,
         fetchTickers: store.fetchTickers,
+        remainingCloseTime: store.remainingCloseTime,
     }));
 
     useEffect(() => {
-        console.log("hola")
-        fetchTickers();
+        setInterval(() => fetchTickers(), 3000);
     }, [])
 
   return (<>
@@ -74,7 +75,9 @@ const CPRStats = observer((props) => {
         🐂 <font color="green">Bulls 50%</font> <b>vs</b> <font color="red">50% Bears</font> 🐻
         <Progress percent={100} success={{ percent: 50 }} showInfo={false} strokeColor="red" />
         <br />
-        Candle close in {tickers[0].candlesticks.dailyCandles[0].time}<br />
+        
+        Candle close in {remainingCloseTime}<br />
+
         <Space><h1>Cryptocurrency / Binance Futures / Daily</h1> <Badge style={{backgroundColor:'#2196F3', marginBottom:7}} count={tickers.length} /></Space>
         </div>
     </>

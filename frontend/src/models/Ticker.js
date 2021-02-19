@@ -11,3 +11,16 @@ export const Ticker = types
             self.symbol = newSymbol
         }
     }))
+    .views(self => {
+        return {
+            get price() {
+                if (!self.candlesticks || Object.keys(self.candlesticks).length === 0) return 0;
+
+                const latestCandlestickData = self.candlesticks[Object.keys(self.candlesticks)[0]];
+                const ohlc = latestCandlestickData[latestCandlestickData.length-1];
+
+                return ohlc.close;
+            }
+
+        }
+    })
