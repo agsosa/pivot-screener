@@ -21,6 +21,6 @@ export const Ticker = types
 
                 return ohlc.close;
             }
-
+            
         }
     })
