@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { Breadcrumb, Result, Badge, Space } from 'antd';
+import { Breadcrumb, Result, Badge, Space, Tabs } from 'antd';
 import { Content } from 'antd/lib/layout/layout';
 import { capitalizeFirstLetter } from '../../utils/Helpers';
 import { isValidMarket } from '../../utils/Markets';
@@ -18,8 +18,8 @@ export default function CPRScreenerPage(props) {
   }));
 
   useEffect(() => {
-    setInterval(() => fetchTickers(), 5000);
-  }, [])
+    if (valid_market) setInterval(() => fetchTickers(), 5000); // TODO: PASS MARKET
+  })
 
   return (
       <Content>

@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { Card, Statistic, Row, Col, Progress, Space, Badge } from 'antd';
+import { Card, Statistic, Row, Col, Progress, Space, Badge, Skeleton } from 'antd';
 import { ArrowUpOutlined, ArrowDownOutlined, PauseOutlined } from '@ant-design/icons';
 import { useMst } from '../models/Root';
 import { observer } from "mobx-react-lite"
@@ -15,6 +15,8 @@ const CPRStats = observer((props) => {
         cprBelowCount: store.cprBelowCount,
         cprAboveCount: store.cprAboveCount,
     }));
+
+    if (!tickers || tickers.length === 0) return ( <Skeleton /> );
 
   return (<>
         <div className="site-statistic-demo-card">

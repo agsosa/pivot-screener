@@ -19,6 +19,12 @@ const CPRTable = observer((props) => {
   const onGridReady = (params) => {
     setGridApi(params.api);
     setGridColumnApi(params.columnApi);
+    params.api.showLoadingOverlay();
+
+    if (tickers && tickers.length > 0) {
+      params.api.setRowData(tickers);
+      params.api.hideOverlay();
+    }
   };
 
   const clearData = () => {
@@ -27,10 +33,10 @@ const CPRTable = observer((props) => {
 
 
   autorun(() => {
-    if (gridApi) {
-      console.log("autorun: "+tickers[0].price)
-      gridApi.setRowData(tickers);
-    }
+      if (gridApi) {
+        gridApi.setRowData(tickers);
+        gridApi.hideOverlay();
+      }
   })
 
 
