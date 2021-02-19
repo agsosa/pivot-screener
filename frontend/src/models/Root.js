@@ -3,6 +3,7 @@ import { types, onSnapshot, flow  } from "mobx-state-tree";
 import { Ticker } from "./Ticker";
 import { fetchTickers } from "../utils/Api";
 import moment from 'moment';
+import { randomInteger } from '../utils/Helpers';
 
 const RootModel = types
     .model({
@@ -30,7 +31,7 @@ const RootModel = types
     }))
     .views(self => {
         return {
-            get remainingCloseTime() {
+            get remainingCloseTime() { // TODO: Not working
                 if (self.tickers.length > 0) {
                     let fTicker = self.tickers[0];
                     if (!fTicker.candlesticks || !fTicker.latestOHLC) return 0;
@@ -48,6 +49,18 @@ const RootModel = types
                 }
 
                 return null;
+            },
+            get cprUntestedCount() {
+                return randomInteger(0,30);
+            },
+            get cprNeutralCount() {
+                return randomInteger(0,30);
+            },
+            get cprBelowCount() {
+                return randomInteger(0,30);
+            },
+            get cprAboveCount() {
+                return randomInteger(0,30);
             }
         }
     })

@@ -3,6 +3,8 @@ import { Breadcrumb, Result, Badge, Space } from 'antd';
 import { Content } from 'antd/lib/layout/layout';
 import { capitalizeFirstLetter } from '../../utils/Helpers';
 import { isValidMarket } from '../../utils/Markets';
+import { useMst } from '../../models/Root';
+import { observer } from "mobx-react-lite"
 
 import CPRStats from '../CPRStats';
 import CPRTable from '../CPRTable';
@@ -11,9 +13,13 @@ export default function CPRScreenerPage(props) {
   const market = props.match.params.market;
   const valid_market = market && isValidMarket(market);
 
-  useEffect(() => {
+  const { fetchTickers } = useMst(store => ({
+    fetchTickers: store.fetchTickers,
+  }));
 
-  }, []);
+  useEffect(() => {
+    setInterval(() => fetchTickers(), 5000);
+  }, [])
 
   return (
       <Content>
