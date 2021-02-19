@@ -58,6 +58,12 @@ const RootModel = types
             },
             get cprAboveCount() {
                 return randomInteger(0,30);
+            },
+            get sidewaysCount() {
+                return randomInteger(0,30);
+            },
+            get trendingCount() {
+                return randomInteger(0,30);
             }
         }
     })

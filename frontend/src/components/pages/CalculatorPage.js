@@ -73,12 +73,13 @@ export default function CalculatorPage(props) {
 
     return (
         <Content>
-            <Breadcrumb style={{ margin: '16px 0', textAlign:'left'}}>
-              <Breadcrumb.Item>Other tools</Breadcrumb.Item>
-              <Breadcrumb.Item>CPR and Camarilla Calculator</Breadcrumb.Item>
-            </Breadcrumb>
 
-            <div className="site-layout-background" style={{ padding: 24, minHeight: 360, textAlign: 'center', }}>
+            <div className="site-layout-background" style={{ padding: 24, minHeight: 360, marginTop:10, textAlign: 'center', }}>
+              <Breadcrumb style={{ marginTop:-5, paddingBottom:5, textAlign:'left'}}>
+                <Breadcrumb.Item>Other tools</Breadcrumb.Item>
+                <Breadcrumb.Item>CPR and Camarilla Calculator</Breadcrumb.Item>
+              </Breadcrumb>
+              
                 <h1>Central Pivot Range and Camarilla Support/Resistance Calculator</h1>
               
               <p>Calculate the CPR and Camarilla levels for the next session<br/>

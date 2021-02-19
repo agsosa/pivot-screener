@@ -4,7 +4,9 @@ import {
   LineChartOutlined,
   ToolOutlined,
   MenuOutlined,
+  MonitorOutlined,
   FundProjectionScreenOutlined,
+  QuestionCircleOutlined,
   HomeOutlined,
 } from '@ant-design/icons';
 
@@ -44,14 +46,17 @@ export default function Sidebar(props) {
                     })
                 }
             </SubMenu>
-            <Menu.Item key="8" disabled icon={<FundProjectionScreenOutlined />}>
-                <NavLink to="/live-feed">Algo Screener</NavLink>
-            </Menu.Item>
-            <Menu.Item key="8" disabled icon={<FundProjectionScreenOutlined />}>
+            <Menu.Item key="7" disabled icon={<FundProjectionScreenOutlined />}>
                 <NavLink to="/live-feed">Live Feed</NavLink>
             </Menu.Item>
+            <Menu.Item key="8" disabled icon={<MonitorOutlined />}>
+                <NavLink to="/algo-screener">Algo Screener</NavLink>
+            </Menu.Item>
             <Menu.Item key="9" icon={<ToolOutlined />}>
-                <NavLink to="/calculator">Pivot Calculator</NavLink>
+                <NavLink to="/calculator">Pivot Calculator</NavLink> 
+            </Menu.Item>
+            <Menu.Item key="10" disabled icon={<QuestionCircleOutlined />}>
+                <NavLink to="/learn">Learn</NavLink>
             </Menu.Item>
             </Menu>
         </Sider>

@@ -30,7 +30,7 @@ function fetchTickersList() {
     return new Promise(async (resolve, reject) => {
         let res = await binance.futuresPrices();
         let list = [...Object.keys(res)];
-        list.map(q => datamanager.addTicker({symbol: q, market: MARKET}));
+        list.map(q => !q.includes("_") && datamanager.addTicker({symbol: q, market: MARKET}));
 
         resolve();
     });

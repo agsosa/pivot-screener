@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import { Card, Statistic, Row, Col, Progress, Space, Badge, Skeleton } from 'antd';
-import { ArrowUpOutlined, ArrowDownOutlined, PauseOutlined } from '@ant-design/icons';
+import { ArrowUpOutlined, SwapOutlined, FallOutlined, RiseOutlined, ArrowDownOutlined, PauseOutlined, StockOutlined } from '@ant-design/icons';
 import { useMst } from '../models/Root';
 import { observer } from "mobx-react-lite"
 import moment from 'moment';
@@ -8,19 +8,21 @@ import { autorun } from "mobx"
 import { calcPercent } from '../utils/Helpers'
 
 const CPRStats = observer((props) => {
-    const { tickers, cprUntestedCount, cprNeutralCount, cprBelowCount, cprAboveCount } = useMst(store => ({
+    const { tickers, cprUntestedCount, cprNeutralCount, cprBelowCount, cprAboveCount, sidewaysCount, trendingCount } = useMst(store => ({
         tickers: store.tickers,
         cprUntestedCount: store.cprUntestedCount,
         cprNeutralCount: store.cprNeutralCount,
         cprBelowCount: store.cprBelowCount,
         cprAboveCount: store.cprAboveCount,
+        sidewaysCount: store.sidewaysCount,
+        trendingCount: store.trendingCount,
     }));
 
     if (!tickers || tickers.length === 0) return ( <Skeleton /> );
 
   return (<>
         <div className="site-statistic-demo-card">
-            <Row gutter={16}>
+            <Row gutter={12}>
             <Col span={12}>
                 <Card>
                 <Statistic
@@ -52,7 +54,7 @@ const CPRStats = observer((props) => {
                     value={cprAboveCount}
                     precision={0}
                     valueStyle={{ color: '#3f8600' }}
-                    prefix={<ArrowUpOutlined />}
+                    prefix={<RiseOutlined />}
                     suffix=""
                 />
                 </Card>
@@ -64,7 +66,31 @@ const CPRStats = observer((props) => {
                     value={cprBelowCount}
                     precision={0}
                     valueStyle={{ color: '#cf1322' }}
-                    prefix={<ArrowDownOutlined />}
+                    prefix={<FallOutlined />}
+                    suffix=""
+                />
+                </Card>
+            </Col>
+            <Col span={12}>
+                <Card>
+                <Statistic
+                    title="Trending"
+                    value={trendingCount}
+                    precision={0}
+                    valueStyle={{ color: '#2196F3' }}
+                    prefix={<StockOutlined />}
+                    suffix=""
+                />
+                </Card>
+            </Col>
+            <Col span={12}>
+                <Card>
+                <Statistic
+                    title="Sideways"
+                    value={sidewaysCount}
+                    precision={0}
+                    valueStyle={{ color: '#F38300' }}
+                    prefix={<SwapOutlined />}
                     suffix=""
                 />
                 </Card>
@@ -78,7 +104,7 @@ const CPRStats = observer((props) => {
         <br />
         
         Candle close in <br />
-
+        
         <Space><h1>Cryptocurrency / Binance Futures / Daily</h1> <Badge style={{backgroundColor:'#2196F3', marginBottom:7}} count={tickers.length} /></Space>
         </div>
     </>

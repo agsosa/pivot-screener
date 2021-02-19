@@ -55,6 +55,20 @@ const CPRTable = observer((props) => {
     )
   }
 
+  const CPRWidthFormatter = (data) => {
+    let value = data.getCPR(props.timeframe).width
+
+    if (value) {
+      let str = "";
+      if (value > 0.5) str = "Sideways";
+      if (value > 0.75) str = "Sideways+";
+      if (value < 0.5) str = "Trending";
+      if (value < 0.25) str = "Trending+"
+  
+      return value + "% " + str;
+    }
+  }
+
   return (
     <div className="ag-theme-material" style={{ height: 700, width: "100%" }}>
       <Button onClick={test}>test</Button>
@@ -73,10 +87,14 @@ const CPRTable = observer((props) => {
           return data.symbol;
         }}
         >
-            <AgGridColumn enableCellChangeFlash field="symbol" sortable filter></AgGridColumn>
-            <AgGridColumn enableCellChangeFlash field="price" sortable filter></AgGridColumn>
+            <AgGridColumn enableCellChangeFlash headerName="Symbol" field="symbol" sortable filter></AgGridColumn>
+            <AgGridColumn enableCellChangeFlash headerName="Price" field="price" sortable filter></AgGridColumn>
             <AgGridColumn enableCellChangeFlash field="CPR Status" sortable filter></AgGridColumn>
             <AgGridColumn enableCellChangeFlash field="Magnet Side" sortable filter></AgGridColumn>
+            <AgGridColumn enableCellChangeFlash headerName="CPR Width" 
+            valueGetter={(params) => CPRWidthFormatter(params.data)} 
+
+            sortable filter></AgGridColumn>
             <AgGridColumn enableCellChangeFlash field="Distance Pivot" sortable filter></AgGridColumn>
             <AgGridColumn enableCellChangeFlash field="Distance TC" sortable filter></AgGridColumn>
             <AgGridColumn enableCellChangeFlash field="Distance BC" sortable filter></AgGridColumn>
