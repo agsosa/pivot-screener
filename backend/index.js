@@ -36,7 +36,7 @@ app.get('/', (req, res) => {
 
 const candlesticksValidation = {
     query: Joi.object({
-        tickers: Joi.string().optional(),
+        symbols: Joi.string().optional(),
         markets: Joi.string().optional(),
         timeframes: Joi.string().optional(),
     }),
@@ -46,24 +46,24 @@ const candlesticksValidation = {
 // TODO: Mejorar documentacion de la API
 app.get('/api/candlesticks', validate(candlesticksValidation, {}, {}), (req, res, next) => {
     try {
-        let { tickers, markets, timeframes } = req.query;
+        let { symbols, markets, timeframes } = req.query;
 
-        if (tickers) tickers = tickers.split(",");
+        if (symbols) symbols = symbols.split(",");
         if (markets) markets = markets.split(",");
         if (timeframes) timeframes = timeframes.split(",");
 
-        bTickers = tickers && Array.isArray(tickers);
+        bSymbols = symbols && Array.isArray(symbols);
         bMarkets = markets && Array.isArray(markets);
         bTimeframes = timeframes && Array.isArray(timeframes);
 
-        bTickers && tickers.map(q => q.toLowerCase());
+        bSymbols && symbols.map(q => q.toLowerCase());
         bMarkets && markets.map(q => q.toLowerCase());
         bTimeframes && timeframes.map(q => q.toLowerCase());
 
         let filtered = JSON.parse(JSON.stringify(datamanager.data.tickersList));
 
         // Filter by tickers and markets parameter
-        filtered = filtered.filter(q => (bTickers ? tickers.includes(q.symbol.toLowerCase()) : true) && (bMarkets ? markets.includes(q.market.toLowerCase()) : true))
+        filtered = filtered.filter(q => (bSymbols ? symbols.includes(q.symbol.toLowerCase()) : true) && (bMarkets ? markets.includes(q.market.toLowerCase()) : true))
 
         // Remove unwanted timeframes
         if (bTimeframes) {

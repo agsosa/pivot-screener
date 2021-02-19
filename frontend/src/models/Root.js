@@ -1,7 +1,7 @@
 import { useContext, createContext } from "react";
 import { types, onSnapshot, flow  } from "mobx-state-tree";
 import { Ticker } from "./Ticker";
-import { fetchTickers } from "../utils/Api";
+import { apiFetchTickers } from "../utils/Api";
 import moment from 'moment';
 import { randomInteger } from '../utils/Helpers';
 
@@ -12,11 +12,11 @@ const RootModel = types
         state: types.enumeration("State", ["pending", "done", "error"]) 
     })    
     .actions(self => ({
-        fetchTickers: flow(function* fetchProjects() { // <- note the star, this a generator function!
+        fetchTickers: flow(function* _callFetchApi(timeframes, symbols) { // <- note the star, this a generator function!
             //self.tickers.clear();
             self.state = "pending"
             try {
-                let result = yield fetchTickers();
+                let result = yield apiFetchTickers(timeframes, symbols);
                 //console.log(result);
                 self.tickers = result;
                 //self.tickers = new Map(result.map(obj => [obj.key, obj.val]));

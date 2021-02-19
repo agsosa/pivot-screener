@@ -12,13 +12,14 @@ import CPRTable from '../CPRTable';
 export default function CPRScreenerPage(props) {
   const market = props.match.params.market;
   const valid_market = market && isValidMarket(market);
+  const { TabPane } = Tabs;
 
   const { fetchTickers } = useMst(store => ({
     fetchTickers: store.fetchTickers,
   }));
 
   useEffect(() => {
-    if (valid_market) setInterval(() => fetchTickers(), 5000); // TODO: PASS MARKET
+    if (valid_market) setInterval(() => fetchTickers("daily, monthly, weekly"), 5000); // TODO: PASS MARKET
   })
 
   return (
@@ -32,8 +33,20 @@ export default function CPRScreenerPage(props) {
             { !valid_market ? <Result status="404" title="404" subTitle="Sorry, the page you visited does not exist."/> : 
               (
                 <>
-                  <CPRStats />
-                  <CPRTable />
+                  <Tabs defaultActiveKey="1">
+                    <TabPane tab="Daily" key="1">
+                      <CPRStats timeframe='daily' />
+                      <CPRTable timeframe='daily' />
+                    </TabPane>
+                    <TabPane tab="Weekly" key="2">
+                      <CPRStats timeframe='weekly' />
+                      <CPRTable timeframe='weekly' />
+                    </TabPane>
+                    <TabPane tab="Monthly" key="3">
+                    <CPRStats timeframe='monthly' />
+                      <CPRTable timeframe='monthly' />
+                    </TabPane>
+                  </Tabs>
                 </>
               )
             }
