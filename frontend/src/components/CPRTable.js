@@ -1,8 +1,9 @@
 import React, {useState, useEffect, useRef} from 'react';
 import { useMst } from '../models/Root';
 import { observer } from "mobx-react-lite"
-import { Button } from 'antd';
+import { Button, Spin, Result } from 'antd';
 import { autorun, reaction } from "mobx"
+import "./AGGridOverrides.css";
 
 import { AgGridColumn, AgGridReact } from 'ag-grid-react';  
 import 'ag-grid-community/dist/styles/ag-grid.css';
@@ -19,41 +20,39 @@ const CPRTable = observer((props) => {
   const onGridReady = (params) => {
     setGridApi(params.api);
     setGridColumnApi(params.columnApi);
-    params.api.showLoadingOverlay();
 
     if (tickers && tickers.length > 0) {
       params.api.setRowData(tickers);
       params.api.hideOverlay();
     }
+    else params.api.showLoadingOverlay();
+
+    autorun(() => {
+        if (tickers && tickers.length > 0) {
+          params.api.hideOverlay();
+          params.api.setRowData(tickers);
+        }
+    })
   };
 
-  const clearData = () => {
-    gridApi.setRowData([]);
-  };
-
-
-  autorun(() => {
-      if (gridApi) {
-        gridApi.setRowData(tickers);
-        gridApi.hideOverlay();
-      }
-  })
-
-
-  /*reaction(
-    () => tickers.slice(),
-    newstate => {
-      console.log("reaction: "+JSON.stringify(newstate));
-    }
-  )*/
 
   function test() {
-    console.log("hola");
-    //addItems(0);
-      // refresh the grid
-      //gridApi.setRowData(tickers);
-    //gridApi.refreshView();
-    gridApi.showLoadingOverlay()
+    gridApi.showNoRowsOverlay()
+  }
+
+  function CustomLoadingOverlay(props) {
+    return (
+        <Spin tip="Loading..."/>
+    )
+  }
+
+  function CustomNoRowsOverlay(props) {
+    return (
+      <Result
+        status="warning"
+        title="No data found. Please try reloading the page."
+      />
+    )
   }
 
   return (
@@ -63,10 +62,17 @@ const CPRTable = observer((props) => {
         onGridReady={onGridReady}
         animateRows
         immutableData={true}
+        frameworkComponents={{
+          customNoRowsOverlay: CustomNoRowsOverlay,
+          customLoadingOverlay: CustomLoadingOverlay,
+        }}
+        loadingOverlayComponent={'customLoadingOverlay'}
+        noRowsOverlayComponent={'customNoRowsOverlay'}
+        rowData={null}
         getRowNodeId={(data) => {
           return data.symbol;
         }}
-        rowData={tickers}>
+        >
             <AgGridColumn enableCellChangeFlash field="symbol" sortable filter></AgGridColumn>
             <AgGridColumn enableCellChangeFlash field="price" sortable filter></AgGridColumn>
             <AgGridColumn enableCellChangeFlash field="CPR Status" sortable filter></AgGridColumn>

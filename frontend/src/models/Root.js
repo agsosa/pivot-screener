@@ -14,14 +14,11 @@ const RootModel = types
     .actions(self => ({
         fetchTickers: flow(function* _callFetchApi(timeframes, symbols) { // <- note the star, this a generator function!
             //self.tickers.clear();
+            console.log("fetchTickers()")
             self.state = "pending"
             try {
                 let result = yield apiFetchTickers(timeframes, symbols);
-                //console.log(result);
                 self.tickers = result;
-                //self.tickers = new Map(result.map(obj => [obj.key, obj.val]));
-                //result.map(obj => self.tickers.set(obj.key, obj.val));
-                //console.log(self.tickers);
                 self.state = "done"
             } catch (error) {
                 console.error("Failed to fetch projects", error)
