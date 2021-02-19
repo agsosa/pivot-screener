@@ -12,50 +12,54 @@ import {
 
 import { markets } from '../utils/Markets';
 
-import { NavLink } from 'react-router-dom'
+import { NavLink, useLocation } from 'react-router-dom'
 
 const { Sider } = Layout;
 const { SubMenu } = Menu;
 
 export default function Sidebar(props) {
     const [collapsed, setCollapsed] = useState(false);
+    const location = useLocation();
+    console.log(location.pathname);
 
     const onCollapse = x => {
         console.log(x);
         setCollapsed(x);
     };
 
+    //!! Menu IDS should be the same as Route Path to select the correct menu when loading the pages directly
     return (
         <Sider collapsible collapsed={collapsed} onCollapse={onCollapse} >
             <div className="logo" />
-            <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
-            <Menu.Item key="1" icon={<HomeOutlined />}>
-            <NavLink to="/">Home (Chart)</NavLink>
+            <Menu theme="dark"  mode="inline" selectedKeys={[location.pathname]} >
+            <Menu.Item key="/" icon={<HomeOutlined />}>
+                <NavLink to="/">Home (Chart)</NavLink>
             </Menu.Item>
             <SubMenu key="sub1" icon={<MenuOutlined />} title="CPR Screener">
                 {
                     markets.map(q => {
-                        return (<Menu.Item key={q.market+"_cpr"} disabled={q.disabled}><NavLink to={"/cpr-screener/"+q.market.toLowerCase()}>{q.market}</NavLink></Menu.Item>)
+                        //console.log(q.market)
+                        return (<Menu.Item key={"/cpr-screener/"+q.market.toLowerCase()} disabled={q.disabled}><NavLink to={"/cpr-screener/"+q.market.toLowerCase()}>{q.market}</NavLink></Menu.Item>)
                     })
                 }
             </SubMenu>
             <SubMenu key="sub2" icon={<LineChartOutlined />} title="Camarilla Screener">
                 {
                     markets.map(q => {
-                        return (<Menu.Item key={q.market+"_cam"} disabled={q.disabled}><NavLink to={"/cam-screener/"+q.market.toLowerCase()}>{q.market}</NavLink></Menu.Item>)
+                        return (<Menu.Item key={"/cam-screener/"+q.market.toLowerCase()} disabled={q.disabled}><NavLink to={"/cam-screener/"+q.market.toLowerCase()}>{q.market}</NavLink></Menu.Item>)
                     })
                 }
             </SubMenu>
-            <Menu.Item key="7" disabled icon={<FundProjectionScreenOutlined />}>
+            <Menu.Item key="/live-feed" disabled icon={<FundProjectionScreenOutlined />}>
                 <NavLink to="/live-feed">Live Feed</NavLink>
             </Menu.Item>
-            <Menu.Item key="8" disabled icon={<MonitorOutlined />}>
+            <Menu.Item key="/algo-screener" disabled icon={<MonitorOutlined />}>
                 <NavLink to="/algo-screener">Algo Screener</NavLink>
             </Menu.Item>
-            <Menu.Item key="9" icon={<ToolOutlined />}>
+            <Menu.Item key="/calculator" icon={<ToolOutlined />}>
                 <NavLink to="/calculator">Pivot Calculator</NavLink> 
             </Menu.Item>
-            <Menu.Item key="10" disabled icon={<QuestionCircleOutlined />}>
+            <Menu.Item key="/learn" disabled icon={<QuestionCircleOutlined />}>
                 <NavLink to="/learn">Learn</NavLink>
             </Menu.Item>
             </Menu>
