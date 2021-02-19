@@ -63,7 +63,7 @@ app.get('/api/candlesticks', validate(candlesticksValidation, {}, {}), (req, res
         let filtered = JSON.parse(JSON.stringify(datamanager.data.tickersList));
 
         // Filter by tickers and markets parameter
-        filtered = filtered.filter(q => (bTickers ? tickers.includes(q.ticker.toLowerCase()) : true) && (bMarkets ? markets.includes(q.market.toLowerCase()) : true))
+        filtered = filtered.filter(q => (bTickers ? tickers.includes(q.symbol.toLowerCase()) : true) && (bMarkets ? markets.includes(q.market.toLowerCase()) : true))
 
         // Remove unwanted timeframes
         if (bTimeframes) {

@@ -30,7 +30,7 @@ function fetchTickersList() {
     return new Promise(async (resolve, reject) => {
         let res = await binance.futuresPrices();
         let list = [...Object.keys(res)];
-        list.map(q => datamanager.addTicker({ticker: q, market: MARKET}));
+        list.map(q => datamanager.addTicker({symbol: q, market: MARKET}));
 
         resolve();
     });
@@ -49,12 +49,12 @@ function fetchTickersList() {
 
             // For every timeframe grab candlesticks for each ticker
             timeframes.forEach(async t => {
-                const url = `https://fapi.binance.com/fapi/v1/klines?symbol=${tickerObj.ticker}&interval=${t.interval}&limit=${t.limit}`;
+                const url = `https://fapi.binance.com/fapi/v1/klines?symbol=${tickerObj.symbol}&interval=${t.interval}&limit=${t.limit}`;
 
                 let prom = fetch(url).then(function(response) {
                     // TODO: CHECK FOR ERRORS
                         response.json().then(data => {
-                            if(!data || data.length == 0) reject("Invalid data received from Binance "+tickerObj.ticker);
+                            if(!data || data.length == 0 || data.code) reject("Invalid data received from Binance "+data);
 
                             let formattedCandles = [];
                             
@@ -64,7 +64,7 @@ function fetchTickersList() {
                                     high: parseFloat(c[2]), 
                                     low: parseFloat(c[3]), 
                                     close: parseFloat(c[4]), 
-                                    time: parseInt(c[6])
+                                    timestamp: parseInt(c[6])
                                 })
                             })
                             

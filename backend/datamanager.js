@@ -11,7 +11,7 @@ function setReady() {
 }
 
 function addTicker(tickerObj) {  //{ ticker: str, market: <market str>} // Available markets: "crypto_binancefut"
-    if (!data.tickersList.find(q => q.ticker == tickerObj.ticker && q.market == tickerObj.market)) data.tickersList.push(tickerObj);
+    if (!data.tickersList.find(q => q.symbol == tickerObj.symbol && q.market == tickerObj.market)) data.tickersList.push(tickerObj);
 }
 
 function updateTickerCandlesticks(tickerObj, candlesticksObj) {

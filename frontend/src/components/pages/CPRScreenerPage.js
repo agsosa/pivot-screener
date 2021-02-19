@@ -27,8 +27,6 @@ export default function CPRScreenerPage(props) {
               (
                 <>
                   <CPRStats />
-                  
-                  <Space><h1>Cryptocurrency / Binance Futures / Daily</h1> <Badge style={{backgroundColor:'#2196F3', marginBottom:7}} count={25} /></Space>
                   <CPRTable />
                 </>
               )
