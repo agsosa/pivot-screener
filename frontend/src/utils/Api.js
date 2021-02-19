@@ -1,4 +1,5 @@
 import axios from 'axios';
+import jsonpack from 'jsonpack';
 
 const BASE_URL = "http://localhost:4000/api/";
 
@@ -12,7 +13,7 @@ export function apiFetchTickers(timeframes="daily,weekly,monthly,hourly", symbol
         axios.get(BASE_URL+QUERY)
         .then(res => {
             //console.log("Received data: "+JSON.stringify(res.data));
-            resolve(res.data);
+            resolve(jsonpack.unpack(res.data));
         }).catch((error) => console.log(error.toString()))
     })
 }

@@ -8,7 +8,6 @@ import { randomInteger } from '../utils/Helpers';
 const RootModel = types
     .model({
         tickers: types.array(Ticker),
-        test: types.string,
         state: types.enumeration("State", ["pending", "done", "error"]) 
     })    
     .actions(self => ({
@@ -69,11 +68,11 @@ const RootModel = types
     })
   
 let initialState = RootModel.create({
-    test: "asd",
     state: "pending",
 });
   
-/*const data = localStorage.getItem('rootState');
+/*
+const data = localStorage.getItem('rootState');
 
 if (data) {
     const json = JSON.parse(data);
@@ -84,10 +83,10 @@ if (data) {
 
 export const rootStore = initialState;
 
+/*
 onSnapshot(rootStore, snapshot => {
-    //console.log("Snapshot: ", snapshot);
-    //localStorage.setItem('rootState', JSON.stringify(snapshot));
-});
+    localStorage.setItem('rootState', JSON.stringify(snapshot));
+});*/
   
 
 const MSTContext = createContext(null);

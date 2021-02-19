@@ -1,11 +1,13 @@
 import React, {useState, useEffect} from 'react';
-import { Card, Statistic, Row, Col, Progress, Space, Badge, Skeleton } from 'antd';
+import { Card, Statistic, Row, Col, Progress, Space, Badge, Skeleton, Collapse } from 'antd';
 import { ArrowUpOutlined, SwapOutlined, FallOutlined, RiseOutlined, ArrowDownOutlined, PauseOutlined, StockOutlined } from '@ant-design/icons';
 import { useMst } from '../models/Root';
 import { observer } from "mobx-react-lite"
 import moment from 'moment';
 import { autorun } from "mobx"
 import { calcPercent } from '../utils/Helpers'
+
+const { Panel } = Collapse;
 
 const CPRStats = observer((props) => {
     const { tickers, cprUntestedCount, cprNeutralCount, cprBelowCount, cprAboveCount, sidewaysCount, trendingCount } = useMst(store => ({
@@ -21,6 +23,8 @@ const CPRStats = observer((props) => {
     if (!tickers || tickers.length === 0) return ( <Skeleton /> );
 
   return (<>
+    <Collapse defaultActiveKey={['1']} style={{marginBottom:12}}>
+    <Panel header="Statistics" key="1">
         <div className="site-statistic-demo-card">
             <Row gutter={12}>
             <Col span={12}>
@@ -101,12 +105,9 @@ const CPRStats = observer((props) => {
         <div style={{paddingTop:10}}>
         🐂 <font color="green">Bulls {calcPercent(cprAboveCount, cprAboveCount+cprBelowCount).toFixed(1)}%</font> <b>vs</b> <font color="red">{calcPercent(cprBelowCount, cprAboveCount+cprBelowCount).toFixed(1)}% Bears</font> 🐻
         <Progress percent={100} success={{ percent: calcPercent(cprAboveCount, cprAboveCount+cprBelowCount) }} showInfo={false} strokeColor="red" />
-        <br />
-        
-        Candle close in <br />
-        
-        <Space><h1>Cryptocurrency / Binance Futures / Daily</h1> <Badge style={{backgroundColor:'#2196F3', marginBottom:7}} count={tickers.length} /></Space>
         </div>
+
+        </Panel></Collapse>
     </>
   )
 })

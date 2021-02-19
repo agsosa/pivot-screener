@@ -47,8 +47,10 @@ export default function LayoutFooter(props) {
                         <li>LTC: LQ2xgCCqzG2AYJLPNarCuap4ZqAV5rLaNE</li>
                     </ul>
                 </Modal>
-                <br /><br />Pivot Screener © 2021 <a href="https://github.com/aleegs/pivot-screener-2" target="_blank" rel="noreferrer">Github</a><br />
-               <p style={{whiteSpace:'pre-wrap', overflowWrap:'break-word', marginLeft:'20%', marginRight:'20%', marginBottom:0}}>Disclaimer: The information provided on this website does not constitute Investment or trading advice. The sole purpose of this website is informational and/or Educational. Pivot Screener is not responsible for any misuse of the information presented on this website.</p>
+                <br /><br />
+                <p style={{whiteSpace:'pre-wrap', overflowWrap:'break-word', marginLeft:'20%', marginRight:'20%', marginBottom:10}}>Disclaimer: The information provided on this website does not constitute Investment or trading advice. The sole purpose of this website is informational and/or Educational. Pivot Screener is not responsible for any misuse of the information presented on this website.</p>
+
+                Pivot Screener © 2021 <a href="https://github.com/aleegs/pivot-screener-2" target="_blank" rel="noreferrer">Github</a><br />
         </Footer>
     )
 }

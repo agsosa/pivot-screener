@@ -10,6 +10,8 @@ import CPRStats from '../CPRStats';
 import CPRTable from '../CPRTable';
 
 export default function CPRScreenerPage(props) {
+  let interval;
+
   const market = props.match.params.market;
   const valid_market = market && isValidMarket(market);
   const { TabPane } = Tabs;
@@ -19,8 +21,12 @@ export default function CPRScreenerPage(props) {
   }));
 
   useEffect(() => {
-    if (valid_market) setInterval(() => fetchTickers("daily, monthly, weekly"), 5000); // TODO: PASS MARKET
-  })
+    if (valid_market) interval = setInterval(() => fetchTickers("daily, monthly, weekly"), 5000); // TODO: PASS MARKET
+
+    return () => {
+      if (interval) clearInterval(interval);
+    }
+  }, [])
 
   return (
       <Content>

@@ -74,8 +74,8 @@ app.get('/api/candlesticks', validate(candlesticksValidation, {}, {}), (req, res
             });
         }
     
-        //res.send(jsonpack.pack(dataResult));
-        res.json(filtered);
+        res.send(jsonpack.pack(filtered));
+        //res.json(filtered);
     }
     catch (e) {
         const error = new Error(e.toString());
