@@ -21,7 +21,11 @@ export default function CPRScreenerPage(props) {
   }));
 
   useEffect(() => {
-    if (valid_market) interval = setInterval(() => fetchTickers("daily, monthly, weekly"), 5000); // TODO: PASS MARKET
+    if (valid_market) {
+      const f = () => fetchTickers("daily, monthly, weekly");
+      f();
+      interval = setInterval(f, 5000); // TODO: PASS MARKET
+    }
 
     return () => {
       if (interval) clearInterval(interval);

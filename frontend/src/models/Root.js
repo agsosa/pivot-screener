@@ -13,7 +13,6 @@ const RootModel = types
     .actions(self => ({
         fetchTickers: flow(function* _callFetchApi(timeframes, symbols) { // <- note the star, this a generator function!
             //self.tickers.clear();
-            console.log("fetchTickers()")
             self.state = "pending"
             try {
                 let result = yield apiFetchTickers(timeframes, symbols);
