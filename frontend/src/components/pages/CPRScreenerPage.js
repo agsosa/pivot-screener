@@ -46,15 +46,15 @@ export default function CPRScreenerPage(props) {
                   <Tabs defaultActiveKey="1">
                     <TabPane tab="Daily" key="1">
                       <CPRStats timeframe='daily' />
-                      <CPRTable timeframe='daily' />
+                      <CPRTable timeframe='daily' market={market} />
                     </TabPane>
                     <TabPane tab="Weekly" key="2">
-                      <CPRStats timeframe='weekly' />
-                      <CPRTable timeframe='weekly' />
+                      <CPRStats timeframe='weekly' market={market} />
+                      <CPRTable timeframe='weekly' market={market} />
                     </TabPane>
                     <TabPane tab="Monthly" key="3">
-                    <CPRStats timeframe='monthly' />
-                      <CPRTable timeframe='monthly' />
+                    <CPRStats timeframe='monthly' market={market} />
+                      <CPRTable timeframe='monthly' market={market} />
                     </TabPane>
                   </Tabs>
                 </>

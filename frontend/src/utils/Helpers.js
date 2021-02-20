@@ -9,14 +9,6 @@ export const percentage = (percent, total) => {
 }
 
 export const distancePct = (a, b) => {
-    //return  (100 * Math.abs( ( a - b ) / ( (a+b)/2 ) )).toFixed(2);
-    //let c = a;
-   /* if (a < b) {
-        a = b;
-        b = c;
-    }*/
-    //return Math.abs((1 - (b / a)) * 100).toFixed(2);
-
     return Math.abs((a - b) / a * 100).toFixed(2);
 }
 
@@ -80,6 +72,24 @@ export function randomInteger(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-export const calcPercent = function(v, t) {
+export const calcPercent = function(v, t) { // What percentage is v (value) of t (total)
     return 100*v/t;
 };
+
+export function inRange(x, min, max) {
+    return ((x-min)*(x-max) <= 0);
+}
+
+export function percentDifference(a, b) {
+    if (!a || !b || (a+b === 0)) return 0;
+
+    if (b === 0) b = [a, a = b][0];
+
+    let result = a-b === 0 ? 0 : 100 * Math.abs( ( a - b ) / b );
+
+    return result;
+}
+
+export function clamp(val, min, max) {
+    return Math.min(Math.max(val, min), max);
+}
