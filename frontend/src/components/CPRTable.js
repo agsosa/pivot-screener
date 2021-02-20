@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useRef} from 'react';
 import { useMst } from '../models/Root';
 import { observer } from "mobx-react-lite"
-import { Button, Spin, Result,Space, Badge, Alert } from 'antd';
+import { Button, Spin, Result,Space, Badge, Alert, Skeleton } from 'antd';
 import { autorun, reaction } from "mobx"
 import { capitalizeFirstLetter } from '../utils/Helpers'
 
@@ -155,7 +155,7 @@ const CPRTable = observer((props) => {
 
   return (
     <>
-      <Space style={{padding:5, }}><h1>{capitalizeFirstLetter(props.market)} / Binance Futures / {capitalizeFirstLetter(props.timeframe)}</h1> <Badge style={{backgroundColor:'#2196F3', marginBottom:7}} count={tickers.length} /></Space>
+      <Space style={{padding:5, }}><h1>{capitalizeFirstLetter(props.market)} / {capitalizeFirstLetter(props.timeframe)}</h1> <Badge style={{backgroundColor:'#2196F3', marginBottom:7}} count={tickers.length} /></Space>
 
     <div className="ag-theme-material" style={{ height: 700, width: "100%" }}>
       {/*<Button onClick={test}>test</Button>*/}
@@ -176,7 +176,9 @@ const CPRTable = observer((props) => {
           return data.symbol;
         }}
         >
-            <AgGridColumn enableCellChangeFlash headerName="Symbol" field="symbol" cellRenderer={symbolRenderer} sortable filter resizable></AgGridColumn>
+            <AgGridColumn enableCellChangeFlash width={130} headerName="Symbol" field="symbol" cellRenderer={symbolRenderer} sortable filter resizable></AgGridColumn>
+
+            <AgGridColumn enableCellChangeFlash headerName="Exchange" field="exchange" cellRenderer={symbolRenderer} sortable filter resizable></AgGridColumn>
 
             <AgGridColumn enableCellChangeFlash headerName="Price" field="price" sortable filter="agNumberColumnFilter" resizable></AgGridColumn>
 
@@ -206,9 +208,13 @@ const CPRTable = observer((props) => {
           </AgGridReact>
     </div>
 
-    <p style={{marginTop:20, paddingTop:10}}>● The percentage shown above the <i>Untested</i> label is the closest approximation to the CPR. <i>Example:</i> Untested <sup>0.1%</sup> means that there was a candle that came within 0.1% of the CPR.
-    <br/>● The Sideways/Trending label on the CPR Width column shouldn't be taken seriously, the parameters need to be adjusted.
-    </p>
+      { !tickers || tickers.length === 0 ? <Skeleton /> :
+        <>
+          <p style={{marginTop:20, paddingTop:10}}>● The percentage shown above the <i>Untested</i> label is the closest approximation to the CPR. <i>Example:</i> Untested <sup>0.1%</sup> means that there was a candle that came within 0.1% of the CPR.
+          <br/>● The Sideways/Trending label on the CPR Width column shouldn't be taken seriously, the parameters need to be adjusted.
+        </p>
+        </> 
+      }
     </>
   )
 });

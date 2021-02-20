@@ -20,7 +20,7 @@ const CPRStats = observer((props) => {
         trendingCount: store.trendingCount,
     }));
 
-    if (!tickers || tickers.length === 0) return ( <Skeleton /> );
+if (!tickers || tickers.length === 0) return ( <Skeleton /> );
 
   return (<>
     <Collapse defaultActiveKey={['1']} style={{marginBottom:12}}>

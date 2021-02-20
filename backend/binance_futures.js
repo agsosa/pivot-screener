@@ -8,7 +8,8 @@ const binance = new Binance().options({
 
 // TODO: Update symbol list every X time
 
-const MARKET = "crypto_binancefut"
+const MARKET = "Cryptocurrency"
+const EXCHANGE = "Binance Futures"
 let loop_interval = -1;
 let initialized = false;
 
@@ -30,7 +31,7 @@ function fetchTickersList() {
     return new Promise(async (resolve, reject) => {
         let res = await binance.futuresPrices();
         let list = [...Object.keys(res)];
-        list.map(q => !q.includes("_") && datamanager.addTicker({symbol: q, market: MARKET}));
+        list.map(q => !q.includes("_") && datamanager.addTicker({symbol: q, market: MARKET, exchange: EXCHANGE, candlesticks: {}}));
 
         resolve();
     });
@@ -42,20 +43,22 @@ function fetchTickersList() {
         let promises = [];
 
         // For each ticker in tickerList initialize data object and push to data.tickersData
-        for (let i = 0; i < datamanager.data.tickersList.length; i++) {
-            const tickerObj = datamanager.data.tickersList[i];
+        const tickersList = datamanager.getTickersListByMarketExchange(MARKET, EXCHANGE);
 
-            let candlesticksObj = { }
+        for (let i = 0; i < tickersList.length; i++) {
+            let tickerObj = tickersList[i];
+
+            let candlesticksObj = {}
+            tickerObj.candlesticks = candlesticksObj; // Assign candlesticksObj
 
             // For every timeframe grab candlesticks for each ticker
             timeframes.forEach(async t => {
                 const url = `https://fapi.binance.com/fapi/v1/klines?symbol=${tickerObj.symbol}&interval=${t.interval}&limit=${t.limit}`;
-
+                
                 let prom = fetch(url).then(function(response) {
                     // TODO: CHECK FOR ERRORS
                         response.json().then(data => {
                             if(!data || data.length == 0 || data.code) reject("Invalid data received from Binance "+data);
-
                             let formattedCandles = [];
                             
                             data.forEach(c => {
@@ -69,8 +72,6 @@ function fetchTickersList() {
                             })
                             
                             candlesticksObj[t.objectName+"Candles"] = formattedCandles;
-
-                            datamanager.updateTickerCandlesticks(tickerObj, candlesticksObj);
                         });
                 })
                 .catch(function(error) {
@@ -82,6 +83,8 @@ function fetchTickersList() {
         }
 
         await Promise.allSettled(promises);
+
+
 
         resolve();
     });
@@ -119,7 +122,7 @@ function loop() {
         fetchTickersData().then(() => {
             console.log("loop() done. Next interval in "+loop_interval+" seconds");
 
-            if (!datamanager.data.isReady) datamanager.setReady();
+            if (!datamanager.data.isReady) datamanager.data.isReady = true;
 
             setTimeout(() => {
                 loop();

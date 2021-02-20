@@ -12,8 +12,6 @@ export function apiFetchTickers(timeframes="daily,weekly,monthly,hourly", symbol
     return new Promise((resolve, reject) => {
         axios.get(BASE_URL+QUERY)
         .then(res => {
-            console.log("apiFetchTickers() received data")
-            //console.log("Received data: "+JSON.stringify(res.data));
             resolve(jsonpack.unpack(res.data));
         }).catch((error) => console.log(error.toString()))
     })

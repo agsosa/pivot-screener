@@ -4,13 +4,21 @@ const datamanager = require('./datamanager');
 const cors = require('cors');
 var compression = require('compression')
 var jsonpack = require('jsonpack/main')
-//const validateParams = require('./validateParams');
 const { validate, ValidationError, Joi } = require('express-validation')
 
 require('./binance_futures');
 
 const app = express();
 const port = 4000;
+
+// Validations
+const candlesticksValidation = {
+    query: Joi.object({
+        symbols: Joi.string().optional(),
+        markets: Joi.string().optional(),
+        timeframes: Joi.string().optional(),
+    }),
+}
 
 // Middlewares
 app.use(compression())
@@ -20,10 +28,8 @@ app.use(bodyParser.json());
 
 app.get('*', (req, res, next) => {
     if (!datamanager.data.isReady) {
-        console.log("HERE HERE HERE");
         const error = new Error('Not ready');
         error.status = 404;
-        res.send("Not ready");
         next(error);
     }
     else next();
@@ -33,14 +39,6 @@ app.get('*', (req, res, next) => {
 app.get('/', (req, res) => {
     res.send('OK');
 });
-
-const candlesticksValidation = {
-    query: Joi.object({
-        symbols: Joi.string().optional(),
-        markets: Joi.string().optional(),
-        timeframes: Joi.string().optional(),
-    }),
-}
 
 // /api/candlesticks. Query parameters acepted: tickers, markets, timeframes (daily, monthly, weekly, hourly).
 // TODO: Mejorar documentacion de la API
@@ -79,9 +77,10 @@ app.get('/api/candlesticks', validate(candlesticksValidation, {}, {}), (req, res
     }
     catch (e) {
         const error = new Error(e.toString());
+        error.msg = e.toString();
         error.status = 404;
-        res.send(error.toString());
-        //next(error);
+        //res.send(error.toString());
+        next(error);
     }
 });
 
@@ -121,7 +120,7 @@ app.use(function(err, req, res, next) {
     if (err instanceof ValidationError) {
       return res.status(err.statusCode).json(err)
     }
-   
+  
     return res.status(500).json(err)
 })
 

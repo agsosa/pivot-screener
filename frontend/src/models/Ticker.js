@@ -1,10 +1,12 @@
 import { types } from "mobx-state-tree";
+import { type } from "os";
 import { inRange, percentDifference, clamp } from '../utils/Helpers';
 
 export const Ticker = types
     .model({
         symbol: types.string,
         market: types.string,
+        exchange: types.string,
         candlesticks: types.optional(types.frozen()),
     })
     .actions(self => ({
@@ -77,6 +79,13 @@ export const Ticker = types
                 if (!cpr.p || !session) return undefined;
 
                 return (session.close <= cpr.bc);
+            },
+            getIsNeutralCPR(timeframe) {
+                const session = self.getCurrentSessionOHLC("any");
+                const cpr = self.getCPR(timeframe);
+                if (!cpr.p || !session) return undefined;
+
+                return (session.close >= cpr.bc && session.close <= cpr.tc);
             },
             getCPRDistancePct(timeframe) {
                 const session = self.getCurrentSessionOHLC("any");
