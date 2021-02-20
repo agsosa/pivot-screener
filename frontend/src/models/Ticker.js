@@ -2,6 +2,7 @@ import { types } from "mobx-state-tree";
 import { inRange, percentDifference } from "../utils/Helpers";
 
 // FIXME: A veces no se retornan los valores porque no se encuentra session
+// TODO: Optimize views/computeds (array filter) use cache or something
 
 export const Ticker = types
 	.model({
@@ -37,7 +38,16 @@ export const Ticker = types
 				return candles.length < 1 ? undefined : candles[candles.length - 1];
 			},
 			getCPR(timeframe, future = false) {
-				let result = { p: undefined, bc: undefined, tc: undefined, width: undefined };
+				let result = {
+					p: undefined,
+					bc: undefined,
+					tc: undefined,
+					width: undefined,
+					isTested: undefined,
+					price_position: undefined,
+					distance: { p: undefined, tc: undefined, bc: undefined },
+					closestApproximation: undefined,
+				};
 				const session = future ? self.getCurrentSessionOHLC(timeframe) : self.getPreviousSessionOHLC(timeframe);
 
 				if (!session) return result;
@@ -56,51 +66,14 @@ export const Ticker = types
                     CPR Width < 0.25 - increases the likelihood of a trending market. 
                 */
 
-				return result;
-			},
-			getIsTestedCPR(timeframe) {
-				const session = self.getCurrentSessionOHLC(timeframe);
-				const cpr = self.getCPR(timeframe);
-				if (!cpr.p || !session) return undefined;
-
-				const tested = inRange(cpr.bc, session.low, session.high) || inRange(cpr.tc, session.low, session.high);
-
-				return tested;
-			},
-			getIsAboveCPR(timeframe) {
-				const session = self.getCurrentSessionOHLC("any");
-				const cpr = self.getCPR(timeframe);
-				if (!cpr.p || !session) return undefined;
-
-				return session.close >= cpr.tc;
-			},
-			getIsBelowCPR(timeframe) {
-				const session = self.getCurrentSessionOHLC("any");
-				const cpr = self.getCPR(timeframe);
-				if (!cpr.p || !session) return undefined;
-
-				return session.close <= cpr.bc;
-			},
-			getIsNeutralCPR(timeframe) {
-				const session = self.getCurrentSessionOHLC("any");
-				const cpr = self.getCPR(timeframe);
-				if (!cpr.p || !session) return undefined;
-
-				return session.close >= cpr.bc && session.close <= cpr.tc;
-			},
-			getCPRDistancePct(timeframe) {
-				const session = self.getCurrentSessionOHLC("any");
-				const cpr = self.getCPR(timeframe);
-				let result = { p: undefined, tc: undefined, bc: undefined };
-				if (!cpr.p || !session) return result;
-
-				result.p = percentDifference(session.close, cpr.p);
-				result.bc = percentDifference(session.close, cpr.bc);
-				result.tc = percentDifference(session.close, cpr.tc);
+				result.isTested = inRange(result.bc, session.low, session.high) || inRange(result.tc, session.low, session.high);
+				result.price_position = session.close >= result.tc ? "above" : session.close <= result.bc ? "below" : "neutral";
+				result.distance.p = percentDifference(session.close, result.p);
+				result.distance.bc = percentDifference(session.close, result.bc);
+				result.distance.tc = percentDifference(session.close, result.tc);
+				result.closestApproximation = result.price_position === "above" ? percentDifference(session.close, result.tc) : percentDifference(session.close, result.bc);
 
 				return result;
 			},
-
-			// usar inrange para above etc
 		};
 	});

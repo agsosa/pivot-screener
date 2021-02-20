@@ -8,6 +8,7 @@ import React, { useEffect, useState } from "react";
 import { useMst } from "../models/Root";
 import { capitalizeFirstLetter } from "../utils/Helpers";
 import "./AGGridOverrides.css";
+import CPRStats from "./CPRStats";
 
 const CPRTable = observer((props) => {
 	let dispose;
@@ -25,16 +26,20 @@ const CPRTable = observer((props) => {
 
 		if (tickers && tickers.length > 0) {
 			params.api.setRowData(tickers);
-			params.api.hideOverlay();
 		} else params.api.showLoadingOverlay();
-
-		dispose = autorun(() => {
-			if (tickers && tickers.length > 0) {
-				params.api.hideOverlay();
-				params.api.setRowData(tickers);
-			}
-		});
 	};
+
+	const onFirstDataRendered = (params) => {
+		params.api.hideOverlay();
+	};
+
+	dispose = autorun(() => {
+		if (gridApi) {
+			if (tickers && tickers.length > 0) {
+				gridApi.setRowData(tickers);
+			}
+		}
+	});
 
 	useEffect(() => {
 		return () => {
@@ -83,14 +88,16 @@ const CPRTable = observer((props) => {
 	};
 
 	const CPRStatusGetter = (data) => {
-		const value = data.getIsTestedCPR(props.timeframe);
+		const value = data.getCPR(props.timeframe).isTested;
 
 		if (value !== undefined) return value ? "Tested" : "Untested";
 	};
 
 	const cprStatusCellRenderer = (params) => {
 		if (params.value) {
-			return params.value === "Tested" ? "✔️ Tested" : "🧲 Untested <sup><font color='gray'>25%</font></sup>";
+			const approximation = 0;
+
+			return params.value === "Tested" ? "✔️ Tested" : "🧲 Untested <sup><font color='gray'0%</font></sup>";
 		}
 	};
 
@@ -102,11 +109,16 @@ const CPRTable = observer((props) => {
 	};
 
 	const MagnetSideGetter = (data) => {
-		const tested = data.getIsTestedCPR(props.timeframe);
-		if (tested !== undefined && tested) return "None";
+		const cpr = data.getCPR(props.timeframe);
+		if (cpr) {
+			const tested = cpr.isTested;
+			if (tested !== undefined) {
+				if (tested) return "None";
 
-		const isAboveCPR = data.getIsAboveCPR(props.timeframe);
-		if (isAboveCPR !== undefined) return isAboveCPR ? "Short" : "Long";
+				const isAboveCPR = cpr.price_position === "above";
+				if (isAboveCPR !== undefined) return isAboveCPR ? "Short" : "Long";
+			}
+		}
 	};
 
 	const MagnetSideCellStyle = (params) => {
@@ -116,8 +128,34 @@ const CPRTable = observer((props) => {
 		}
 	};
 
+	const SituationGetter = (data) => {
+		const cpr = data.getCPR(props.timeframe);
+
+		if (cpr) {
+			if (cpr.price_position !== undefined) {
+				const neutral = cpr.price_position === "neutral";
+				if (neutral !== undefined && neutral) return "Neutral";
+
+				const above = cpr.price_position === "above";
+				if (above !== undefined && above) return "Above CPR";
+				else return "Below CPR";
+			}
+		}
+	};
+
+	const SituationCellStyle = (params) => {
+		if (params && params.value) {
+			const extra = { fontSize: "15px" };
+			return params.value === "Below CPR"
+				? { ...extra, backgroundColor: "rgba(255, 0, 0, 0.1)" }
+				: params.value === "Above CPR"
+				? { ...extra, backgroundColor: "rgba(0, 255, 0, 0.1)" }
+				: { ...extra, backgroundColor: "rgb(103, 124, 135, 0.1)" };
+		}
+	};
+
 	const pivotDistanceGetter = (data) => {
-		const dist = data.getCPRDistancePct(props.timeframe);
+		const dist = data.getCPR(props.timeframe).distance;
 		if (dist && dist.p) {
 			return dist.p;
 		}
@@ -128,8 +166,8 @@ const CPRTable = observer((props) => {
 	};
 
 	const tcDistanceGetter = (data) => {
-		const dist = data.getCPRDistancePct(props.timeframe);
-		if (dist && dist.p) {
+		const dist = data.getCPR(props.timeframe).distance;
+		if (dist && dist.tc) {
 			return dist.tc;
 		}
 	};
@@ -139,8 +177,8 @@ const CPRTable = observer((props) => {
 	};
 
 	const bcDistanceGetter = (data) => {
-		const dist = data.getCPRDistancePct(props.timeframe);
-		if (dist && dist.p) {
+		const dist = data.getCPR(props.timeframe).distance;
+		if (dist && dist.bc) {
 			return dist.bc;
 		}
 	};
@@ -155,6 +193,7 @@ const CPRTable = observer((props) => {
 
 	return (
 		<>
+			<CPRStats timeframe={props.timeframe} />
 			<Space style={{ padding: 5 }}>
 				<h1>
 					{capitalizeFirstLetter(props.market)} / {capitalizeFirstLetter(props.timeframe)}
@@ -167,11 +206,20 @@ const CPRTable = observer((props) => {
 				<AgGridReact
 					onGridReady={onGridReady}
 					animateRows
+					onFirstDataRendered={onFirstDataRendered}
 					immutableData={true}
 					tooltipShowDelay={0}
 					frameworkComponents={{
 						customNoRowsOverlay: CustomNoRowsOverlay,
 						customLoadingOverlay: CustomLoadingOverlay,
+					}}
+					defaultColDef={{
+						enableCellChangeFlash: true,
+						editable: true,
+						sortable: true,
+						flex: 1,
+						filter: true,
+						resizable: true,
 					}}
 					loadingOverlayComponent={"customLoadingOverlay"}
 					noRowsOverlayComponent={"customNoRowsOverlay"}
@@ -180,59 +228,37 @@ const CPRTable = observer((props) => {
 					getRowNodeId={(data) => {
 						return data.symbol;
 					}}>
-					<AgGridColumn enableCellChangeFlash width={130} headerName="Symbol" field="symbol" cellRenderer={symbolRenderer} sortable filter resizable></AgGridColumn>
+					<AgGridColumn headerName="Symbol" field="symbol" cellRenderer={symbolRenderer}></AgGridColumn>
 
-					<AgGridColumn enableCellChangeFlash headerName="Exchange" field="exchange" cellRenderer={symbolRenderer} sortable filter resizable></AgGridColumn>
+					<AgGridColumn headerName="Exchange" field="exchange" cellRenderer={symbolRenderer}></AgGridColumn>
 
-					<AgGridColumn enableCellChangeFlash headerName="Price" field="price" sortable filter="agNumberColumnFilter" resizable></AgGridColumn>
+					<AgGridColumn headerName="Price" field="price" filter="agNumberColumnFilter"></AgGridColumn>
 
-					<AgGridColumn
-						enableCellChangeFlash
-						cellStyle={cprStatusCellStyle}
-						cellRenderer={cprStatusCellRenderer}
-						headerName="CPR Status"
-						valueGetter={(params) => CPRStatusGetter(params.data)}
-						sortable
-						filter
-						resizable></AgGridColumn>
+					<AgGridColumn cellStyle={cprStatusCellStyle} cellRenderer={cprStatusCellRenderer} headerName="CPR Status" valueGetter={(params) => CPRStatusGetter(params.data)}></AgGridColumn>
 
-					<AgGridColumn enableCellChangeFlash headerName="Magnet Side" valueGetter={(params) => MagnetSideGetter(params.data)} cellStyle={MagnetSideCellStyle} sortable filter resizable></AgGridColumn>
+					<AgGridColumn headerName="Magnet Side" valueGetter={(params) => MagnetSideGetter(params.data)} cellStyle={MagnetSideCellStyle}></AgGridColumn>
+
+					<AgGridColumn headerName="Situation" valueGetter={(params) => SituationGetter(params.data)} cellStyle={SituationCellStyle}></AgGridColumn>
 
 					<AgGridColumn
-						enableCellChangeFlash
-						headerName="Distance Pivot"
+						headerName="P Distance"
 						valueFormatter={(params) => pivotDistanceFormatter(params.value)}
 						valueGetter={(params) => pivotDistanceGetter(params.data)}
-						sortable
-						filter="agNumberColumnFilter"
-						resizable></AgGridColumn>
+						filter="agNumberColumnFilter"></AgGridColumn>
 
 					<AgGridColumn
-						enableCellChangeFlash
-						headerName="Distance TC"
+						headerName="TC Distance"
 						valueFormatter={(params) => tcDistanceFormatter(params.value)}
 						valueGetter={(params) => tcDistanceGetter(params.data)}
-						sortable
-						filter="agNumberColumnFilter"
-						resizable></AgGridColumn>
+						filter="agNumberColumnFilter"></AgGridColumn>
 
 					<AgGridColumn
-						enableCellChangeFlash
-						headerName="Distance BC"
+						headerName="BC Distance"
 						valueFormatter={(params) => bcDistanceFormatter(params.value)}
 						valueGetter={(params) => bcDistanceGetter(params.data)}
-						sortable
-						filter="agNumberColumnFilter"
-						resizable></AgGridColumn>
+						filter="agNumberColumnFilter"></AgGridColumn>
 
-					<AgGridColumn
-						enableCellChangeFlash
-						headerName="CPR Width"
-						cellRenderer={(params) => CPRWidthRenderer(params.value)}
-						valueGetter={(params) => CPRWidthGetter(params.data)}
-						sortable
-						filter
-						resizable></AgGridColumn>
+					<AgGridColumn headerName="CPR Width" cellRenderer={(params) => CPRWidthRenderer(params.value)} valueGetter={(params) => CPRWidthGetter(params.data)}></AgGridColumn>
 				</AgGridReact>
 			</div>
 
@@ -244,6 +270,9 @@ const CPRTable = observer((props) => {
 						● The percentage shown above the <i>Untested</i> label is the closest approximation to the CPR. <i>Example:</i> Untested <sup>0.1%</sup> means that there was a candle that came within 0.1%
 						of the CPR.
 						<br />● The Sideways/Trending label on the CPR Width column shouldn't be taken seriously, the parameters need to be adjusted.
+						<br />● P Distance is the distance between the current price and the pivot level.
+						<br />● TC Distance is the distance between the current price and the top pivot level.
+						<br />● BC Distance is the distance between the current price and the bottom pivot level.
 					</p>
 				</>
 			)}

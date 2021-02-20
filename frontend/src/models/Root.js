@@ -5,6 +5,8 @@ import { apiFetchTickers } from "../utils/Api";
 import { randomInteger } from "../utils/Helpers";
 import { Ticker } from "./Ticker";
 
+// TODO: Optimize views/computeds (array filter) use cache or something
+
 const RootModel = types
 	.model({
 		tickers: types.array(Ticker),
@@ -47,24 +49,24 @@ const RootModel = types
 
 				return null;
 			},
-			get cprUntestedCount() {
-				return randomInteger(0, 30);
+			cprUntestedCount(timeframe) {
+				return self.tickers.filter((q) => q.getCPR(timeframe).isTested === undefined ? false : !q.getCPR(timeframe).isTested).length;
 			},
-			get cprNeutralCount() {
-				return randomInteger(0, 30);
+			cprNeutralCount(timeframe) {
+				return self.tickers.filter((q) => q.getCPR(timeframe).price_position === "neutral").length;
 			},
-			get cprBelowCount() {
-				return randomInteger(0, 30);
+			cprBelowCount(timeframe) {
+				return self.tickers.filter((q) => q.getCPR(timeframe).price_position === "below").length;
 			},
-			get cprAboveCount() {
-				return randomInteger(0, 30);
+			cprAboveCount(timeframe) {
+				return self.tickers.filter((q) => q.getCPR(timeframe).price_position === "above").length;
 			},
-			get sidewaysCount() {
-				return randomInteger(0, 30);
+			/*sidewaysCount(timeframe) {
+				return self.tickers.filter((q) => !q.getCPR(timeframe)).length;
 			},
-			get trendingCount() {
-				return randomInteger(0, 30);
-			},
+			trendingCount(timeframe) {
+				return self.tickers.filter((q) => !q.getCPR(timeframe)).length;
+			},*/
 		};
 	});
 
