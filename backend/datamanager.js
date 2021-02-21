@@ -14,14 +14,33 @@ function getTickersListByMarketExchange(market, exchange) {
     return (data.tickersList.filter(q => q.market == market && q.exchange == exchange));
 }
 
+function getSymbolsList(markets = undefined) {
+    let result = [];
+
+    data.tickersList.map(q => {
+        if (!markets) {
+            result.push(q.symbol);
+        }
+        else {
+            markets = markets.replace(/\s/g, "").split(",");
+            bMarkets = markets && Array.isArray(markets);
+            if (bMarkets) {
+                markets = markets.map(q => { return q.toLowerCase() });
+            
+                if (markets.includes(q.market)) result.push(q.symbol);
+            }
+        }
+    })
+
+    return result;
+}
+
 function getFilteredTickers(timeframes, markets, symbols) {
     try {
         console.log(timeframes, " ESTO")
         if (symbols) symbols = symbols.replace(/\s/g, "").split(",");
         if (markets) markets = markets.replace(/\s/g, "").split(",");
         if (timeframes) timeframes = timeframes.replace(/\s/g, "").split(",");
-
-        console.log(timeframes);
 
         bSymbols = symbols && Array.isArray(symbols);
         bMarkets = markets && Array.isArray(markets);
@@ -37,18 +56,14 @@ function getFilteredTickers(timeframes, markets, symbols) {
         if (bSymbols) filtered = filtered.filter(q => symbols.includes(q.symbol.toLowerCase()));
         if (bMarkets) filtered =  filtered.filter(q =>  markets.includes(q.market.toLowerCase()));
 
-        console.log("before: "+JSON.stringify(filtered))
         // Remove unwanted timeframes
         if (bTimeframes) {
             filtered.forEach(item => {
                 for (const k of Object.keys(item.candlesticks)) {
-                    console.log(k);
                     if (!timeframes.find(t => t+"Candles" == k)) delete item.candlesticks[k];
                 }
             });
         }
-
-        console.log("returning "+JSON.stringify(filtered))
         
         return filtered;
     }
@@ -67,3 +82,4 @@ exports.addTicker = addTicker;
 exports.getTickersListByMarketExchange = getTickersListByMarketExchange;
 exports.emitDataUpdatedEvent = emitDataUpdatedEvent;
 exports.getFilteredTickers = getFilteredTickers;
+exports.getSymbolsList = getSymbolsList;

@@ -12,6 +12,7 @@
     "axios": "^0.21.1",
     "axios-retry": "^3.1.9",
     "jsonpack": "^1.1.5",
+    "lightweight-charts": "^3.3.0",
     "localforage": "^1.9.0",
     "mobx": "^6.1.7",
     "mobx-react-lite": "^3.2.0",

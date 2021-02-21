@@ -14,7 +14,7 @@ function initialize(app, port) {
 
         console.log("connection received "+socket.id+" "+JSON.stringify(socket.handshake.query));
         socket.on("request_tickers", (query) => {
-            if (query) {
+            if (query && !socket.tickers_query) {
                 // Subscribe socket to data_updated event
                 try {
                     //console.log("received query = "+query)

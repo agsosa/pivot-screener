@@ -26,7 +26,7 @@ const RootModel = types
 		function afterCreate() {
 			socket = io("http://localhost:4001/", {
 				transports: ["websocket"],
-				upgrade: false,
+				upgrade: true,
 				autoConnect: false,
 			});
 
@@ -51,7 +51,7 @@ const RootModel = types
 
 			socket.on("tickers_data", (data) => {
 				self.setTickers(jsonpack.unpack(data));
-				console.log("data received length=" + jsonpack.unpack(data));
+				//console.log("data received length=" + jsonpack.unpack(data));
 			});
 		}
 
@@ -161,7 +161,7 @@ const RootModel = types
 
 let initialState = RootModel.create();
 
-persist("PivotSC", initialState, { 
+persist("PivotSC", initialState, {
 	whitelist: ["statsPanelVisible"], // only these keys will be persisted
 });
 

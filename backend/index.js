@@ -6,6 +6,9 @@ var compression = require('compression')
 var jsonpack = require('jsonpack/main')
 const { validate, ValidationError, Joi } = require('express-validation')
 
+// TODO: POSIBLE MEMORY LEAK. QUIZAS EVENTOS O SOCKET
+// TODO: LIMITAR REQUESTS ANTI DOS
+
 require('./binance_futures');
 
 const app = express();
@@ -31,6 +34,12 @@ const candlesticksValidation = {
     }),
 }
 
+const symbolListValidation = {
+    query: Joi.object({
+        markets: Joi.string().optional()
+    })
+}
+
 app.get('*', (req, res, next) => {
     if (!datamanager.data.isReady) {
         const error = new Error('Not ready');
@@ -52,6 +61,20 @@ app.get('/api/candlesticks', validate(candlesticksValidation, {}, {}), (req, res
         const filtered = datamanager.getFilteredTickers( symbols, markets, timeframes);
     
         res.send(jsonpack.pack(filtered));
+    }
+    catch (e) {
+        const error = new Error(e.toString());
+        error.msg = e.toString();
+        error.status = 404;
+        next(error);
+    }
+});
+
+app.get('/api/symbols-list', validate(candlesticksValidation, {}, {}), (req, res, next) => {
+    try {
+        let { markets } = req.query;
+    
+        res.json(datamanager.getSymbolsList(markets));
     }
     catch (e) {
         const error = new Error(e.toString());
