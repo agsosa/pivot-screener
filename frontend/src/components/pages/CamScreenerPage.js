@@ -16,8 +16,6 @@ export default function CamScreenerPage(props) {
 	}));
 
 	useEffect(() => {
-		startReceivingData("daily, monthly, weekly", props.market);
-
 		return () => {
 			stopReceivingData();
 		};

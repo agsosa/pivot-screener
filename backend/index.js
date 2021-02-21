@@ -31,7 +31,6 @@ const candlesticksValidation = {
     }),
 }
 
-
 app.get('*', (req, res, next) => {
     if (!datamanager.data.isReady) {
         const error = new Error('Not ready');
@@ -50,32 +49,7 @@ app.get('/', (req, res) => {
 app.get('/api/candlesticks', validate(candlesticksValidation, {}, {}), (req, res, next) => {
     try {
         let { symbols, markets, timeframes } = req.query;
-
-        if (symbols) symbols = symbols.split(",");
-        if (markets) markets = markets.split(",");
-        if (timeframes) timeframes = timeframes.split(",");
-
-        bSymbols = symbols && Array.isArray(symbols);
-        bMarkets = markets && Array.isArray(markets);
-        bTimeframes = timeframes && Array.isArray(timeframes);
-
-        bSymbols && symbols.map(q => q.toLowerCase());
-        bMarkets && markets.map(q => q.toLowerCase());
-        bTimeframes && timeframes.map(q => q.toLowerCase());
-
-        let filtered = JSON.parse(JSON.stringify(datamanager.data.tickersList));
-
-        // Filter by tickers and markets parameter
-        filtered = filtered.filter(q => (bSymbols ? symbols.includes(q.symbol.toLowerCase()) : true) && (bMarkets ? markets.includes(q.market.toLowerCase()) : true))
-
-        // Remove unwanted timeframes
-        if (bTimeframes) {
-            filtered.forEach(item => {
-                for (const k of Object.keys(item.candlesticks)) {
-                    if (!timeframes.find(t => t+"Candles" == k)) delete item.candlesticks[k];
-                }
-            });
-        }
+        const filtered = datamanager.getFilteredTickers( symbols, markets, timeframes);
     
         res.send(jsonpack.pack(filtered));
     }
@@ -83,7 +57,6 @@ app.get('/api/candlesticks', validate(candlesticksValidation, {}, {}), (req, res
         const error = new Error(e.toString());
         error.msg = e.toString();
         error.status = 404;
-        //res.send(error.toString());
         next(error);
     }
 });

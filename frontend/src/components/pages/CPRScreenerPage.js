@@ -2,22 +2,23 @@ import { Breadcrumb, Result, Tabs } from "antd";
 import { Content } from "antd/lib/layout/layout";
 import React, { useEffect } from "react";
 import { useMst } from "../../models/Root";
+import { Tag } from "antd";
+import { CheckCircleOutlined, SyncOutlined, CloseCircleOutlined, ExclamationCircleOutlined, ClockCircleOutlined, MinusCircleOutlined } from "@ant-design/icons";
+
 import { capitalizeFirstLetter } from "../../utils/Helpers";
 import { isValidMarket } from "../../utils/Markets";
-import CPRStats from "../CPRStats";
 import CPRTable from "../CPRTable";
+import { observer } from "mobx-react-lite";
 
-export default function CPRScreenerPage(props) {
-	let interval;
-
+const CPRScreenerPage = observer((props) => {
 	const market = props.match.params.market;
 	const valid_market = market && isValidMarket(market);
 	const { TabPane } = Tabs;
 
-	const { fetchTickers, startReceivingData, stopReceivingData } = useMst((store) => ({
-		fetchTickers: store.fetchTickers,
+	const { startReceivingData, stopReceivingData, socketConnected } = useMst((store) => ({
 		startReceivingData: store.startReceivingData,
 		stopReceivingData: store.stopReceivingData,
+		socketConnected: store.socketConnected,
 	}));
 
 	useEffect(() => {
@@ -27,7 +28,7 @@ export default function CPRScreenerPage(props) {
 			f();
 			interval = setInterval(f, 5000); // TODO: PASS MARKET*/
 
-			startReceivingData("daily, monthly, weekly", market);
+			startReceivingData("daily, weekly, monthly", market, "BTCUSDT");
 		}
 
 		return () => {
@@ -44,6 +45,18 @@ export default function CPRScreenerPage(props) {
 					<Breadcrumb.Item>{capitalizeFirstLetter(market)}</Breadcrumb.Item>
 				</Breadcrumb>
 
+				<div style={{ textAlign: "right", marginTop: -25, marginRight: "10%", transform: "scale(1.2)" }}>
+					{socketConnected ? (
+						<Tag icon={<CheckCircleOutlined />} color="success">
+							ONLINE
+						</Tag>
+					) : (
+						<Tag icon={<CloseCircleOutlined />} color="error">
+							OFFLINE
+						</Tag>
+					)}
+				</div>
+
 				{!valid_market ? (
 					<Result status="404" title="404" subTitle="Sorry, the page you visited does not exist." />
 				) : (
@@ -58,13 +71,13 @@ export default function CPRScreenerPage(props) {
 							<TabPane tab="Monthly" key="3">
 								<CPRTable timeframe="monthly" market={market} />
 							</TabPane>
-							<TabPane tab="Tomorrow" key="3" disabled>
+							<TabPane tab="Tomorrow" key="4" disabled>
 								<CPRTable timeframe="tomorrow" market={market} />
 							</TabPane>
-							<TabPane tab="Next Week" key="3" disabled>
+							<TabPane tab="Next Week" key="5" disabled>
 								<CPRTable timeframe="nextweek" market={market} />
 							</TabPane>
-							<TabPane tab="Next Month" key="3" disabled>
+							<TabPane tab="Next Month" key="6" disabled>
 								<CPRTable timeframe="nextmonth" market={market} />
 							</TabPane>
 						</Tabs>
@@ -73,4 +86,6 @@ export default function CPRScreenerPage(props) {
 			</div>
 		</Content>
 	);
-}
+});
+
+export default CPRScreenerPage;

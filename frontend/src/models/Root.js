@@ -14,8 +14,9 @@ import jsonpack from "jsonpack";
 const RootModel = types
 	.model("RootModel", {
 		tickers: types.array(Ticker),
-		statsPanelVisible: types.boolean,
+		statsPanelVisible: true,
 		symbolsList: types.array(types.string),
+		socketConnected: false,
 	})
 	.actions((self) => {
 		let socket;
@@ -27,21 +28,20 @@ const RootModel = types
 				transports: ["websocket"],
 				upgrade: false,
 				autoConnect: false,
-				query: {
-					x: 42, // TODO: REMOVE
-				},
 			});
 
 			console.log("hi");
 
 			socket.on("connect", (data) => {
-				console.log("connect");
-				if (currentQuery != null) socket.emit("request_tickers", currentQuery);
+				self.setSocketConnected(true);
+				console.log("reconnect");
+				if (currentQuery != null) socket.emit("request_tickers", JSON.stringify(currentQuery));
 
 				console.log(socket.id);
 			});
 
 			socket.on("disconnect", (reason) => {
+				self.setSocketConnected(false);
 				console.log("disconnect reason: " + reason);
 			});
 
@@ -50,13 +50,18 @@ const RootModel = types
 			});
 
 			socket.on("tickers_data", (data) => {
-				console.log("tickers_data " + data);
 				self.setTickers(jsonpack.unpack(data));
+				console.log("data received length=" + jsonpack.unpack(data));
 			});
 		}
 
 		function setTickers(data) {
 			self.tickers = data;
+		}
+
+		function setSocketConnected(b) {
+			self.socketConnected = b;
+			console.log("setisSocketConnected " + self.socketConnected);
 		}
 
 		function beforeDestroy() {
@@ -65,12 +70,12 @@ const RootModel = types
 			socket = null;
 		}
 
-		const startReceivingData = function (timeframes, market, symbols) {
+		const startReceivingData = function (timeframes = undefined, markets = undefined, symbols = undefined) {
 			if (socket && !socket.connected) socket.connect();
 
-			currentQuery = { timeframes: timeframes, market: market, symbols: symbols }; // Used on reconnection
+			currentQuery = { timeframes: timeframes, markets: markets, symbols: symbols }; // Used on reconnection
 
-			console.log("start receiving data");
+			console.log("start receiving data " + JSON.stringify(currentQuery));
 
 			if (socket) {
 				socket.emit("request_tickers", JSON.stringify(currentQuery));
@@ -108,6 +113,7 @@ const RootModel = types
 			startReceivingData,
 			stopReceivingData,
 			setTickers,
+			setSocketConnected,
 		};
 	})
 	.views((self) => {
@@ -153,11 +159,9 @@ const RootModel = types
 		};
 	});
 
-let initialState = RootModel.create({
-	statsPanelVisible: true,
-});
+let initialState = RootModel.create();
 
-persist("PivotSC", initialState, {
+persist("PivotSC", initialState, { 
 	whitelist: ["statsPanelVisible"], // only these keys will be persisted
 });
 

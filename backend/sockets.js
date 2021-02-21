@@ -16,10 +16,19 @@ function initialize(app, port) {
         socket.on("request_tickers", (query) => {
             if (query) {
                 // Subscribe socket to data_updated event
-                socket.tickers_query = query;
+                try {
+                    //console.log("received query = "+query)
+                    query = JSON.parse(query);
+                    socket.tickers_query = query;
+                    //console.log(JSON.stringify(query)+" connected")
 
-                // Send data NOW if available
-                if (datamanager.data.isReady) socket.emit("tickers_data", jsonpack.pack(datamanager.data.tickersList));
+                    // Send data NOW if available
+                    // TODO: Arreglar, enviar filtrada
+                    if (datamanager.data.isReady && query) socket.emit("tickers_data", jsonpack.pack(datamanager.getFilteredTickers(query.timeframes, query.markets, query.symbols)))
+                }
+                catch (e) {
+                    console.log(e.toString());
+                }
             }
         });
 
@@ -39,9 +48,14 @@ datamanager.eventEmitter.on('data_updated', () => {
     const sockets = io.of("/").sockets
 
     for (const [key, value] of sockets.entries()) {
-        console.log(value.tickers_query);
         const socket = namespace.to(key);
-        socket.emit("tickers_data", jsonpack.pack(datamanager.data.tickersList))
+        const query = value.tickers_query;
+        if (query) {
+            console.log("datamanagerEventEmitter " + query+" "+query.timeframes);
+            socket.emit("tickers_data", jsonpack.pack(datamanager.getFilteredTickers(query.timeframes, query.markets, query.symbols)))
+        }
+
+        //
     }
 
 });
