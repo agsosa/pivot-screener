@@ -14,8 +14,12 @@ function getTickersListByMarketExchange(market, exchange) {
     return (data.tickersList.filter(q => q.market == market && q.exchange == exchange));
 }
 
+function emitDataUpdatedEvent() {
+    eventEmitter.emit('data_updated');
+}
 
 exports.data = data;
 exports.eventEmitter = eventEmitter
 exports.addTicker = addTicker;
 exports.getTickersListByMarketExchange = getTickersListByMarketExchange;
+exports.emitDataUpdatedEvent = emitDataUpdatedEvent;

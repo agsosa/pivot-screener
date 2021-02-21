@@ -9,8 +9,19 @@ const { validate, ValidationError, Joi } = require('express-validation')
 require('./binance_futures');
 
 const app = express();
-const port = 4000;
 
+// Middlewares
+app.use(compression())
+app.use(cors());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
+const port = 4000;
+const sockets_port = 4001;
+const sockets = require('./sockets.js');
+sockets.initialize(app, sockets_port);
+
+console.log("Socket Initialized on port "+sockets_port)
 // Validations
 const candlesticksValidation = {
     query: Joi.object({
@@ -20,11 +31,6 @@ const candlesticksValidation = {
     }),
 }
 
-// Middlewares
-app.use(compression())
-app.use(cors());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
 
 app.get('*', (req, res, next) => {
     if (!datamanager.data.isReady) {
@@ -35,9 +41,8 @@ app.get('*', (req, res, next) => {
     else next();
 });
 
-// Endpoints
 app.get('/', (req, res) => {
-    res.send('OK');
+    res.send("OK");
 });
 
 // /api/candlesticks. Query parameters acepted: tickers, markets, timeframes (daily, monthly, weekly, hourly).
@@ -82,38 +87,6 @@ app.get('/api/candlesticks', validate(candlesticksValidation, {}, {}), (req, res
         next(error);
     }
 });
-
-// server-sent event stream
-/*app.get('/events', function (req, res) {
-    res.set({
-        'Cache-Control': 'no-cache',
-        'Content-Type': 'text/event-stream',
-        'Connection': 'keep-alive'
-      });
-    res.flushHeaders();
-
-    res.write('retry: 5000\n\n');
-  
-    // send a ping approx every 2 seconds
-    /*var timer = setInterval(function () {
-      res.write('data: ping\n\n')
-  
-      res.flush()
-    }, 2000)*/
-  
-    /*let myEventHandler = function () {
-        res.write('data: ping\n\n')
-  
-        res.flush()
-    }
-
-    datamanager.eventEmitter.on('scream', myEventHandler);
-    
-    res.on('close', function () {
-      //clearInterval(timer)
-      datamanager.eventEmitter.removeListener('scream', myEventHandler);
-    })
-})*/
 
 app.use(function(err, req, res, next) {
     if (err instanceof ValidationError) {

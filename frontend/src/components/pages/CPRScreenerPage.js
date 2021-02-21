@@ -14,19 +14,25 @@ export default function CPRScreenerPage(props) {
 	const valid_market = market && isValidMarket(market);
 	const { TabPane } = Tabs;
 
-	const { fetchTickers } = useMst((store) => ({
+	const { fetchTickers, startReceivingData, stopReceivingData } = useMst((store) => ({
 		fetchTickers: store.fetchTickers,
+		startReceivingData: store.startReceivingData,
+		stopReceivingData: store.stopReceivingData,
 	}));
 
 	useEffect(() => {
 		if (valid_market) {
+			/*
 			const f = () => fetchTickers("daily, monthly, weekly");
 			f();
-			interval = setInterval(f, 5000); // TODO: PASS MARKET
+			interval = setInterval(f, 5000); // TODO: PASS MARKET*/
+
+			startReceivingData("daily, monthly, weekly", market);
 		}
 
 		return () => {
-			if (interval) clearInterval(interval);
+			//if (interval) clearInterval(interval);
+			stopReceivingData();
 		};
 	}, []);
 

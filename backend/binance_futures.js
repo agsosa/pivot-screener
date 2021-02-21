@@ -41,7 +41,7 @@ function fetchTickersList() {
    return new Promise(async (resolve, reject) => {
        let candlesticksObjQueue = [];
 
-        console.log("Running fetchTickersData()...");
+        //console.log("Running fetchTickersData()...");
         let promises = [];
 
         // For each ticker in tickerList initialize data object and push to data.tickersData
@@ -126,9 +126,11 @@ function loop() {
     if (initialized) {
         
         fetchTickersData().then(() => {
-            console.log("loop() done. Next interval in "+loop_interval+" seconds");
+            //console.log("loop() done. Next interval in "+loop_interval+" seconds");
 
             if (!datamanager.data.isReady) datamanager.data.isReady = true;
+
+            datamanager.emitDataUpdatedEvent();
 
             setTimeout(() => {
                 loop();

@@ -6,6 +6,8 @@ import { randomInteger } from "../utils/Helpers";
 import { Ticker } from "./Ticker";
 import localForage from "localforage";
 import { persist } from "mst-persist";
+import { io } from "socket.io-client";
+import jsonpack from "jsonpack";
 
 // TODO: Optimize views/computeds (array filter) use cache or something
 
@@ -13,12 +15,76 @@ const RootModel = types
 	.model("RootModel", {
 		tickers: types.array(Ticker),
 		statsPanelVisible: types.boolean,
+		symbolsList: types.array(types.string),
 	})
-	.actions((self) => ({
-		toggleStatsPanel: function () {
-			self.statsPanelVisible = !self.statsPanelVisible;
-		},
-		fetchTickers: flow(function* _callFetchApi(timeframes, symbols) {
+	.actions((self) => {
+		let socket;
+
+		let currentQuery = null;
+
+		function afterCreate() {
+			socket = io("http://localhost:4001/", {
+				transports: ["websocket"],
+				upgrade: false,
+				autoConnect: false,
+				query: {
+					x: 42, // TODO: REMOVE
+				},
+			});
+
+			console.log("hi");
+
+			socket.on("connect", (data) => {
+				console.log("connect");
+				if (currentQuery != null) socket.emit("request_tickers", currentQuery);
+
+				console.log(socket.id);
+			});
+
+			socket.on("disconnect", (reason) => {
+				console.log("disconnect reason: " + reason);
+			});
+
+			socket.on("connect_error", (err) => {
+				console.log("Socket error: " + err);
+			});
+
+			socket.on("tickers_data", (data) => {
+				console.log("tickers_data " + data);
+				self.setTickers(jsonpack.unpack(data));
+			});
+		}
+
+		function setTickers(data) {
+			self.tickers = data;
+		}
+
+		function beforeDestroy() {
+			currentQuery = null;
+			socket.close();
+			socket = null;
+		}
+
+		const startReceivingData = function (timeframes, market, symbols) {
+			if (socket && !socket.connected) socket.connect();
+
+			currentQuery = { timeframes: timeframes, market: market, symbols: symbols }; // Used on reconnection
+
+			console.log("start receiving data");
+
+			if (socket) {
+				socket.emit("request_tickers", JSON.stringify(currentQuery));
+			}
+		};
+
+		const stopReceivingData = function () {
+			// unsuscribe rooms
+			currentQuery = null;
+			self.tickers.clear();
+			socket.close();
+		};
+
+		const fetchTickers = flow(function* _callFetchApi(timeframes, symbols) {
 			//self.tickers.clear();
 			try {
 				let result = yield apiFetchTickers(timeframes, symbols);
@@ -26,8 +92,24 @@ const RootModel = types
 			} catch (error) {
 				console.error("Failed to fetch projects", error);
 			}
-		}),
-	}))
+		});
+
+		// const fetchSymbols List etc.
+
+		const toggleStatsPanel = function () {
+			self.statsPanelVisible = !self.statsPanelVisible;
+		};
+
+		return {
+			afterCreate,
+			beforeDestroy,
+			fetchTickers,
+			toggleStatsPanel,
+			startReceivingData,
+			stopReceivingData,
+			setTickers,
+		};
+	})
 	.views((self) => {
 		return {
 			get remainingCloseTime() {

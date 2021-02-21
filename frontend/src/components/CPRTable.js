@@ -217,7 +217,7 @@ const CPRTable = observer((props) => {
 					}}
 					defaultColDef={{
 						enableCellChangeFlash: true,
-						editable: true,
+						editable: false,
 						sortable: true,
 						flex: 1,
 						filter: true,
