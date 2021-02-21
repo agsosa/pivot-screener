@@ -1,4 +1,4 @@
-import { Breadcrumb, Result, Tabs } from "antd";
+import { Result, Tabs } from "antd";
 import { Content } from "antd/lib/layout/layout";
 import React, { useEffect } from "react";
 import { useMst } from "../../models/Root";
@@ -9,16 +9,16 @@ import { capitalizeFirstLetter } from "../../utils/Helpers";
 import { isValidMarket } from "../../utils/Markets";
 import CPRTable from "../CPRTable";
 import { observer } from "mobx-react-lite";
+import Breadcrumb from "../Breadcrumb";
 
 const CPRScreenerPage = observer((props) => {
 	const market = props.match.params.market;
 	const valid_market = market && isValidMarket(market);
 	const { TabPane } = Tabs;
 
-	const { startReceivingData, stopReceivingData, socketConnected } = useMst((store) => ({
+	const { startReceivingData, stopReceivingData } = useMst((store) => ({
 		startReceivingData: store.startReceivingData,
 		stopReceivingData: store.stopReceivingData,
-		socketConnected: store.socketConnected,
 	}));
 
 	useEffect(() => {
@@ -28,7 +28,7 @@ const CPRScreenerPage = observer((props) => {
 			f();
 			interval = setInterval(f, 5000); // TODO: PASS MARKET*/
 
-			startReceivingData("daily, weekly, monthly", market, "BTCUSDT");
+			startReceivingData("daily, weekly, monthly", market);
 		}
 
 		return () => {
@@ -40,22 +40,7 @@ const CPRScreenerPage = observer((props) => {
 	return (
 		<Content>
 			<div className="site-layout-background" style={{ padding: 24, minHeight: 360, marginTop: 10, textAlign: "center" }}>
-				<Breadcrumb style={{ marginTop: -5, paddingBottom: 5, textAlign: "left" }}>
-					<Breadcrumb.Item>CPR Screener</Breadcrumb.Item>
-					<Breadcrumb.Item>{capitalizeFirstLetter(market)}</Breadcrumb.Item>
-				</Breadcrumb>
-
-				<div style={{ textAlign: "right", marginTop: -25, marginRight: "10%", transform: "scale(1.2)" }}>
-					{socketConnected ? (
-						<Tag icon={<CheckCircleOutlined />} color="success">
-							ONLINE
-						</Tag>
-					) : (
-						<Tag icon={<CloseCircleOutlined />} color="error">
-							OFFLINE
-						</Tag>
-					)}
-				</div>
+				<Breadcrumb items={["CPR Screener", capitalizeFirstLetter(market)]} />
 
 				{!valid_market ? (
 					<Result status="404" title="404" subTitle="Sorry, the page you visited does not exist." />

@@ -1,9 +1,10 @@
-import { Breadcrumb, Result } from "antd";
+import { Result } from "antd";
 import { Content } from "antd/lib/layout/layout";
 import React, { useEffect } from "react";
 import { capitalizeFirstLetter } from "../../utils/Helpers";
 import { isValidMarket } from "../../utils/Markets";
 import { useMst } from "../../models/Root";
+import Breadcrumb from "./../Breadcrumb";
 
 export default function CamScreenerPage(props) {
 	const market = props.match.params.market;
@@ -24,10 +25,7 @@ export default function CamScreenerPage(props) {
 	return (
 		<Content>
 			<div className="site-layout-background" style={{ padding: 24, minHeight: 360, marginTop: 10, textAlign: "center" }}>
-				<Breadcrumb style={{ marginTop: -5, paddingBottom: 5, textAlign: "left" }}>
-					<Breadcrumb.Item>Camarilla Screener</Breadcrumb.Item>
-					<Breadcrumb.Item>{capitalizeFirstLetter(market)}</Breadcrumb.Item>
-				</Breadcrumb>
+				<Breadcrumb items={["Camarilla Screener", capitalizeFirstLetter(market)]} />
 
 				{!valid_market ? <Result status="404" title="404" subTitle="Sorry, the page you visited does not exist." /> : <>{market}</>}
 			</div>

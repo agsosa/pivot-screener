@@ -1,8 +1,9 @@
 import { CalculatorFilled, DeleteFilled } from "@ant-design/icons";
-import { Breadcrumb, Button, Divider, InputNumber, message, Space, Tag } from "antd";
+import { Button, Divider, InputNumber, message, Space, Tag } from "antd";
 import { Content } from "antd/lib/layout/layout";
 import React, { useState } from "react";
 import { calculateCamarilla, calculateCPR, toFixedEx } from "../../utils/Helpers";
+import Breadcrumb from "./../Breadcrumb";
 
 export default function CalculatorPage(props) {
 	const defaultState = {
@@ -73,10 +74,7 @@ export default function CalculatorPage(props) {
 	return (
 		<Content>
 			<div className="site-layout-background" style={{ padding: 24, minHeight: 360, marginTop: 10, textAlign: "center" }}>
-				<Breadcrumb style={{ marginTop: -5, paddingBottom: 5, textAlign: "left" }}>
-					<Breadcrumb.Item>Other tools</Breadcrumb.Item>
-					<Breadcrumb.Item>CPR and Camarilla Calculator</Breadcrumb.Item>
-				</Breadcrumb>
+				<Breadcrumb items={["Other Tools", "CPR and Camarilla Calculator"]} />
 
 				<h1>Central Pivot Range and Camarilla Support/Resistance Calculator</h1>
 

@@ -9,6 +9,7 @@ import { useMst } from "../models/Root";
 import { capitalizeFirstLetter } from "../utils/Helpers";
 import "./AGGridOverrides.css";
 import CPRStats from "./CPRStats";
+import SocketStatus from "./SocketStatus";
 
 const CPRTable = observer((props) => {
 	let dispose;
@@ -199,10 +200,9 @@ const CPRTable = observer((props) => {
 					{capitalizeFirstLetter(props.market)} / {capitalizeFirstLetter(props.timeframe)}
 				</h1>{" "}
 				<Badge style={{ backgroundColor: "#2196F3", marginBottom: 7 }} count={tickers.length} />
+				<SocketStatus style={{ marginBottom: 5 }} />
 			</Space>
-
 			<p style={{ marginTop: -5 }}>You can filter and sort any column. The data is updated automatically.</p>
-
 			<div className="ag-theme-material" style={{ height: 700, width: "100%" }}>
 				{/*<Button onClick={test}>test</Button>*/}
 				<AgGridReact
@@ -263,7 +263,6 @@ const CPRTable = observer((props) => {
 					<AgGridColumn headerName="CPR Width" cellRenderer={(params) => CPRWidthRenderer(params.value)} valueGetter={(params) => CPRWidthGetter(params.data)}></AgGridColumn>
 				</AgGridReact>
 			</div>
-
 			{!tickers || tickers.length === 0 ? (
 				<Skeleton />
 			) : (
