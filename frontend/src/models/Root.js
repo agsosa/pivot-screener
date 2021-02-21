@@ -1,7 +1,7 @@
 import { flow, types } from "mobx-state-tree";
 import moment from "moment";
 import { createContext, useContext } from "react";
-import { apiFetchTickers } from "../utils/Api";
+import { apiFetchTickers, apiFetchCandlesticksLocally } from "../utils/Api";
 import { randomInteger } from "../utils/Helpers";
 import { Ticker } from "./Ticker";
 import localForage from "localforage";
@@ -71,6 +71,7 @@ const RootModel = types
 		}
 
 		const startReceivingData = function (timeframes = undefined, markets = undefined, symbols = undefined) {
+			// TODO: Change to named arguments/object
 			if (socket && !socket.connected) socket.connect();
 
 			currentQuery = { timeframes: timeframes, markets: markets, symbols: symbols }; // Used on reconnection
@@ -89,16 +90,6 @@ const RootModel = types
 			socket.close();
 		};
 
-		const fetchTickers = flow(function* _callFetchApi(timeframes, symbols) {
-			//self.tickers.clear();
-			try {
-				let result = yield apiFetchTickers(timeframes, symbols);
-				self.tickers = result;
-			} catch (error) {
-				console.error("Failed to fetch projects", error);
-			}
-		});
-
 		// const fetchSymbols List etc.
 
 		const toggleStatsPanel = function () {
@@ -108,7 +99,6 @@ const RootModel = types
 		return {
 			afterCreate,
 			beforeDestroy,
-			fetchTickers,
 			toggleStatsPanel,
 			startReceivingData,
 			stopReceivingData,

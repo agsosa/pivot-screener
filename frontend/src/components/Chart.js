@@ -1,37 +1,161 @@
 import { createChart, CrosshairMode, LineStyle, PriceScaleMode } from "lightweight-charts";
-import React from "react";
+import React, { useState, useRef } from "react";
 import { percentage } from "../utils/Helpers";
+import { observer } from "mobx-react-lite";
+import { useMst } from "./../models/Root";
+import { reaction, autorun } from "mobx";
+import moment from "moment";
+import { Switch, Space, Button } from "antd";
 
-const marginPctHeight = 0;
-const marginPctWidth = 0;
+export const Chart = observer((props) => {
+	/*const [chart, setChart] = useState();
+	const [series, setSeries] = useState();*/
+	const chart = useRef(null);
+	const series = useRef(null);
+	const dispose = useRef(null);
+	const drawings = useRef({ dailyCPR: [], weeklyCPR: [], monthlyCPR: [], dailyCam: [], weeklyCam: [], monthlyCam: [] });
+	const lastData = useRef(null);
 
-let chart;
-let series;
+	const { tickers } = useMst((store) => ({
+		tickers: store.tickers,
+	}));
 
-const resizeObserver = new ResizeObserver((entries) => {
-	if (chart) {
-		chart.resize(
-			entries[0].target.offsetWidth - percentage(marginPctWidth, entries[0].target.offsetWidth),
-			entries[0].target.offsetHeight - percentage(marginPctHeight, entries[0].target.offsetHeight)
-		);
-	}
-});
+	dispose.current = reaction(
+		() => tickers,
+		(tickers) => {
+			if (tickers && tickers.length >= 1) {
+				if (!lastData.current || tickers[0].price !== lastData.current.price) updateChart(tickers[0]);
+			}
+		},
+		{ fireImmediately: true }
+	);
 
-export const Chart = (props) => {
 	const chartRef = React.useRef(null);
 
-	React.useEffect(() => {
-		// Create chart
-		if (chartRef.current) {
-			console.log("hola");
+	const marginPctHeight = 0;
+	const marginPctWidth = 0;
 
+	const resizeObserver = new ResizeObserver((entries) => {
+		if (chart.current) {
+			chart.current.resize(
+				entries[0].target.offsetWidth - percentage(marginPctWidth, entries[0].target.offsetWidth),
+				entries[0].target.offsetHeight - percentage(marginPctHeight, entries[0].target.offsetHeight)
+			);
+		}
+	});
+
+	function updateChart(data) {
+		if (data) {
+			console.log("Chart updateChart symbol = " + data.symbol + "price = " + data.price);
+			if (data.candlesticks && data.candlesticks.hourlyCandles && data.candlesticks.dailyCandles) {
+				series.current.setData([]);
+
+				chart.current.applyOptions({
+					watermark: {
+						color: "rgba(11, 0, 0, 0.4)",
+						visible: true,
+						text: data.symbol + " (1h)",
+						fontSize: 38,
+						horzAlign: "right",
+						vertAlign: "bottom",
+					},
+				});
+
+				/*data.candlesticks.dailyCandles.sort(function (a, b) {
+				return new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime();
+			});*/
+
+				for (let i = 0; i < data.candlesticks.hourlyCandles.length; i++) {
+					let e = data.candlesticks.hourlyCandles[i];
+					let d = {};
+					d.open = +e.open;
+					d.high = +e.high;
+					d.low = +e.low;
+					d.close = +e.close;
+					d.time = new Date(e.timestamp) / 1000;
+					series.current.update(d);
+				}
+
+				console.log("1");
+				// initializeDrawings solo debe ser llamado cuando se cambie de symbol o cuando se detecte una nueva dailyCandle
+				//if (lastData && (lastData.symbol != data.symbol || lastData.candlesticks.dailyCandles != data.candlesticks.dailyCandles)) clearDrawings();
+				if (!lastData.current) initializeDrawings(data);
+				else {
+					console.log("xd");
+					const a = lastData.current.candlesticks.dailyCandles;
+					const b = data.candlesticks.dailyCandles;
+					if (a[a.length - 1].timestamp !== b[b.length - 1].timestamp || lastData.symbol !== data.symbol) {
+						initializeDrawings(data);
+					}
+				}
+				console.log("End of updatedat");
+				lastData.current = data;
+			}
+		}
+	}
+
+	function initializeDrawings(data) {
+		if (data) {
+			clearDrawings();
+			console.log("initializedrawings");
+
+			const timeframes = [
+				["daily", "green"],
+				["weekly", "blue"],
+				["monthly", "red"],
+			];
+
+			timeframes.forEach((t) => {
+				const label = t[0];
+				const color = t[1];
+				// CPR
+				const cpr = data.getCPR(label);
+				if (cpr) {
+					const p = series.current.createPriceLine({ price: cpr.p, color: color, lineWidth: 3, lineStyle: LineStyle.Dotted, axisLabelVisible: true, title: label + " P" });
+					const bc = series.current.createPriceLine({ price: cpr.bc, color: color, lineWidth: 3, lineStyle: LineStyle.Dotted, axisLabelVisible: true, title: label + " BC" });
+					const tc = series.current.createPriceLine({ price: cpr.tc, color: color, lineWidth: 3, lineStyle: LineStyle.Dotted, axisLabelVisible: true, title: label + " TC" });
+					drawings.current[label + "CPR"] = [p, bc, tc];
+				}
+
+				const cam = data.getCamarilla(label);
+				if (cam) {
+					for (const [key, value] of Object.entries(cam)) {
+						const obj = series.current.createPriceLine({ price: cam[key], color: color, lineWidth: 2, lineStyle: LineStyle.Solid, axisLabelVisible: true, title: label + " " + key.toUpperCase() });
+						drawings.current[label + "Cam"].push(obj);
+					}
+				}
+			});
+		}
+	}
+
+	function clearDrawings() {
+		console.log("clearDrawings llamado");
+
+		for (const [key, value] of Object.entries(drawings.current)) {
+			console.log(`${key}: ${value}`);
+			drawings.current[key].map((q) => series.current.removePriceLine(q));
+			drawings.current[key] = [];
+		}
+		console.log("end of cleardrawings");
+
+		/*drawings.forEach((d) => {
+			d.forEach((q) => {
+				series.removePriceLine(q);
+			});
+
+			d = [];
+		});*/
+	}
+
+	React.useEffect(() => {
+		if (chartRef.current) {
 			resizeObserver.observe(chartRef.current);
 
 			let box = document.getElementsByClassName("site-layout-background")[0];
 			let width = box.offsetWidth - percentage(marginPctWidth, box.offsetWidth);
 			let height = box.offsetHeight - percentage(marginPctHeight, box.offsetHeight);
 
-			chart = createChart(chartRef.current, {
+			chart.current = createChart(chartRef.current, {
 				width: width,
 				height: height,
 				localization: {
@@ -62,7 +186,7 @@ export const Chart = (props) => {
 				},
 			});
 
-			series = chart.addCandlestickSeries({
+			series.current = chart.current.addCandlestickSeries({
 				upColor: "rgb(38,166,154)",
 				downColor: "rgb(255,82,82)",
 				wickUpColor: "rgb(38,166,154)",
@@ -70,11 +194,11 @@ export const Chart = (props) => {
 				borderVisible: false,
 			});
 
-			series.applyOptions({ priceLineVisible: false, priceFormat: { type: "price", minMove: 0.0000001, precision: 8 } });
+			series.current.applyOptions({ priceLineVisible: false, priceFormat: { type: "price", minMove: 0.0000001, precision: 8 } });
 
-			chart.applyOptions({
+			chart.current.applyOptions({
 				timeScale: {
-					rightOffset: 100,
+					rightOffset: 50,
 				},
 				crosshair: {
 					mode: CrosshairMode.Normal,
@@ -86,20 +210,60 @@ export const Chart = (props) => {
 			});
 
 			//InitializeDrawings();
-
-			if (props.onLoadComplete) {
-				props.onLoadComplete();
-			}
+			//updateChart();
+			if (props.onLoadComplete) props.onLoadComplete();
 		}
 
 		return () => {
 			// On unmount
-			chart.remove();
-			chart = null;
-			series = null;
+			chart.current.remove();
+			dispose.current();
 			//currentSymbolData = null;
 		};
 	}, []);
 
-	return <div ref={chartRef} />;
-};
+	return (
+		<>
+			<Space direction="vertical">
+				<Space>
+					<span style={{ marginRight: 10 }}>
+						<Button primary>Toggle Daily</Button>
+					</span>
+					<span style={{ marginRight: 10 }}>
+						<Button primary>Toggle Weekly</Button>
+					</span>
+					<span style={{ marginRight: 10 }}>
+						<Button primary>Toggle Monthly</Button>
+					</span>
+					<span style={{ marginRight: 20 }}>
+						Future pivots mode: <Switch size="small" defaultChecked={false} />
+					</span>
+				</Space>
+				<Space>
+					<span style={{ marginRight: 20 }}>
+						Daily CPR: <Switch size="small" defaultChecked />
+					</span>
+
+					<span style={{ marginRight: 20 }}>
+						Weekly CPR: <Switch size="small" defaultChecked />
+					</span>
+					<span style={{ marginRight: 20 }}>
+						Monthly CPR: <Switch size="small" defaultChecked />
+					</span>
+				</Space>
+				<Space>
+					<span style={{ marginRight: 20 }}>
+						Daily Camarilla: <Switch size="small" defaultChecked />
+					</span>
+					<span style={{ marginRight: 20 }}>
+						Weekly Camarilla: <Switch size="small" defaultChecked />
+					</span>
+					<span style={{ marginRight: 20 }}>
+						Monthly Camarilla: <Switch size="small" defaultChecked />
+					</span>
+				</Space>
+			</Space>
+			<div ref={chartRef} />
+		</>
+	);
+});

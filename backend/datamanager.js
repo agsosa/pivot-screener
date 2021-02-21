@@ -35,6 +35,24 @@ function getSymbolsList(markets = undefined) {
     return result;
 }
 
+// TODO: Implementar guardado de historial y fetch inteligente de velas. X ej que no fechee las velas de 1h a cada rato sino cada menos tiempo, aprovechar el ticker model views, solo se van necesitando nuevas velas y lo demas mantener actualizado 1 candlestick para saber si se testeo el cpr o no
+/*
+SEPARAR HOURLYCANDLES DE DAILY-WEEKLY-MONTHLY y actualizarlas mas lento
+>>>>>>>>o QUIZAS USAR AL CLIENTE PARA SACAR LAS HOURLYCANDLES
+
+
+IDEA DESCARTADA
+1) tomar el simbol list
+2) para cada symbol tomar velas historicas, colocar timestamp
+3) mantener un intervalo de 1 seg esperando cierta diferencia entre date.now y timestamp
+4) cuando se cumpla ese intervalo (x ej 1h, 24h) intentar refrezcar velas historicas
+
+refreshCandlesticks
+refreshCurrentOHLC
+
+mantener un OHLC actual apartado de candlesticks actualizandose con All Market Mini Tickers Stream
+(y un canal de websockets para enviar esto tmb)
+*/
 function getFilteredTickers(timeframes, markets, symbols) {
     try {
         console.log(timeframes, " ESTO")

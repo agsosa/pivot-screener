@@ -58,6 +58,7 @@ function fetchTickersList() {
             // For every timeframe grab candlesticks for each ticker
             timeframes.forEach(async t => {
                 const url = `https://fapi.binance.com/fapi/v1/klines?symbol=${tickerObj.symbol}&interval=${t.interval}&limit=${t.limit}`;
+                console.log(url)
                 
                 let prom = fetch(url).then(function(response) {
                         response.json().then(data => {

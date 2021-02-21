@@ -51,7 +51,7 @@ datamanager.eventEmitter.on('data_updated', () => {
         const socket = namespace.to(key);
         const query = value.tickers_query;
         if (query) {
-            console.log("datamanagerEventEmitter " + query+" "+query.timeframes);
+            console.log("datamanagerEventEmitter " + JSON.stringify(query));
             socket.emit("tickers_data", jsonpack.pack(datamanager.getFilteredTickers(query.timeframes, query.markets, query.symbols)))
         }
 

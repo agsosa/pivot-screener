@@ -76,5 +76,33 @@ export const Ticker = types
 
 				return result;
 			},
+			getCamarilla(timeframe, future = false) {
+				let result = {
+					h3: undefined,
+					h4: undefined,
+					h5: undefined,
+					h6: undefined,
+					l3: undefined,
+					l4: undefined,
+					l5: undefined,
+					l6: undefined,
+				};
+				const currSession = self.getCurrentSessionOHLC(timeframe);
+				const session = future ? currSession : self.getPreviousSessionOHLC(timeframe);
+
+				if (!session) return result;
+
+				const range = session.high - session.low;
+				result.h4 = session.close + (range * 1.1) / 2;
+				result.h3 = session.close + (range * 1.1) / 4;
+				result.l3 = session.close - (range * 1.1) / 4;
+				result.l4 = session.close - (range * 1.1) / 2;
+				result.h6 = (session.high / session.low) * session.close;
+				result.h5 = result.h4 + 1.168 * (result.h4 - result.h3);
+				result.l5 = result.l4 - 1.168 * (result.l3 - result.l4);
+				result.l6 = session.close - (result.h6 - session.close);
+
+				return result;
+			},
 		};
 	});
