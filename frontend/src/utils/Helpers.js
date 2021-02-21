@@ -111,6 +111,7 @@ export function clamp(val, min, max) {
 }
 
 export function getPairObject(symbol) {
+	// TODO: Arreglar esto y par BTCBUSD en tabla
 	// Turns pairs (BTCUSDT, ETHUSDT, ADAETH, ADABNB, LTCUSD, BTCBUSD) into object { symbol, quote }
 	/*const QUOTES = [ USDT, BUSD, BTC, ETH, BNB, "USD"];
 

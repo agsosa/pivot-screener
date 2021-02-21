@@ -48,7 +48,8 @@ export const Ticker = types
 					distance: { p: undefined, tc: undefined, bc: undefined },
 					closestApproximation: undefined,
 				};
-				const session = future ? self.getCurrentSessionOHLC(timeframe) : self.getPreviousSessionOHLC(timeframe);
+				const currSession = self.getCurrentSessionOHLC(timeframe);
+				const session = future ? currSession : self.getPreviousSessionOHLC(timeframe);
 
 				if (!session) return result;
 
@@ -66,12 +67,12 @@ export const Ticker = types
                     CPR Width < 0.25 - increases the likelihood of a trending market. 
                 */
 
-				result.isTested = inRange(result.bc, session.low, session.high) || inRange(result.tc, session.low, session.high);
-				result.price_position = session.close >= result.tc ? "above" : session.close <= result.bc ? "below" : "neutral";
-				result.distance.p = percentDifference(session.close, result.p);
-				result.distance.bc = percentDifference(session.close, result.bc);
-				result.distance.tc = percentDifference(session.close, result.tc);
-				result.closestApproximation = result.price_position === "above" ? percentDifference(session.close, result.tc) : percentDifference(session.close, result.bc);
+				result.isTested = inRange(result.bc, currSession.low, currSession.high) || inRange(result.tc, currSession.low, currSession.high);
+				result.price_position = currSession.close >= result.tc ? "above" : currSession.close <= result.bc ? "below" : "neutral";
+				result.distance.p = percentDifference(currSession.close, result.p);
+				result.distance.bc = percentDifference(currSession.close, result.bc);
+				result.distance.tc = percentDifference(currSession.close, result.tc);
+				result.closestApproximation = result.price_position === "above" ? percentDifference(currSession.close, result.tc) : percentDifference(currSession.close, result.bc);
 
 				return result;
 			},

@@ -2,6 +2,7 @@ import { BellOutlined } from "@ant-design/icons";
 import { Alert, Badge, Col, notification, Row, Space } from "antd";
 import { createRef, useEffect, useState } from "react";
 import "./LayoutHeader.css";
+import DailyCloseTime from "./DailyCloseTime";
 
 export default function LayoutHeader(props) {
 	const [scriptMounted, setScriptMounted] = useState(false);
@@ -73,7 +74,11 @@ export default function LayoutHeader(props) {
 				</div>
 
 				<Row>
-					<Col span={8}></Col>
+					<Col span={8} style={{ marginTop: "1%", marginLeft: "1%", flex: 1, display: "flex", justifyContent: "flex-start" }}>
+						<div>
+							<DailyCloseTime />
+						</div>
+					</Col>
 					<Col
 						span={8}
 						style={{

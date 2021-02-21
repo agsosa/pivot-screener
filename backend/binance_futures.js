@@ -39,6 +39,8 @@ function fetchTickersList() {
 
  function fetchTickersData() {
    return new Promise(async (resolve, reject) => {
+       let candlesticksObjQueue = [];
+
         console.log("Running fetchTickersData()...");
         let promises = [];
 
@@ -49,14 +51,15 @@ function fetchTickersList() {
             let tickerObj = tickersList[i];
 
             let candlesticksObj = {}
-            tickerObj.candlesticks = candlesticksObj; // Assign candlesticksObj
+            candlesticksObj.linkedTickerObj = tickerObj;
+            candlesticksObjQueue.push(candlesticksObj);
+            candlesticksObj.candles = {};
 
             // For every timeframe grab candlesticks for each ticker
             timeframes.forEach(async t => {
                 const url = `https://fapi.binance.com/fapi/v1/klines?symbol=${tickerObj.symbol}&interval=${t.interval}&limit=${t.limit}`;
                 
                 let prom = fetch(url).then(function(response) {
-                    // TODO: CHECK FOR ERRORS
                         response.json().then(data => {
                             if(!data || data.length == 0 || data.code) reject("Invalid data received from Binance "+data);
                             let formattedCandles = [];
@@ -71,7 +74,8 @@ function fetchTickersList() {
                                 })
                             })
                             
-                            candlesticksObj[t.objectName+"Candles"] = formattedCandles;
+                            candlesticksObj.candles[t.objectName+"Candles"] = formattedCandles;
+
                         });
                 })
                 .catch(function(error) {
@@ -79,12 +83,14 @@ function fetchTickersList() {
                 });
 
                 promises.push(prom);
-            })
+            });
         }
 
         await Promise.allSettled(promises);
 
-
+        candlesticksObjQueue.forEach(q => { // TODO: Implementar algo mejor y soporte para otros exchanges
+            q.linkedTickerObj.candlesticks = q.candles;
+        });
 
         resolve();
     });

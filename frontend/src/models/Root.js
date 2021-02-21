@@ -4,26 +4,27 @@ import { createContext, useContext } from "react";
 import { apiFetchTickers } from "../utils/Api";
 import { randomInteger } from "../utils/Helpers";
 import { Ticker } from "./Ticker";
+import localForage from "localforage";
+import { persist } from "mst-persist";
 
 // TODO: Optimize views/computeds (array filter) use cache or something
 
 const RootModel = types
-	.model({
+	.model("RootModel", {
 		tickers: types.array(Ticker),
-		state: types.enumeration("State", ["pending", "done", "error"]),
+		statsPanelVisible: types.boolean,
 	})
 	.actions((self) => ({
+		toggleStatsPanel: function () {
+			self.statsPanelVisible = !self.statsPanelVisible;
+		},
 		fetchTickers: flow(function* _callFetchApi(timeframes, symbols) {
-			// <- note the star, this a generator function!
 			//self.tickers.clear();
-			self.state = "pending";
 			try {
 				let result = yield apiFetchTickers(timeframes, symbols);
 				self.tickers = result;
-				self.state = "done";
 			} catch (error) {
 				console.error("Failed to fetch projects", error);
-				self.state = "error";
 			}
 		}),
 	}))
@@ -50,7 +51,7 @@ const RootModel = types
 				return null;
 			},
 			cprUntestedCount(timeframe) {
-				return self.tickers.filter((q) => q.getCPR(timeframe).isTested === undefined ? false : !q.getCPR(timeframe).isTested).length;
+				return self.tickers.filter((q) => (q.getCPR(timeframe).isTested === undefined ? false : !q.getCPR(timeframe).isTested)).length;
 			},
 			cprNeutralCount(timeframe) {
 				return self.tickers.filter((q) => q.getCPR(timeframe).price_position === "neutral").length;
@@ -71,7 +72,11 @@ const RootModel = types
 	});
 
 let initialState = RootModel.create({
-	state: "pending",
+	statsPanelVisible: true,
+});
+
+persist("PivotSC", initialState, {
+	whitelist: ["statsPanelVisible"], // only these keys will be persisted
 });
 
 /*

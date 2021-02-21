@@ -192,14 +192,16 @@ const CPRTable = observer((props) => {
 	};
 
 	return (
-		<>
+		<p>
 			<CPRStats timeframe={props.timeframe} />
-			<Space style={{ padding: 5 }}>
+			<Space style={{ padding: 1 }}>
 				<h1>
 					{capitalizeFirstLetter(props.market)} / {capitalizeFirstLetter(props.timeframe)}
 				</h1>{" "}
 				<Badge style={{ backgroundColor: "#2196F3", marginBottom: 7 }} count={tickers.length} />
 			</Space>
+
+			<p style={{ marginTop: -5 }}>You can filter and sort any column. The data is updated automatically.</p>
 
 			<div className="ag-theme-material" style={{ height: 700, width: "100%" }}>
 				{/*<Button onClick={test}>test</Button>*/}
@@ -276,7 +278,7 @@ const CPRTable = observer((props) => {
 					</p>
 				</>
 			)}
-		</>
+		</p>
 	);
 });
 

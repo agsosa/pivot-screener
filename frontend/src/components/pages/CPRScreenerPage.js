@@ -52,6 +52,15 @@ export default function CPRScreenerPage(props) {
 							<TabPane tab="Monthly" key="3">
 								<CPRTable timeframe="monthly" market={market} />
 							</TabPane>
+							<TabPane tab="Tomorrow" key="3" disabled>
+								<CPRTable timeframe="tomorrow" market={market} />
+							</TabPane>
+							<TabPane tab="Next Week" key="3" disabled>
+								<CPRTable timeframe="nextweek" market={market} />
+							</TabPane>
+							<TabPane tab="Next Month" key="3" disabled>
+								<CPRTable timeframe="nextmonth" market={market} />
+							</TabPane>
 						</Tabs>
 					</>
 				)}
