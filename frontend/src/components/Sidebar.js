@@ -23,7 +23,7 @@ export default function Sidebar(props) {
 			<div className="logo" />
 			<Menu theme="dark" mode="inline" selectedKeys={[location.pathname]}>
 				<Menu.Item key="/" icon={<HomeOutlined />}>
-					<NavLink to="/">Home (Chart)</NavLink>
+					<NavLink to="/">Chart</NavLink>
 				</Menu.Item>
 				<SubMenu key="sub1" icon={<MenuOutlined />} title="CPR Screener">
 					{markets.map((q) => {

@@ -1,4 +1,4 @@
-import { flow, types } from "mobx-state-tree";
+import { flow, types, unprotect } from "mobx-state-tree";
 import moment from "moment";
 import { createContext, useContext } from "react";
 import { apiFetchTickers, apiFetchCandlesticksLocally } from "../utils/Api";
@@ -8,15 +8,18 @@ import localForage from "localforage";
 import { persist } from "mst-persist";
 import { io } from "socket.io-client";
 import jsonpack from "jsonpack";
+import { ChartOptions } from "./ChartOptions";
 
 // TODO: Optimize views/computeds (array filter) use cache or something
 
 const RootModel = types
 	.model("RootModel", {
 		tickers: types.array(Ticker),
-		statsPanelVisible: true,
+		cprStatsPanelVisible: true,
+		camStatsPanelVisible: true,
 		symbolsList: types.array(types.string),
 		socketConnected: false,
+		chartOptions: ChartOptions,
 	})
 	.actions((self) => {
 		let socket;
@@ -30,14 +33,10 @@ const RootModel = types
 				autoConnect: false,
 			});
 
-			console.log("hi");
-
 			socket.on("connect", (data) => {
 				self.setSocketConnected(true);
-				console.log("reconnect");
+				console.log("socket connected");
 				if (currentQuery != null) socket.emit("request_tickers", JSON.stringify(currentQuery));
-
-				console.log(socket.id);
 			});
 
 			socket.on("disconnect", (reason) => {
@@ -51,17 +50,7 @@ const RootModel = types
 
 			socket.on("tickers_data", (data) => {
 				self.setTickers(jsonpack.unpack(data));
-				//console.log("data received length=" + jsonpack.unpack(data));
 			});
-		}
-
-		function setTickers(data) {
-			self.tickers = data;
-		}
-
-		function setSocketConnected(b) {
-			self.socketConnected = b;
-			console.log("setisSocketConnected " + self.socketConnected);
 		}
 
 		function beforeDestroy() {
@@ -76,34 +65,42 @@ const RootModel = types
 
 			currentQuery = { timeframes: timeframes, markets: markets, symbols: symbols }; // Used on reconnection
 
-			console.log("start receiving data " + JSON.stringify(currentQuery));
-
 			if (socket) {
 				socket.emit("request_tickers", JSON.stringify(currentQuery));
 			}
 		};
 
 		const stopReceivingData = function () {
-			// unsuscribe rooms
 			currentQuery = null;
 			self.tickers.clear();
 			socket.close();
 		};
 
-		// const fetchSymbols List etc.
+		function setTickers(data) {
+			self.tickers = data;
+		}
 
-		const toggleStatsPanel = function () {
-			self.statsPanelVisible = !self.statsPanelVisible;
+		function setSocketConnected(b) {
+			self.socketConnected = b;
+			console.log("setisSocketConnected " + self.socketConnected);
+		}
+		const toggleCPRStatsPanel = function () {
+			self.cprStatsPanelVisible = !self.cprStatsPanelVisible;
+		};
+
+		const toggleCamStatsPanel = function () {
+			self.camStatsPanelVisible = !self.camStatsPanelVisible;
 		};
 
 		return {
 			afterCreate,
 			beforeDestroy,
-			toggleStatsPanel,
+			toggleCPRStatsPanel,
 			startReceivingData,
 			stopReceivingData,
 			setTickers,
 			setSocketConnected,
+			toggleCamStatsPanel,
 		};
 	})
 	.views((self) => {
@@ -140,6 +137,9 @@ const RootModel = types
 			cprAboveCount(timeframe) {
 				return self.tickers.filter((q) => q.getCPR(timeframe).price_position === "above").length;
 			},
+			camStats(timeframe) {
+				return {};
+			},
 			/*sidewaysCount(timeframe) {
 				return self.tickers.filter((q) => !q.getCPR(timeframe)).length;
 			},
@@ -149,10 +149,14 @@ const RootModel = types
 		};
 	});
 
-let initialState = RootModel.create();
+let initialState = RootModel.create({
+	cprStatsPanelVisible: true,
+	camStatsPanelVisible: true,
+	chartOptions: { dailyCPR: true, weeklyCPR: true, monthlyCPR: true, dailyCam: false, weeklyCam: true, monthlyCam: false, futureMode: false },
+});
 
 persist("PivotSC", initialState, {
-	whitelist: ["statsPanelVisible"], // only these keys will be persisted
+	whitelist: ["cprStatsPanelVisible", "camStatsPanelVisible", "chartOptions"], // only these keys will be persisted
 });
 
 /*

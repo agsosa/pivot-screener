@@ -75,6 +75,7 @@ const ChartPage = observer((props) => {
 
 		if (symbolsList.filter((q) => q.value === input).length !== 0) {
 			setSymbol(input);
+			message.loading("Loading symbol data...", 2);
 		} else message.error("Symbol name not found");
 	}
 

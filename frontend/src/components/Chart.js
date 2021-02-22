@@ -10,15 +10,27 @@ import { Switch, Space, Button } from "antd";
 export const Chart = observer((props) => {
 	/*const [chart, setChart] = useState();
 	const [series, setSeries] = useState();*/
+	//const [chartOptions, setChartOptions] = useState({ dailyCPR: false, weeklyCPR: false, monthlyCPR: true, dailyCAM: false, weeklyCAM: false, monthlyCAM: true, futureMode: false });
 	const chart = useRef(null);
 	const series = useRef(null);
 	const dispose = useRef(null);
+	const dispose2 = useRef(null);
 	const drawings = useRef({ dailyCPR: [], weeklyCPR: [], monthlyCPR: [], dailyCam: [], weeklyCam: [], monthlyCam: [] });
 	const lastData = useRef(null);
 
-	const { tickers } = useMst((store) => ({
+	const { tickers, chartOptions } = useMst((store) => ({
 		tickers: store.tickers,
+		chartOptions: store.chartOptions,
 	}));
+
+	dispose2.current = reaction(
+		() => chartOptions,
+		(chartOptions) => {
+			console.log(chartOptions);
+			updateChart(tickers[0]);
+		},
+		{ fireImmediately: true }
+	);
 
 	dispose.current = reaction(
 		() => tickers,
@@ -60,7 +72,6 @@ export const Chart = observer((props) => {
 						vertAlign: "bottom",
 					},
 				});
-
 				/*data.candlesticks.dailyCandles.sort(function (a, b) {
 				return new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime();
 			});*/
@@ -81,10 +92,10 @@ export const Chart = observer((props) => {
 				//if (lastData && (lastData.symbol != data.symbol || lastData.candlesticks.dailyCandles != data.candlesticks.dailyCandles)) clearDrawings();
 				if (!lastData.current) initializeDrawings(data);
 				else {
-					console.log("xd");
 					const a = lastData.current.candlesticks.dailyCandles;
 					const b = data.candlesticks.dailyCandles;
 					if (a[a.length - 1].timestamp !== b[b.length - 1].timestamp || lastData.symbol !== data.symbol) {
+						chart.current.priceScale().applyOptions({ autoScale: true });
 						initializeDrawings(data);
 					}
 				}
@@ -100,17 +111,20 @@ export const Chart = observer((props) => {
 			console.log("initializedrawings");
 
 			const timeframes = [
-				["daily", "green"],
-				["weekly", "blue"],
-				["monthly", "red"],
+				// label, color, togglecpr, togglecam
+				["daily", "green", chartOptions.dailyCPR, chartOptions.dailyCam],
+				["weekly", "blue", chartOptions.weeklyCPR, chartOptions.weeklyCam],
+				["monthly", "red", chartOptions.monthlyCPR, chartOptions.monthlyCam],
 			];
 
 			timeframes.forEach((t) => {
 				const label = t[0];
 				const color = t[1];
+				const showCPR = t[2];
+				const showCam = t[3];
 				// CPR
 				const cpr = data.getCPR(label);
-				if (cpr) {
+				if (cpr && showCPR) {
 					const p = series.current.createPriceLine({ price: cpr.p, color: color, lineWidth: 3, lineStyle: LineStyle.Dotted, axisLabelVisible: true, title: label + " P" });
 					const bc = series.current.createPriceLine({ price: cpr.bc, color: color, lineWidth: 3, lineStyle: LineStyle.Dotted, axisLabelVisible: true, title: label + " BC" });
 					const tc = series.current.createPriceLine({ price: cpr.tc, color: color, lineWidth: 3, lineStyle: LineStyle.Dotted, axisLabelVisible: true, title: label + " TC" });
@@ -118,7 +132,7 @@ export const Chart = observer((props) => {
 				}
 
 				const cam = data.getCamarilla(label);
-				if (cam) {
+				if (cam && showCam) {
 					for (const [key, value] of Object.entries(cam)) {
 						const obj = series.current.createPriceLine({ price: cam[key], color: color, lineWidth: 2, lineStyle: LineStyle.Solid, axisLabelVisible: true, title: label + " " + key.toUpperCase() });
 						drawings.current[label + "Cam"].push(obj);
@@ -218,6 +232,7 @@ export const Chart = observer((props) => {
 			// On unmount
 			chart.current.remove();
 			dispose.current();
+			dispose2.current();
 			//currentSymbolData = null;
 		};
 	}, []);
@@ -227,39 +242,53 @@ export const Chart = observer((props) => {
 			<Space direction="vertical">
 				<Space>
 					<span style={{ marginRight: 10 }}>
-						<Button primary>Toggle Daily</Button>
+						<Button primary onClick={() => chartOptions.toggleAllDaily()}>
+							Toggle Daily
+						</Button>
 					</span>
 					<span style={{ marginRight: 10 }}>
-						<Button primary>Toggle Weekly</Button>
+						<Button primary onClick={() => chartOptions.toggleAllWeekly()}>
+							Toggle Weekly
+						</Button>
 					</span>
 					<span style={{ marginRight: 10 }}>
-						<Button primary>Toggle Monthly</Button>
+						<Button primary onClick={() => chartOptions.toggleAllMonthly()}>
+							Toggle Monthly
+						</Button>
 					</span>
 					<span style={{ marginRight: 20 }}>
-						Future pivots mode: <Switch size="small" defaultChecked={false} />
+						Future pivots mode:{" "}
+						<Switch
+							size="small"
+							disabled
+							checked={chartOptions.futureMode}
+							onChange={(checked) => {
+								chartOptions.setFutureMode(checked);
+							}}
+						/>
 					</span>
 				</Space>
 				<Space>
 					<span style={{ marginRight: 20 }}>
-						Daily CPR: <Switch size="small" defaultChecked />
+						Daily CPR: <Switch size="small" checked={chartOptions.dailyCPR} onChange={(checked) => chartOptions.setDailyCPR(checked)} />
 					</span>
 
 					<span style={{ marginRight: 20 }}>
-						Weekly CPR: <Switch size="small" defaultChecked />
+						Weekly CPR: <Switch size="small" checked={chartOptions.weeklyCPR} onChange={(checked) => chartOptions.setWeeklyCPR(checked)} />
 					</span>
 					<span style={{ marginRight: 20 }}>
-						Monthly CPR: <Switch size="small" defaultChecked />
+						Monthly CPR: <Switch size="small" checked={chartOptions.monthlyCPR} onChange={(checked) => chartOptions.setMonthlyCPR(checked)} />
 					</span>
 				</Space>
 				<Space>
 					<span style={{ marginRight: 20 }}>
-						Daily Camarilla: <Switch size="small" defaultChecked />
+						Daily Camarilla: <Switch size="small" checked={chartOptions.dailyCam} onChange={(checked) => chartOptions.setDailyCam(checked)} />
 					</span>
 					<span style={{ marginRight: 20 }}>
-						Weekly Camarilla: <Switch size="small" defaultChecked />
+						Weekly Camarilla: <Switch size="small" checked={chartOptions.weeklyCam} onChange={(checked) => chartOptions.setWeeklyCam(checked)} />
 					</span>
 					<span style={{ marginRight: 20 }}>
-						Monthly Camarilla: <Switch size="small" defaultChecked />
+						Monthly Camarilla: <Switch size="small" checked={chartOptions.monthlyCam} onChange={(checked) => chartOptions.setMonthlyCam(checked)} />
 					</span>
 				</Space>
 			</Space>

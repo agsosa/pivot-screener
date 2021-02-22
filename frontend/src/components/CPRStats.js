@@ -6,26 +6,26 @@ import { observer } from "mobx-react-lite";
 import { calcPercent } from "../utils/Helpers";
 
 const CPRStats = observer((props) => {
-	const { tickers, cprUntestedCount, cprNeutralCount, cprBelowCount, cprAboveCount, toggleStatsPanel, statsPanelVisible } = useMst((store) => ({
+	const { tickers, cprUntestedCount, cprNeutralCount, cprBelowCount, cprAboveCount, toggleCPRStatsPanel, cprStatsPanelVisible } = useMst((store) => ({
 		tickers: store.tickers,
 		cprUntestedCount: store.cprUntestedCount,
 		cprNeutralCount: store.cprNeutralCount,
-		cprBelowCount: store.cprBelowCount,
+		cprBelowCount: store.cprBelowCount, // TODO: Modularizar todas estas estadisticas en 1 sola, tambien juntar con porcentaje bears vs
 		cprAboveCount: store.cprAboveCount,
-		toggleStatsPanel: store.toggleStatsPanel,
-		statsPanelVisible: store.statsPanelVisible,
+		toggleCPRStatsPanel: store.toggleCPRStatsPanel,
+		cprStatsPanelVisible: store.cprStatsPanelVisible,
 	}));
 
-	if (!tickers || (tickers.length === 0 && statsPanelVisible)) return <Skeleton />;
+	if (!tickers || (tickers.length === 0 && cprStatsPanelVisible)) return <Skeleton />;
 
 	return (
 		<>
-			<Button style={{ marginBottom: 10 }} onClick={toggleStatsPanel}>
-				{statsPanelVisible ? "Hide Statistics" : "Show Statistics"}
+			<Button style={{ marginBottom: 10 }} onClick={toggleCPRStatsPanel}>
+				{cprStatsPanelVisible ? "Hide Statistics" : "Show Statistics"}
 			</Button>
 
 			<div>
-				{statsPanelVisible ? (
+				{cprStatsPanelVisible ? (
 					<>
 						<div className="site-statistic-demo-card">
 							<Row gutter={12}>
