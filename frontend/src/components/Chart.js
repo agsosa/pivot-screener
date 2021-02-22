@@ -94,8 +94,8 @@ export const Chart = observer((props) => {
 				else {
 					const a = lastData.current.candlesticks.dailyCandles;
 					const b = data.candlesticks.dailyCandles;
-					if (a[a.length - 1].timestamp !== b[b.length - 1].timestamp || lastData.symbol !== data.symbol) {
-						chart.current.priceScale().applyOptions({ autoScale: true });
+					if (a[a.length - 1].timestamp !== b[b.length - 1].timestamp || lastData.current.symbol !== data.symbol) {
+						if (lastData.current.symbol !== data.symbol) chart.current.priceScale().applyOptions({ autoScale: true });
 						initializeDrawings(data);
 					}
 				}
@@ -257,7 +257,7 @@ export const Chart = observer((props) => {
 						</Button>
 					</span>
 					<span style={{ marginRight: 20 }}>
-						Future pivots mode:{" "}
+						Show developing pivots:{" "}
 						<Switch
 							size="small"
 							disabled

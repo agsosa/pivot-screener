@@ -11,6 +11,9 @@ import "./AGGridOverrides.css";
 import CPRStats from "./CPRStats";
 import SocketStatus from "./SocketStatus";
 
+// TODO: Implementar tooltip en las distancias de pivote para mostrar precio del pivote
+// TODO: Optimizar, no es necesario llamar a getCPR en cada funcion.
+
 const CPRTable = observer((props) => {
 	let dispose;
 
@@ -67,7 +70,7 @@ const CPRTable = observer((props) => {
 			let str = "";
 			let font = "";
 
-			if (value >= 0.5) {
+			/*if (value >= 0.5) {
 				font = "<font color='#DF4294'>";
 				str = "Sideways</font>";
 			}
@@ -82,6 +85,14 @@ const CPRTable = observer((props) => {
 			if (value <= 0.25) {
 				font = "<font color='#2196F3'>";
 				str = "Trending+</font>";
+			}*/
+
+			if (value <= 1) {
+				font = "<font color='#DF4294'>";
+				str = "</font>";
+			} else {
+				font = "<font color='#2196F3'>";
+				str = "</font>";
 			}
 
 			return font + value + "% " + str;
@@ -96,9 +107,9 @@ const CPRTable = observer((props) => {
 
 	const cprStatusCellRenderer = (params) => {
 		if (params.value) {
-			const approximation = 0;
+			const approximation = params.data.getCPR(props.timeframe).closestApproximation.toFixed(1);
 
-			return params.value === "Tested" ? "✔️ Tested" : "🧲 Untested <sup><font color='gray'0%</font></sup>";
+			return params.value === "Tested" ? "✔️ Tested" : "🧲 Untested <sup><font color='gray'>" + approximation + "%</font></sup>";
 		}
 	};
 
@@ -270,7 +281,7 @@ const CPRTable = observer((props) => {
 					<p style={{ marginTop: 20, paddingTop: 10 }}>
 						● The percentage shown above the <i>Untested</i> label is the closest approximation to the CPR. <i>Example:</i> Untested <sup>0.1%</sup> means that there was a candle that came within 0.1%
 						of the CPR.
-						<br />● The Sideways/Trending label on the CPR Width column shouldn't be taken seriously, the parameters need to be adjusted.
+						{/*<br />● The Sideways/Trending label on the CPR Width column shouldn't be taken seriously, the parameters need to be adjusted.*/}
 						<br />● P Distance is the distance between the current price and the pivot level.
 						<br />● TC Distance is the distance between the current price and the top pivot level.
 						<br />● BC Distance is the distance between the current price and the bottom pivot level.

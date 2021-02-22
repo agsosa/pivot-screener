@@ -4,10 +4,11 @@
 	font-weight: bold;
 	color: white;
 	background-color: #001529;
-	background-image: url("../bglogo.jpg");
-	background-size: 100%;
-	background-position-y: 95%;
+	background-image: url("../headerbg.png");
+	background-size: cover;
+	background-position-y: center;
 	background-position-x: center;
+	background-repeat: no-repeat;
 	max-height: auto;
 }
 

@@ -72,7 +72,7 @@ export const Ticker = types
 				result.distance.p = percentDifference(currSession.close, result.p);
 				result.distance.bc = percentDifference(currSession.close, result.bc);
 				result.distance.tc = percentDifference(currSession.close, result.tc);
-				result.closestApproximation = result.price_position === "above" ? percentDifference(currSession.close, result.tc) : percentDifference(currSession.close, result.bc);
+				result.closestApproximation = result.price_position === "above" ? percentDifference(currSession.low, result.tc) : percentDifference(currSession.high, result.bc);
 
 				return result;
 			},

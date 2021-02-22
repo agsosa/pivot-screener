@@ -1,6 +1,6 @@
 import React from "react";
 import { Card, Statistic, Row, Col, Progress, Skeleton, Button } from "antd";
-import { FallOutlined, RiseOutlined, PauseOutlined } from "@ant-design/icons";
+import { FallOutlined, RiseOutlined, ExpandOutlined, VerticalAlignMiddleOutlined, PauseOutlined } from "@ant-design/icons";
 import { useMst } from "../models/Root";
 import { observer } from "mobx-react-lite";
 import { calcPercent } from "../utils/Helpers";
@@ -49,16 +49,16 @@ const CPRStats = observer((props) => {
 										<Statistic title="Below CPR" value={cprBelowCount(props.timeframe)} precision={0} valueStyle={{ color: "#cf1322" }} prefix={<FallOutlined />} suffix="" />
 									</Card>
 								</Col>
-								{/*<Col span={12}>
-								<Card>
-									<Statistic title="Trending" value={trendingCount(props.timeframe)} precision={0} valueStyle={{ color: "#2196F3" }} prefix={<StockOutlined />} suffix="" />
-								</Card>
-							</Col>
-							<Col span={12}>
-								<Card>
-									<Statistic title="Sideways" value={sidewaysCount(props.timeframe)} precision={0} valueStyle={{ color: "#F38300" }} prefix={<SwapOutlined />} suffix="" />
-								</Card>
-							</Col>*/}
+								<Col span={12}>
+									<Card>
+										<Statistic title="CPR Width < 1%" value={0} precision={0} valueStyle={{ color: "#DF4294" }} prefix={<VerticalAlignMiddleOutlined />} suffix="" />
+									</Card>
+								</Col>
+								<Col span={12}>
+									<Card>
+										<Statistic title="CPR Width > 1%" value={0} precision={0} valueStyle={{ color: "#2196F3" }} prefix={<ExpandOutlined />} suffix="" />
+									</Card>
+								</Col>
 							</Row>
 						</div>
 

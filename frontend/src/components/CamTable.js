@@ -203,6 +203,14 @@ const CamTable = observer((props) => {
 				<SocketStatus style={{ marginBottom: 5 }} />
 			</Space>
 			<p style={{ marginTop: -5 }}>You can filter and sort any column. The data is updated automatically.</p>
+			<p>
+				<b>
+					status: lo q muestra en camstats
+					<br /> nearest: el nivel mas cercano para cada nivel mostrar la distancia
+					<br /> quizas agregar tambien si en esta sesion lo ha tocado <br />
+					construir la tabla mediante loop de object.keys del objeto de camarilla
+				</b>
+			</p>
 			<div className="ag-theme-material" style={{ height: 700, width: "100%" }}>
 				{/*<Button onClick={test}>test</Button>*/}
 				<AgGridReact

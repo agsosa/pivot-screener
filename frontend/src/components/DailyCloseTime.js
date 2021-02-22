@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { Profiler, useState, useEffect } from "react";
 import moment from "moment";
+
+// TODO: Refactor
 
 export default function DailyCloseTime(props) {
 	const getDailyClose = (exchange = "binance") => {
@@ -23,10 +25,10 @@ export default function DailyCloseTime(props) {
 	});
 
 	return (
-		<>
+		<p>
 			Binance Daily Close: {binanceTimeleft.toString()}
 			<br />
 			Huobi Daily Close: {huobiTimeleft.toString()}
-		</>
+		</p>
 	);
 }

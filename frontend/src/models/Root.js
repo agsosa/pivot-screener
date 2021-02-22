@@ -126,6 +126,7 @@ const RootModel = types
 				return null;
 			},
 			cprUntestedCount(timeframe) {
+				// TODO: Unificar todos los cpr stats y solo llamar 1 vez. Buscar formas de optimizar llamadas de cpr y todo eso
 				return self.tickers.filter((q) => (q.getCPR(timeframe).isTested === undefined ? false : !q.getCPR(timeframe).isTested)).length;
 			},
 			cprNeutralCount(timeframe) {
