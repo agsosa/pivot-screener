@@ -42,7 +42,7 @@ SEPARAR HOURLYCANDLES DE DAILY-WEEKLY-MONTHLY y actualizarlas mas lento
 
 
 IDEA DESCARTADA
-1) tomar el simbol list
+1) tomar el symbol list
 2) para cada symbol tomar velas historicas, colocar timestamp
 3) mantener un intervalo de 1 seg esperando cierta diferencia entre date.now y timestamp
 4) cuando se cumpla ese intervalo (x ej 1h, 24h) intentar refrezcar velas historicas
@@ -55,7 +55,6 @@ mantener un OHLC actual apartado de candlesticks actualizandose con All Market M
 */
 function getFilteredTickers(timeframes, markets, symbols) {
     try {
-        console.log(timeframes, " ESTO")
         if (symbols) symbols = symbols.replace(/\s/g, "").split(",");
         if (markets) markets = markets.replace(/\s/g, "").split(",");
         if (timeframes) timeframes = timeframes.replace(/\s/g, "").split(",");
@@ -82,7 +81,7 @@ function getFilteredTickers(timeframes, markets, symbols) {
                 }
             });
         }
-        
+
         return filtered;
     }
     catch {

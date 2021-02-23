@@ -1,17 +1,14 @@
 const Binance = require('node-binance-api');
-const datamanager = require('./datamanager');
+const datamanager = require('./data_manager');
+const axios = require('axios');
 const fetch = require("node-fetch");
 const binance = new Binance().options({
   APIKEY: '<key>',
   APISECRET: '<secret>'
 });
 
-// TODO: Update symbol list every X time
-
 const MARKET = "Cryptocurrency"
 const EXCHANGE = "Binance Futures"
-let loop_interval = -1;
-let initialized = false;
 
 const timeframes = [ 
     { interval: '1d', objectName: 'daily', limit: 2 },
@@ -20,12 +17,16 @@ const timeframes = [
     //{ interval: '1h', objectName: 'hourly', limit: 500},
 ]
 
+let fetchTickerDataInterval = 30*1000;
+let initialized = false;
+
 function binanceLimitToWeight(limit) {
     if (limit <= 100) return 1;
     if (limit <= 500) return 2;
     if (limit <= 100) return 5;
     else return 10;
 }
+
 
 function fetchTickersList() {
     return new Promise(async (resolve, reject) => {
@@ -40,58 +41,51 @@ function fetchTickersList() {
  function fetchTickersData() {
    return new Promise(async (resolve, reject) => {
        let candlesticksObjQueue = [];
-
-        //console.log("Running fetchTickersData()...");
         let promises = [];
 
         // For each ticker in tickerList initialize data object and push to data.tickersData
         const tickersList = datamanager.getTickersListByMarketExchange(MARKET, EXCHANGE);
 
         for (let i = 0; i < tickersList.length; i++) {
-            let tickerObj = tickersList[i];
-
-            let candlesticksObj = {}
-            candlesticksObj.linkedTickerObj = tickerObj;
-            candlesticksObjQueue.push(candlesticksObj);
-            candlesticksObj.candles = {};
+            const tickerObj = tickersList[i];
+            tickerObj.candlesticks = {};
 
             // For every timeframe grab candlesticks for each ticker
-            timeframes.forEach(async t => {
+            timeframes.forEach(t => {
                 const url = `https://fapi.binance.com/fapi/v1/klines?symbol=${tickerObj.symbol}&interval=${t.interval}&limit=${t.limit}`;
-                console.log(url)
-                
-                let prom = fetch(url).then(function(response) {
-                        response.json().then(data => {
-                            if(!data || data.length == 0 || data.code) reject("Invalid data received from Binance "+data);
-                            let formattedCandles = [];
-                            
-                            data.forEach(c => {
-                                formattedCandles.push({ 
-                                    open: parseFloat(c[1]), 
-                                    high: parseFloat(c[2]), 
-                                    low: parseFloat(c[3]), 
-                                    close: parseFloat(c[4]), 
-                                    timestamp: parseInt(c[6])
-                                })
-                            })
-                            
-                            candlesticksObj.candles[t.objectName+"Candles"] = formattedCandles;
 
-                        });
+                promises.push(axios.get(url).then((res) => {
+                    const data = res.data;
+                        if(!data || data.length == 0) {
+                            throw new Error("Invalid data URL: "+url);
+                        }
+
+                        let formattedCandles = [];
+                        
+                        data.forEach(c => {
+                            formattedCandles.push({ 
+                                open: parseFloat(c[1]), 
+                                high: parseFloat(c[2]), 
+                                low: parseFloat(c[3]), 
+                                close: parseFloat(c[4]), 
+                                timestamp: parseInt(c[6])
+                            })
+                        })
+
+                        tickerObj.candlesticks[t.objectName + "Candles"] = formattedCandles;
                 })
                 .catch(function(error) {
-                    console.error(url+" - Error fetching Binance API. Err = "+error.message);
-                });
-
-                promises.push(prom);
+                    console.log("Fetch symbol data error: "+error);
+                    throw error;
+                }));
             });
         }
 
         await Promise.allSettled(promises);
 
-        candlesticksObjQueue.forEach(q => { // TODO: Implementar algo mejor y soporte para otros exchanges
-            q.linkedTickerObj.candlesticks = q.candles;
-        });
+        /*tickersList.forEach(q => {
+            if (!q.candlesticks["dailyCandles"]) console.log(`symbol: ${q.symbol} - dailycandles not found`);
+        })*/
 
         resolve();
     });
@@ -114,9 +108,9 @@ async function initialize() {
             console.log(max_fetch_per_minute);
             console.log(calculated_fetch_interval)*/
 
-            loop_interval = calculated_fetch_interval+EXTRA_SECONDS;
+            fetchTickerDataInterval = calculated_fetch_interval+EXTRA_SECONDS;
             initialized = true;
-            console.log("Calculated fetch interval: "+loop_interval+" (total weight per fetch: "+calculated_weight_total+")");
+            console.log("Calculated fetch interval: "+fetchTickerDataInterval+" (total weight per fetch: "+calculated_weight_total+")");
 
             resolve();
         });
@@ -135,7 +129,7 @@ function loop() {
 
             setTimeout(() => {
                 loop();
-            }, 1000*loop_interval);
+            }, 1000*fetchTickerDataInterval);
         })
     }
     else {

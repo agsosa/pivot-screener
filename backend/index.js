@@ -1,12 +1,11 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const datamanager = require('./datamanager');
+const datamanager = require('./data_manager');
 const cors = require('cors');
 var compression = require('compression')
 var jsonpack = require('jsonpack/main')
 const { validate, ValidationError, Joi } = require('express-validation')
 
-// TODO: POSIBLE MEMORY LEAK. QUIZAS EVENTOS O SOCKET
 // TODO: LIMITAR REQUESTS ANTI DOS
 
 require('./binance_futures');
@@ -25,6 +24,7 @@ const sockets = require('./sockets.js');
 sockets.initialize(app, sockets_port);
 
 console.log("Socket Initialized on port "+sockets_port)
+
 // Validations
 const candlesticksValidation = {
     query: Joi.object({
@@ -70,7 +70,7 @@ app.get('/api/candlesticks', validate(candlesticksValidation, {}, {}), (req, res
     }
 });
 
-app.get('/api/symbols-list', validate(candlesticksValidation, {}, {}), (req, res, next) => {
+app.get('/api/symbols-list', validate(symbolListValidation, {}, {}), (req, res, next) => {
     try {
         let { markets } = req.query;
     
