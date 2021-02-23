@@ -124,23 +124,34 @@ const RootModel = types
 
 				return null;
 			},
-			cprUntestedCount(timeframe) {
-				// TODO: Unificar todos los cpr stats y solo llamar 1 vez. Buscar formas de optimizar llamadas de cpr y todo eso
-				return self.tickers.filter((q) => (q.getCPR(timeframe).isTested === undefined ? false : !q.getCPR(timeframe).isTested)).length;
-			},
-			cprNeutralCount(timeframe) {
-				return self.tickers.filter((q) => q.getCPR(timeframe).price_position === "neutral").length;
-			},
-			cprBelowCount(timeframe) {
-				return self.tickers.filter((q) => q.getCPR(timeframe).price_position === "below").length;
-			},
-			cprAboveCount(timeframe) {
-				return self.tickers.filter((q) => q.getCPR(timeframe).price_position === "above").length;
+			cprStats(timeframe) {
+				const result = { aboveCount: 0, belowCount: 0, neutralCount: 0, untestedCount: 0, bullsPercent: 0, bearsPercent: 0, wideCount: 0, tightCount: 0 };
+
+				self.tickers.forEach((q) => {
+					const cpr = q.getCPR(timeframe);
+
+					result.aboveCount += cpr.price_position === "above" ? 1 : 0;
+					result.belowCount += cpr.price_position === "below" ? 1 : 0;
+					result.neutralCount += cpr.price_position === "neutral" ? 1 : 0;
+
+					result.wideCount += cpr.width > 1 ? 1 : 0;
+					result.tightCount += cpr.width <= 1 ? 1 : 0;
+
+					// isTested will be undefined for new pairs with only 1 candle and should count this case as tested, otherwise just return isTested value.
+					result.untestedCount += (cpr.isTested === undefined ? true : cpr.isTested) ? 1 : 0;
+				});
+
+				// Neutrals are ignored in bulls/bears percentage
+				result.bullsPercent = calcPercent(result.aboveCount, result.aboveCount + result.belowCount);
+				result.bearsPercent = calcPercent(result.belowCount, result.aboveCount + result.belowCount);
+
+				return result;
 			},
 			camStats(timeframe) {
 				const result = { aboveH4: 0, belowL4: 0, aboveH3: 0, belowL3: 0, betweenL3H3: 0, bullsPercent: 0, bearsPercent: 0 };
 				self.tickers.forEach((q) => {
 					const cam = q.getCamarilla(timeframe);
+
 					result.aboveH4 += cam.h4_priceStatus === "above" ? 1 : 0;
 					result.aboveH3 += cam.h3_priceStatus === "above" && cam.h4_priceStatus !== "above" ? 1 : 0;
 

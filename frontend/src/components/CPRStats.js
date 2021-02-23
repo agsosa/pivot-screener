@@ -3,20 +3,18 @@ import { Card, Statistic, Row, Col, Progress, Skeleton, Button } from "antd";
 import { FallOutlined, RiseOutlined, ExpandOutlined, VerticalAlignMiddleOutlined, PauseOutlined } from "@ant-design/icons";
 import { useMst } from "../models/Root";
 import { observer } from "mobx-react-lite";
-import { calcPercent } from "../utils/Helpers";
 
 const CPRStats = observer((props) => {
-	const { tickers, cprUntestedCount, cprNeutralCount, cprBelowCount, cprAboveCount, toggleCPRStatsPanel, cprStatsPanelVisible } = useMst((store) => ({
+	const { tickers, cprStats, toggleCPRStatsPanel, cprStatsPanelVisible } = useMst((store) => ({
 		tickers: store.tickers,
-		cprUntestedCount: store.cprUntestedCount,
-		cprNeutralCount: store.cprNeutralCount,
-		cprBelowCount: store.cprBelowCount, // TODO: Modularizar todas estas estadisticas en 1 sola, tambien juntar con porcentaje bears vs
-		cprAboveCount: store.cprAboveCount,
+		cprStats: store.cprStats,
 		toggleCPRStatsPanel: store.toggleCPRStatsPanel,
 		cprStatsPanelVisible: store.cprStatsPanelVisible,
 	}));
 
 	if (!tickers || (tickers.length === 0 && cprStatsPanelVisible)) return <Skeleton />;
+
+	const stats = cprStats(props.timeframe);
 
 	return (
 		<>
@@ -31,46 +29,40 @@ const CPRStats = observer((props) => {
 							<Row gutter={12}>
 								<Col span={12}>
 									<Card>
-										<Statistic title="Untested CPR" value={cprUntestedCount(props.timeframe)} precision={0} valueStyle={{ color: "black" }} prefix={"🧲"} suffix="" />
+										<Statistic title="Untested CPR" value={stats.untestedCount} precision={0} valueStyle={{ color: "black" }} prefix={"🧲"} suffix="" />
 									</Card>
 								</Col>
 								<Col span={12}>
 									<Card>
-										<Statistic title="Neutral" value={cprNeutralCount(props.timeframe)} precision={0} valueStyle={{ color: "gray" }} prefix={<PauseOutlined />} suffix="" />
+										<Statistic title="Neutral" value={stats.neutralCount} precision={0} valueStyle={{ color: "gray" }} prefix={<PauseOutlined />} suffix="" />
 									</Card>
 								</Col>
 								<Col span={12}>
 									<Card>
-										<Statistic title="Above CPR" value={cprAboveCount(props.timeframe)} precision={0} valueStyle={{ color: "#3f8600" }} prefix={<RiseOutlined />} suffix="" />
+										<Statistic title="Above CPR" value={stats.aboveCount} precision={0} valueStyle={{ color: "#3f8600" }} prefix={<RiseOutlined />} suffix="" />
 									</Card>
 								</Col>
 								<Col span={12}>
 									<Card>
-										<Statistic title="Below CPR" value={cprBelowCount(props.timeframe)} precision={0} valueStyle={{ color: "#cf1322" }} prefix={<FallOutlined />} suffix="" />
+										<Statistic title="Below CPR" value={stats.belowCount} precision={0} valueStyle={{ color: "#cf1322" }} prefix={<FallOutlined />} suffix="" />
 									</Card>
 								</Col>
 								<Col span={12}>
 									<Card>
-										<Statistic title="CPR Width < 1%" value={0} precision={0} valueStyle={{ color: "#DF4294" }} prefix={<VerticalAlignMiddleOutlined />} suffix="" />
+										<Statistic title="CPR Width < 1%" value={stats.tightCount} precision={0} valueStyle={{ color: "#DF4294" }} prefix={<VerticalAlignMiddleOutlined />} suffix="" />
 									</Card>
 								</Col>
 								<Col span={12}>
 									<Card>
-										<Statistic title="CPR Width > 1%" value={0} precision={0} valueStyle={{ color: "#2196F3" }} prefix={<ExpandOutlined />} suffix="" />
+										<Statistic title="CPR Width > 1%" value={stats.wideCount} precision={0} valueStyle={{ color: "#2196F3" }} prefix={<ExpandOutlined />} suffix="" />
 									</Card>
 								</Col>
 							</Row>
 						</div>
 
 						<div style={{ paddingTop: 10 }}>
-							🐂 <font color="green">Bulls {calcPercent(cprAboveCount(props.timeframe), cprAboveCount(props.timeframe) + cprBelowCount(props.timeframe)).toFixed(1)}%</font> <b>vs</b>{" "}
-							<font color="red">{calcPercent(cprBelowCount(props.timeframe), cprAboveCount(props.timeframe) + cprBelowCount(props.timeframe)).toFixed(1)}% Bears</font> 🐻
-							<Progress
-								percent={100}
-								success={{ percent: calcPercent(cprAboveCount(props.timeframe), cprAboveCount(props.timeframe) + cprBelowCount(props.timeframe)) }}
-								showInfo={false}
-								strokeColor="red"
-							/>
+							🐂 <font color="green">Bulls {stats.bullsPercent.toFixed(1)}%</font> <b>vs</b> <font color="red">{stats.bearsPercent.toFixed(1)}% Bears</font> 🐻
+							<Progress percent={100} success={{ percent: stats.bullsPercent }} showInfo={false} strokeColor="red" />
 						</div>
 					</>
 				) : null}
