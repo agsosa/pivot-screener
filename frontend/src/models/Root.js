@@ -1,8 +1,7 @@
 import { flow, types, unprotect } from "mobx-state-tree";
 import moment from "moment";
 import { createContext, useContext } from "react";
-import { apiFetchTickers, apiFetchCandlesticksLocally } from "../utils/Api";
-import { randomInteger } from "../utils/Helpers";
+import { calcPercent } from "../utils/Helpers";
 import { Ticker } from "./Ticker";
 import localForage from "localforage";
 import { persist } from "mst-persist";
@@ -139,14 +138,23 @@ const RootModel = types
 				return self.tickers.filter((q) => q.getCPR(timeframe).price_position === "above").length;
 			},
 			camStats(timeframe) {
-				return {};
+				const result = { aboveH4: 0, belowL4: 0, aboveH3: 0, belowL3: 0, betweenL3H3: 0, bullsPercent: 0, bearsPercent: 0 };
+				self.tickers.forEach((q) => {
+					const cam = q.getCamarilla(timeframe);
+					result.aboveH4 += cam.h4_priceStatus === "above" ? 1 : 0;
+					result.aboveH3 += cam.h3_priceStatus === "above" && cam.h4_priceStatus !== "above" ? 1 : 0;
+
+					result.belowL3 += cam.l3_priceStatus === "below" && cam.l4_priceStatus !== "below" ? 1 : 0;
+					result.belowL4 += cam.l4_priceStatus === "below" ? 1 : 0;
+
+					result.betweenL3H3 += cam.h3_priceStatus === "below" && cam.l3_priceStatus === "above" ? 1 : 0;
+				});
+
+				result.bullsPercent = calcPercent(result.aboveH4 + result.aboveH3, self.tickers.length - result.betweenL3H3);
+				result.bearsPercent = calcPercent(result.belowL4 + result.belowL3, self.tickers.length - result.betweenL3H3);
+
+				return result;
 			},
-			/*sidewaysCount(timeframe) {
-				return self.tickers.filter((q) => !q.getCPR(timeframe)).length;
-			},
-			trendingCount(timeframe) {
-				return self.tickers.filter((q) => !q.getCPR(timeframe)).length;
-			},*/
 		};
 	});
 

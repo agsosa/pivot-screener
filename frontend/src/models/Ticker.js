@@ -18,6 +18,7 @@ export const Ticker = types
 	}))
 	.views((self) => {
 		return {
+			// TODO: Optimize (lazy initialization?) in special getCPR, getCamarilla
 			get price() {
 				const session = self.getCurrentSessionOHLC();
 				return !session ? 0 : session.close;
@@ -57,15 +58,7 @@ export const Ticker = types
 				result.bc = (session.high + session.low) / 2.0;
 				result.tc = result.p - result.bc + result.p;
 				const width_result = ((Math.abs(result.tc - result.bc) / result.p) * 100).toFixed(2);
-				result.width = width_result; //clamp(width_result, 0.01, 1.0);
-
-				// TODO: Normalize or something width to improve accuracy
-				/*
-                    CPR Width > 0.5 - Sideways or Trading Range Day, 
-                    CPR Width > 0.75 - increases the likelihood of sideways trading behavior, 
-                    CPR Width < 0.5 - Trending type of day, 
-                    CPR Width < 0.25 - increases the likelihood of a trending market. 
-                */
+				result.width = width_result;
 
 				result.isTested = inRange(result.bc, currSession.low, currSession.high) || inRange(result.tc, currSession.low, currSession.high);
 				result.price_position = currSession.close >= result.tc ? "above" : currSession.close <= result.bc ? "below" : "neutral";
@@ -101,6 +94,11 @@ export const Ticker = types
 				result.h5 = result.h4 + 1.168 * (result.h4 - result.h3);
 				result.l5 = result.l4 - 1.168 * (result.l3 - result.l4);
 				result.l6 = session.close - (result.h6 - session.close);
+
+				// For each Camarilla level add result.level_priceStatus "above" if the current PRICE is above this level, "below" if it's below
+				Object.keys(result).forEach((k) => {
+					result[k + "_priceStatus"] = self.price > result[k] ? "above" : "below";
+				});
 
 				return result;
 			},
