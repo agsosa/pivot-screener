@@ -7,7 +7,7 @@ export default function Breadcrumb(props) {
 			<>
 				<BreadcrumbAntd style={{ paddingBottom: 15, textAlign: "left" }}>
 					{props.items.map((i) => {
-						return <BreadcrumbAntd.Item>{i}</BreadcrumbAntd.Item>;
+						return <BreadcrumbAntd.Item key={i}>{i}</BreadcrumbAntd.Item>;
 					})}
 				</BreadcrumbAntd>
 			</>

@@ -204,7 +204,7 @@ const CPRTable = observer((props) => {
 	};
 
 	return (
-		<p>
+		<div>
 			<CPRStats timeframe={props.timeframe} />
 			<Space style={{ padding: 1 }}>
 				<h1>
@@ -288,7 +288,7 @@ const CPRTable = observer((props) => {
 					</p>
 				</>
 			)}
-		</p>
+		</div>
 	);
 });
 

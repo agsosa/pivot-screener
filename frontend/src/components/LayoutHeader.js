@@ -67,9 +67,9 @@ export default function LayoutHeader(props) {
 	return (
 		<>
 			<div className="header-title" style={{ padding: 14, flex: 1 }}>
-				<div class="widget_container">
-					<div class="tradingview-widget-container" ref={hRef}>
-						<div class="tradingview-widget-container__widget"></div>
+				<div className="widget_container">
+					<div className="tradingview-widget-container" ref={hRef}>
+						<div className="tradingview-widget-container__widget"></div>
 					</div>
 				</div>
 
@@ -124,7 +124,7 @@ export default function LayoutHeader(props) {
 				</Row>
 			</div>
 
-			<Space vertical style={{ alignSelf: "center", paddingTop: 10 }}>
+			<div style={{ alignSelf: "center", paddingTop: 10 }}>
 				<Alert
 					message={
 						<>
@@ -136,7 +136,7 @@ export default function LayoutHeader(props) {
 					}
 					type="warning"
 				/>
-			</Space>
+			</div>
 		</>
 	);
 }

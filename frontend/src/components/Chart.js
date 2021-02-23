@@ -11,6 +11,7 @@ export const Chart = observer((props) => {
 	/*const [chart, setChart] = useState();
 	const [series, setSeries] = useState();*/
 	//const [chartOptions, setChartOptions] = useState({ dailyCPR: false, weeklyCPR: false, monthlyCPR: true, dailyCAM: false, weeklyCAM: false, monthlyCAM: true, futureMode: false });
+	const [ready, setReady] = useState(false);
 	const chart = useRef(null);
 	const series = useRef(null);
 	const dispose = useRef(null);
@@ -26,8 +27,7 @@ export const Chart = observer((props) => {
 	dispose2.current = reaction(
 		() => chartOptions,
 		(chartOptions) => {
-			console.log(chartOptions);
-			updateChart(tickers[0]);
+			updateChart(tickers[0], true);
 		},
 		{ fireImmediately: true }
 	);
@@ -56,7 +56,7 @@ export const Chart = observer((props) => {
 		}
 	});
 
-	function updateChart(data) {
+	function updateChart(data, forceDrawingsRefresh = false) {
 		if (data) {
 			console.log("Chart updateChart symbol = " + data.symbol + "price = " + data.price);
 			if (data.candlesticks && data.candlesticks.hourlyCandles && data.candlesticks.dailyCandles) {
@@ -94,7 +94,7 @@ export const Chart = observer((props) => {
 				else {
 					const a = lastData.current.candlesticks.dailyCandles;
 					const b = data.candlesticks.dailyCandles;
-					if (a[a.length - 1].timestamp !== b[b.length - 1].timestamp || lastData.current.symbol !== data.symbol) {
+					if (a[a.length - 1].timestamp !== b[b.length - 1].timestamp || lastData.current.symbol !== data.symbol || forceDrawingsRefresh) {
 						if (lastData.current.symbol !== data.symbol) chart.current.priceScale().applyOptions({ autoScale: true });
 						initializeDrawings(data);
 					}
@@ -225,6 +225,7 @@ export const Chart = observer((props) => {
 
 			//InitializeDrawings();
 			//updateChart();
+			setReady(true);
 			if (props.onLoadComplete) props.onLoadComplete();
 		}
 
@@ -242,19 +243,13 @@ export const Chart = observer((props) => {
 			<Space direction="vertical">
 				<Space>
 					<span style={{ marginRight: 10 }}>
-						<Button primary onClick={() => chartOptions.toggleAllDaily()}>
-							Toggle Daily
-						</Button>
+						<Button onClick={() => chartOptions.toggleAllDaily()}>Toggle Daily</Button>
 					</span>
 					<span style={{ marginRight: 10 }}>
-						<Button primary onClick={() => chartOptions.toggleAllWeekly()}>
-							Toggle Weekly
-						</Button>
+						<Button onClick={() => chartOptions.toggleAllWeekly()}>Toggle Weekly</Button>
 					</span>
 					<span style={{ marginRight: 10 }}>
-						<Button primary onClick={() => chartOptions.toggleAllMonthly()}>
-							Toggle Monthly
-						</Button>
+						<Button onClick={() => chartOptions.toggleAllMonthly()}>Toggle Monthly</Button>
 					</span>
 					<span style={{ marginRight: 20 }}>
 						Show developing pivots:{" "}
@@ -292,6 +287,7 @@ export const Chart = observer((props) => {
 					</span>
 				</Space>
 			</Space>
+
 			<div ref={chartRef} />
 		</>
 	);
