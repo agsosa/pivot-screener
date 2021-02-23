@@ -88,7 +88,7 @@ export default function LayoutHeader(props) {
 							justifyContent: "center",
 						}}>
 						<a href="/" style={{ fontSize: "XXX-LARGE", color: "white" }}>
-							Pivot Screener
+							Pivot Screener <sup style={{ fontSize: 20 }}>Beta</sup>
 						</a>
 					</Col>
 					<Col

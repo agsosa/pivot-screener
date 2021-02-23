@@ -12,6 +12,7 @@ import CPRStats from "./CPRStats";
 import SocketStatus from "./SocketStatus";
 
 // TODO: Implementar tooltip en las distancias de pivote para mostrar precio del pivote
+// TODO: Merge with CamTable
 
 const CPRTable = observer((props) => {
 	const { timeframe } = props;
@@ -21,9 +22,32 @@ const CPRTable = observer((props) => {
 	const [gridApi, setGridApi] = useState(null);
 	const [gridColumnApi, setGridColumnApi] = useState(null);
 
+	const [width, setWidth] = useState(window.innerWidth);
+
+	function handleWindowSizeChange() {
+		setWidth(window.innerWidth);
+	}
+
 	const { tickers } = useMst((store) => ({
 		tickers: store.tickers,
 	}));
+
+	dispose = autorun(() => {
+		if (gridApi) {
+			if (tickers && tickers.length > 0) {
+				gridApi.setRowData(tickers);
+			}
+		}
+	});
+
+	useEffect(() => {
+		window.addEventListener("resize", handleWindowSizeChange);
+
+		return () => {
+			window.removeEventListener("resize", handleWindowSizeChange);
+			if (dispose) dispose();
+		};
+	}, []);
 
 	const onGridReady = (params) => {
 		setGridApi(params.api);
@@ -37,20 +61,6 @@ const CPRTable = observer((props) => {
 	const onFirstDataRendered = (params) => {
 		params.api.hideOverlay();
 	};
-
-	dispose = autorun(() => {
-		if (gridApi) {
-			if (tickers && tickers.length > 0) {
-				gridApi.setRowData(tickers);
-			}
-		}
-	});
-
-	useEffect(() => {
-		return () => {
-			if (dispose) dispose();
-		};
-	}, []);
 
 	function CustomLoadingOverlay(props) {
 		return <Spin tip="Loading..." />;
@@ -192,7 +202,7 @@ const CPRTable = observer((props) => {
 						enableCellChangeFlash: true,
 						editable: false,
 						sortable: true,
-						flex: 1,
+						flex: width <= 768 ? 0 : 1,
 						filter: true,
 						resizable: true,
 					}}

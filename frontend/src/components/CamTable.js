@@ -11,6 +11,8 @@ import "./AGGridOverrides.css";
 import CamStats from "./CamStats";
 import SocketStatus from "./SocketStatus";
 
+// TODO: Merge with CPRTable
+
 const CamTable = observer((props) => {
 	let dispose;
 
@@ -20,6 +22,21 @@ const CamTable = observer((props) => {
 	const { tickers } = useMst((store) => ({
 		tickers: store.tickers,
 	}));
+
+	const [width, setWidth] = useState(window.innerWidth);
+
+	function handleWindowSizeChange() {
+		setWidth(window.innerWidth);
+	}
+
+	useEffect(() => {
+		window.addEventListener("resize", handleWindowSizeChange);
+
+		return () => {
+			window.removeEventListener("resize", handleWindowSizeChange);
+			if (dispose) dispose();
+		};
+	}, []);
 
 	const onGridReady = (params) => {
 		setGridApi(params.api);
@@ -41,12 +58,6 @@ const CamTable = observer((props) => {
 			}
 		}
 	});
-
-	useEffect(() => {
-		return () => {
-			if (dispose) dispose();
-		};
-	}, []);
 
 	function CustomLoadingOverlay(props) {
 		return <Spin tip="Loading..." />;
@@ -143,7 +154,7 @@ const CamTable = observer((props) => {
 						enableCellChangeFlash: true,
 						editable: false,
 						sortable: true,
-						flex: 1,
+						flex: width <= 768 ? 0 : 1,
 						filter: true,
 						resizable: true,
 					}}
