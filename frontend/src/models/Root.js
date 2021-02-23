@@ -132,13 +132,30 @@ const RootModel = types
 				self.tickers.forEach((q) => {
 					const cam = q.getCamarilla(timeframe);
 
-					result.aboveH4 += cam.h4_priceStatus === "above" ? 1 : 0;
+					/*result.aboveH4 += cam.h4_priceStatus === "above" ? 1 : 0;
 					result.aboveH3 += cam.h3_priceStatus === "above" && cam.h4_priceStatus !== "above" ? 1 : 0;
 
 					result.belowL3 += cam.l3_priceStatus === "below" && cam.l4_priceStatus !== "below" ? 1 : 0;
 					result.belowL4 += cam.l4_priceStatus === "below" ? 1 : 0;
 
-					result.betweenL3H3 += cam.h3_priceStatus === "below" && cam.l3_priceStatus === "above" ? 1 : 0;
+					result.betweenL3H3 += cam.h3_priceStatus === "below" && cam.l3_priceStatus === "above" ? 1 : 0;*/
+
+					switch (cam.situation) {
+						case "Above H4":
+							result.aboveH4++;
+							break;
+						case "Above H3":
+							result.aboveH3++;
+							break;
+						case "Below L3":
+							result.belowL3++;
+							break;
+						case "Below L4":
+							result.belowL4++;
+							break;
+						default:
+							result.betwweenL3H3++;
+					}
 				});
 
 				result.bullsPercent = calcPercent(result.aboveH4 + result.aboveH3, self.tickers.length - result.betweenL3H3);

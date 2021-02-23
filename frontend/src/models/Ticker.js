@@ -98,6 +98,13 @@ export const Ticker = types
 					result[k + "_priceStatus"] = self.price > result[k] ? "above" : "below";
 				});
 
+				result.situation =
+					(result.h4_priceStatus === "above" && "Above H4") ||
+					(result.h3_priceStatus === "above" && result.h4_priceStatus !== "above" && "Above H3") ||
+					(result.l3_priceStatus === "below" && result.l4_priceStatus !== "below" && "Below L3") ||
+					(result.l4_priceStatus === "below" && "Below L4") ||
+					(result.h3_priceStatus === "below" && result.l3_priceStatus === "above" && "Between H3-L3");
+
 				return result;
 			},
 		};
