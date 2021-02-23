@@ -156,25 +156,10 @@ let initialState = RootModel.create({
 });
 
 persist("PivotSC", initialState, {
-	whitelist: ["cprStatsPanelVisible", "camStatsPanelVisible", "chartOptions"], // only these keys will be persisted
+	whitelist: ["cprStatsPanelVisible", "camStatsPanelVisible", "chartOptions"],
 });
 
-/*
-const data = localStorage.getItem('rootState');
-
-if (data) {
-    const json = JSON.parse(data);
-    if (RootModel.is(json)) {
-        initialState = RootModel.create(json);
-    }
-}*/
-
 export const rootStore = initialState;
-
-/*
-onSnapshot(rootStore, snapshot => {
-    localStorage.setItem('rootState', JSON.stringify(snapshot));
-});*/
 
 const MSTContext = createContext(null);
 

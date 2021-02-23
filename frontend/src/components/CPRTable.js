@@ -12,9 +12,10 @@ import CPRStats from "./CPRStats";
 import SocketStatus from "./SocketStatus";
 
 // TODO: Implementar tooltip en las distancias de pivote para mostrar precio del pivote
-// TODO: Optimizar, no es necesario llamar a getCPR en cada funcion.
 
 const CPRTable = observer((props) => {
+	const { timeframe } = props;
+
 	let dispose;
 
 	const [gridApi, setGridApi] = useState(null);
@@ -60,7 +61,7 @@ const CPRTable = observer((props) => {
 	}
 
 	const CPRWidthGetter = (data) => {
-		const value = data.getCPR(props.timeframe).width;
+		const value = data.getCPR(timeframe).width;
 
 		if (value) return value;
 	};
@@ -69,23 +70,6 @@ const CPRTable = observer((props) => {
 		if (value) {
 			let str = "";
 			let font = "";
-
-			/*if (value >= 0.5) {
-				font = "<font color='#DF4294'>";
-				str = "Sideways</font>";
-			}
-			if (value >= 0.75) {
-				font = "<font color='#DF4294'>";
-				str = "Sideways+</font>";
-			}
-			if (value <= 0.5) {
-				font = "<font color='#2196F3'>";
-				str = "Trending</font>";
-			}
-			if (value <= 0.25) {
-				font = "<font color='#2196F3'>";
-				str = "Trending+</font>";
-			}*/
 
 			if (value <= 1) {
 				font = "<font color='#DF4294'>";
@@ -99,15 +83,15 @@ const CPRTable = observer((props) => {
 		}
 	};
 
-	const CPRStatusGetter = (data) => {
-		const value = data.getCPR(props.timeframe).isTested;
+	const cprStatusGetter = (data) => {
+		const value = data.getCPR(timeframe).isTested;
 
 		if (value !== undefined) return value ? "Tested" : "Untested";
 	};
 
 	const cprStatusCellRenderer = (params) => {
 		if (params.value) {
-			const approximation = params.data.getCPR(props.timeframe).closestApproximation.toFixed(1);
+			const approximation = params.data.getCPR(timeframe).closestApproximation.toFixed(1);
 
 			return params.value === "Tested" ? "✔️ Tested" : "🧲 Untested <sup><font color='gray'>" + approximation + "%</font></sup>";
 		}
@@ -120,8 +104,8 @@ const CPRTable = observer((props) => {
 		}
 	};
 
-	const MagnetSideGetter = (data) => {
-		const cpr = data.getCPR(props.timeframe);
+	const magnetSideGetter = (data) => {
+		const cpr = data.getCPR(timeframe);
 		if (cpr) {
 			const tested = cpr.isTested;
 			if (tested !== undefined) {
@@ -133,15 +117,15 @@ const CPRTable = observer((props) => {
 		}
 	};
 
-	const MagnetSideCellStyle = (params) => {
+	const magnetSideCellStyle = (params) => {
 		if (params && params.value) {
 			const extra = { fontSize: "15px" };
 			return params.value === "Short" ? { ...extra, color: "rgba(255, 0, 0, 1)" } : params.value === "Long" ? { ...extra, color: "#4BAA4E" } : { ...extra, color: "#858585" };
 		}
 	};
 
-	const SituationGetter = (data) => {
-		const cpr = data.getCPR(props.timeframe);
+	const situationGetter = (data) => {
+		const cpr = data.getCPR(timeframe);
 
 		if (cpr) {
 			if (cpr.price_position !== undefined) {
@@ -155,7 +139,7 @@ const CPRTable = observer((props) => {
 		}
 	};
 
-	const SituationCellStyle = (params) => {
+	const situationCellStyle = (params) => {
 		if (params && params.value) {
 			const extra = { fontSize: "15px" };
 			return params.value === "Below CPR"
@@ -167,7 +151,7 @@ const CPRTable = observer((props) => {
 	};
 
 	const pivotDistanceGetter = (data) => {
-		const dist = data.getCPR(props.timeframe).distance;
+		const dist = data.getCPR(timeframe).distance;
 		if (dist && dist.p) {
 			return dist.p;
 		}
@@ -178,7 +162,7 @@ const CPRTable = observer((props) => {
 	};
 
 	const tcDistanceGetter = (data) => {
-		const dist = data.getCPR(props.timeframe).distance;
+		const dist = data.getCPR(timeframe).distance;
 		if (dist && dist.tc) {
 			return dist.tc;
 		}
@@ -189,7 +173,7 @@ const CPRTable = observer((props) => {
 	};
 
 	const bcDistanceGetter = (data) => {
-		const dist = data.getCPR(props.timeframe).distance;
+		const dist = data.getCPR(timeframe).distance;
 		if (dist && dist.bc) {
 			return dist.bc;
 		}
@@ -205,10 +189,10 @@ const CPRTable = observer((props) => {
 
 	return (
 		<div>
-			<CPRStats timeframe={props.timeframe} />
+			<CPRStats timeframe={timeframe} />
 			<Space style={{ padding: 1 }}>
 				<h1>
-					{capitalizeFirstLetter(props.market)} / {capitalizeFirstLetter(props.timeframe)}
+					{capitalizeFirstLetter(props.market)} / {capitalizeFirstLetter(timeframe)}
 				</h1>{" "}
 				<Badge style={{ backgroundColor: "#2196F3", marginBottom: 7 }} count={tickers.length} />
 				<SocketStatus style={{ marginBottom: 5 }} />
@@ -247,11 +231,11 @@ const CPRTable = observer((props) => {
 
 					<AgGridColumn headerName="Price" field="price" filter="agNumberColumnFilter"></AgGridColumn>
 
-					<AgGridColumn cellStyle={cprStatusCellStyle} cellRenderer={cprStatusCellRenderer} headerName="CPR Status" valueGetter={(params) => CPRStatusGetter(params.data)}></AgGridColumn>
+					<AgGridColumn cellStyle={cprStatusCellStyle} cellRenderer={cprStatusCellRenderer} headerName="CPR Status" valueGetter={(params) => cprStatusGetter(params.data)}></AgGridColumn>
 
-					<AgGridColumn headerName="Magnet Side" valueGetter={(params) => MagnetSideGetter(params.data)} cellStyle={MagnetSideCellStyle}></AgGridColumn>
+					<AgGridColumn headerName="Magnet Side" valueGetter={(params) => magnetSideGetter(params.data)} cellStyle={magnetSideCellStyle}></AgGridColumn>
 
-					<AgGridColumn headerName="Situation" valueGetter={(params) => SituationGetter(params.data)} cellStyle={SituationCellStyle}></AgGridColumn>
+					<AgGridColumn headerName="Situation" valueGetter={(params) => situationGetter(params.data)} cellStyle={situationCellStyle}></AgGridColumn>
 
 					<AgGridColumn
 						headerName="P Distance"

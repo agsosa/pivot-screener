@@ -1,8 +1,7 @@
 import { types } from "mobx-state-tree";
 import { inRange, percentDifference } from "../utils/Helpers";
 
-// FIXME: A veces no se retornan los valores porque no se encuentra session
-// TODO: Optimize views/computeds (array filter) use cache or something
+// TODO: Optimize views use cache or something
 
 export const Ticker = types
 	.model({
@@ -18,7 +17,6 @@ export const Ticker = types
 	}))
 	.views((self) => {
 		return {
-			// TODO: Optimize (lazy initialization?) in special getCPR, getCamarilla
 			get price() {
 				const session = self.getCurrentSessionOHLC();
 				return !session ? 0 : session.close;

@@ -1,5 +1,6 @@
 import { Alert, Button, Layout, Modal, Space } from "antd";
 import React, { useState } from "react";
+import Contact from "./Contact.js";
 
 const { Footer } = Layout;
 
@@ -44,7 +45,7 @@ export default function LayoutFooter(props) {
 						<>
 							For any suggestion or bug report you can send me a message on Telegram{" "}
 							<a href="https://t.me/xref1x" target="_blank" rel="noreferrer" style={{ marginLeft: 100 }}>
-								💬 Contact
+								💬 Telegram
 							</a>
 						</>
 					}
@@ -79,10 +80,7 @@ export default function LayoutFooter(props) {
 				Disclaimer: The information provided on this website does not constitute Investment or trading advice. The sole purpose of this website is informational and/or Educational. Pivot Screener is
 				not responsible for any misuse of the information presented on this website.
 			</p>
-			Pivot Screener © 2021{" "}
-			<a href="https://github.com/aleegs/pivot-screener-2" target="_blank" rel="noreferrer">
-				Github
-			</a>
+			Pivot Screener © 2021 <Contact />
 			<br />
 		</Footer>
 	);
