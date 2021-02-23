@@ -154,7 +154,7 @@ const RootModel = types
 							result.belowL4++;
 							break;
 						default:
-							result.betwweenL3H3++;
+							result.betweenL3H3++;
 					}
 				});
 

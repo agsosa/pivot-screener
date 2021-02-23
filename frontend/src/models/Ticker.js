@@ -77,6 +77,9 @@ export const Ticker = types
 					l4: undefined,
 					l5: undefined,
 					l6: undefined,
+					situation: undefined,
+					distance: { h3: undefined, h4: undefined, h5: undefined, h6: undefined, l3: undefined, l4: undefined, l5: undefined, l6: undefined },
+					nearest: undefined,
 				};
 				const currSession = self.getCurrentSessionOHLC(timeframe);
 				const session = future ? currSession : self.getPreviousSessionOHLC(timeframe);
@@ -104,6 +107,22 @@ export const Ticker = types
 					(result.l3_priceStatus === "below" && result.l4_priceStatus !== "below" && "Below L3") ||
 					(result.l4_priceStatus === "below" && "Below L4") ||
 					(result.h3_priceStatus === "below" && result.l3_priceStatus === "above" && "Between H3-L3");
+
+				// Calculate distance percentage for every level in result.distance
+				Object.keys(result.distance).forEach((k) => {
+					result.distance[k] = percentDifference(currSession.close, result[k]);
+				});
+
+				// Get nearest level
+				result.nearest = Object.keys(result.distance)
+					.map(function (k) {
+						// Convert to [key, value]
+						return [k, result.distance[k]];
+					})
+					.reduce(function (a, b) {
+						// Get the minimum pair
+						return b[1] < a[1] ? b : a;
+					})[0]; // Result will be [key, value], we just need the key
 
 				return result;
 			},

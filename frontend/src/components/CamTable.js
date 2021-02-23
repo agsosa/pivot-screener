@@ -56,140 +56,63 @@ const CamTable = observer((props) => {
 		return <Result status="warning" title="No data found. Please try reloading the page." />;
 	}
 
-	const CPRWidthGetter = (data) => {
-		const value = data.getCPR(props.timeframe).width;
+	const situationGetter = (data) => {
+		const cam = data.getCamarilla(props.timeframe);
 
-		if (value) return value;
-	};
-
-	const CPRWidthRenderer = (value) => {
-		if (value) {
-			let str = "";
-			let font = "";
-
-			if (value >= 0.5) {
-				font = "<font color='#DF4294'>";
-				str = "Sideways</font>";
-			}
-			if (value >= 0.75) {
-				font = "<font color='#DF4294'>";
-				str = "Sideways+</font>";
-			}
-			if (value <= 0.5) {
-				font = "<font color='#2196F3'>";
-				str = "Trending</font>";
-			}
-			if (value <= 0.25) {
-				font = "<font color='#2196F3'>";
-				str = "Trending+</font>";
-			}
-
-			return font + value + "% " + str;
+		if (cam) {
+			return cam.situation;
 		}
 	};
 
-	const CPRStatusGetter = (data) => {
-		const value = data.getCPR(props.timeframe).isTested;
-
-		if (value !== undefined) return value ? "Tested" : "Untested";
-	};
-
-	const cprStatusCellRenderer = (params) => {
-		if (params.value) {
-			const approximation = 0;
-
-			return params.value === "Tested" ? "✔️ Tested" : "🧲 Untested <sup><font color='gray'0%</font></sup>";
-		}
-	};
-
-	const cprStatusCellStyle = (params) => {
+	const situationCellStyle = (params) => {
 		if (params && params.value) {
 			const extra = { fontSize: "15px" };
-			return params.value === "Untested" ? { ...extra, backgroundColor: "rgba(255, 0, 0, 0.1)" } : { ...extra, backgroundColor: "rgba(0, 255, 0, 0.1)" };
-		}
-	};
 
-	const MagnetSideGetter = (data) => {
-		const cpr = data.getCPR(props.timeframe);
-		if (cpr) {
-			const tested = cpr.isTested;
-			if (tested !== undefined) {
-				if (tested) return "None";
-
-				const isAboveCPR = cpr.price_position === "above";
-				if (isAboveCPR !== undefined) return isAboveCPR ? "Short" : "Long";
+			switch (params.value) {
+				case "Above H4":
+					return { ...extra, backgroundColor: "rgba(0, 255, 0, 0.3)" };
+				case "Above H3":
+					return { ...extra, backgroundColor: "rgba(249, 211, 101, 0.3)" };
+				case "Below L3":
+					return { ...extra, backgroundColor: "rgba(249, 211, 101, 0.3)" };
+				case "Below L4":
+					return { ...extra, backgroundColor: "rgba(255, 0, 0, 0.3)" };
+				default:
+					return { ...extra, backgroundColor: "rgb(103, 124, 135, 0.3)" };
 			}
 		}
 	};
 
-	const MagnetSideCellStyle = (params) => {
-		if (params && params.value) {
+	const distanceCellStyle = (params, level) => {
+		if (params && params.value && level && level.length >= 2) {
 			const extra = { fontSize: "15px" };
-			return params.value === "Short" ? { ...extra, color: "rgba(255, 0, 0, 1)" } : params.value === "Long" ? { ...extra, color: "#4BAA4E" } : { ...extra, color: "#858585" };
+
+			if (level[0] === "h") return { ...extra, backgroundColor: "rgba(33, 150, 243, 0.1)" };
+			// H4,H5,H3,H6
+			else if (level[0] === "l") return { ...extra, backgroundColor: "rgba(223, 66, 148, 0.1)" }; // L4,L5,L6,L3
 		}
 	};
 
-	const SituationGetter = (data) => {
-		const cpr = data.getCPR(props.timeframe);
-
-		if (cpr) {
-			if (cpr.price_position !== undefined) {
-				const neutral = cpr.price_position === "neutral";
-				if (neutral !== undefined && neutral) return "Neutral";
-
-				const above = cpr.price_position === "above";
-				if (above !== undefined && above) return "Above CPR";
-				else return "Below CPR";
-			}
+	const distanceGetter = (data, levelStr) => {
+		const dist = data.getCamarilla(props.timeframe).distance;
+		if (dist && dist[levelStr]) {
+			return dist[levelStr];
 		}
 	};
 
-	const SituationCellStyle = (params) => {
-		if (params && params.value) {
-			const extra = { fontSize: "15px" };
-			return params.value === "Below CPR"
-				? { ...extra, backgroundColor: "rgba(255, 0, 0, 0.1)" }
-				: params.value === "Above CPR"
-				? { ...extra, backgroundColor: "rgba(0, 255, 0, 0.1)" }
-				: { ...extra, backgroundColor: "rgb(103, 124, 135, 0.1)" };
-		}
-	};
-
-	const pivotDistanceGetter = (data) => {
-		const dist = data.getCPR(props.timeframe).distance;
-		if (dist && dist.p) {
-			return dist.p;
-		}
-	};
-
-	const pivotDistanceFormatter = (value) => {
+	const distanceFormatter = (value) => {
 		if (value) return value.toFixed(2) + "%";
 	};
 
-	const tcDistanceGetter = (data) => {
-		const dist = data.getCPR(props.timeframe).distance;
-		if (dist && dist.tc) {
-			return dist.tc;
+	const nearestLevelGetter = (data, levelStr) => {
+		const nearest = data.getCamarilla(props.timeframe).nearest;
+		if (nearest) {
+			return nearest.toUpperCase();
 		}
-	};
-
-	const tcDistanceFormatter = (value) => {
-		if (value) return value.toFixed(2) + "%";
-	};
-
-	const bcDistanceGetter = (data) => {
-		const dist = data.getCPR(props.timeframe).distance;
-		if (dist && dist.bc) {
-			return dist.bc;
-		}
-	};
-
-	const bcDistanceFormatter = (value) => {
-		if (value) return value.toFixed(2) + "%";
 	};
 
 	const symbolRenderer = (params) => {
-		return "<font size=3>" + params.value.replace("USDT", "</font> <font color='gray'>USDT</font>");
+		return "<font size=3>" + params.value.replace("USDT", "</font> <font color='gray'>USDT</font>"); // TODO: Use utils get pair object (to get separated symbol, quote)
 	};
 
 	return (
@@ -203,12 +126,6 @@ const CamTable = observer((props) => {
 				<SocketStatus style={{ marginBottom: 5 }} />
 			</Space>
 			<p style={{ marginTop: -5 }}>You can filter and sort any column. The data is updated automatically.</p>
-			<b>
-				status: lo q muestra en camstats
-				<br /> nearest: el nivel mas cercano para cada nivel mostrar la distancia
-				<br /> quizas agregar tambien si en esta sesion lo ha tocado <br />
-				construir la tabla mediante loop de object.keys del objeto de camarilla
-			</b>
 
 			<div className="ag-theme-material" style={{ height: 700, width: "100%" }}>
 				{/*<Button onClick={test}>test</Button>*/}
@@ -243,31 +160,20 @@ const CamTable = observer((props) => {
 
 					<AgGridColumn headerName="Price" field="price" filter="agNumberColumnFilter"></AgGridColumn>
 
-					<AgGridColumn cellStyle={cprStatusCellStyle} cellRenderer={cprStatusCellRenderer} headerName="CPR Status" valueGetter={(params) => CPRStatusGetter(params.data)}></AgGridColumn>
+					<AgGridColumn headerName="Nearest" valueGetter={(params) => nearestLevelGetter(params.data)}></AgGridColumn>
 
-					<AgGridColumn headerName="Magnet Side" valueGetter={(params) => MagnetSideGetter(params.data)} cellStyle={MagnetSideCellStyle}></AgGridColumn>
+					<AgGridColumn headerName="Situation" valueGetter={(params) => situationGetter(params.data)} cellStyle={situationCellStyle}></AgGridColumn>
 
-					<AgGridColumn headerName="Situation" valueGetter={(params) => SituationGetter(params.data)} cellStyle={SituationCellStyle}></AgGridColumn>
-
-					<AgGridColumn
-						headerName="P Distance"
-						valueFormatter={(params) => pivotDistanceFormatter(params.value)}
-						valueGetter={(params) => pivotDistanceGetter(params.data)}
-						filter="agNumberColumnFilter"></AgGridColumn>
-
-					<AgGridColumn
-						headerName="TC Distance"
-						valueFormatter={(params) => tcDistanceFormatter(params.value)}
-						valueGetter={(params) => tcDistanceGetter(params.data)}
-						filter="agNumberColumnFilter"></AgGridColumn>
-
-					<AgGridColumn
-						headerName="BC Distance"
-						valueFormatter={(params) => bcDistanceFormatter(params.value)}
-						valueGetter={(params) => bcDistanceGetter(params.data)}
-						filter="agNumberColumnFilter"></AgGridColumn>
-
-					<AgGridColumn headerName="CPR Width" cellRenderer={(params) => CPRWidthRenderer(params.value)} valueGetter={(params) => CPRWidthGetter(params.data)}></AgGridColumn>
+					{["h3", "h4", "h5", "h6", "l3", "l4", "l5", "l6"].map((q) => {
+						return (
+							<AgGridColumn
+								headerName={q.toUpperCase() + " Distance"}
+								valueFormatter={(params) => distanceFormatter(params.value)}
+								valueGetter={(params) => distanceGetter(params.data, q)}
+								cellStyle={(params) => distanceCellStyle(params, q)}
+								filter="agNumberColumnFilter"></AgGridColumn>
+						);
+					})}
 				</AgGridReact>
 			</div>
 			{!tickers || tickers.length === 0 ? (
