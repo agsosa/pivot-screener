@@ -60,6 +60,17 @@ const CPRTable = observer((props) => {
 		return <Result status="warning" title="No data found. Please try reloading the page." />;
 	}
 
+	const distanceGetter = (data, objectStr) => {
+		const dist = data.getCPR(timeframe).distance;
+		if (dist && dist[objectStr]) {
+			return dist[objectStr];
+		}
+	};
+
+	const distanceFormatter = (value) => {
+		if (value) return value.toFixed(2) + "%";
+	};
+
 	const CPRWidthGetter = (data) => {
 		const value = data.getCPR(timeframe).width;
 
@@ -150,41 +161,8 @@ const CPRTable = observer((props) => {
 		}
 	};
 
-	const pivotDistanceGetter = (data) => {
-		const dist = data.getCPR(timeframe).distance;
-		if (dist && dist.p) {
-			return dist.p;
-		}
-	};
-
-	const pivotDistanceFormatter = (value) => {
-		if (value) return value.toFixed(2) + "%";
-	};
-
-	const tcDistanceGetter = (data) => {
-		const dist = data.getCPR(timeframe).distance;
-		if (dist && dist.tc) {
-			return dist.tc;
-		}
-	};
-
-	const tcDistanceFormatter = (value) => {
-		if (value) return value.toFixed(2) + "%";
-	};
-
-	const bcDistanceGetter = (data) => {
-		const dist = data.getCPR(timeframe).distance;
-		if (dist && dist.bc) {
-			return dist.bc;
-		}
-	};
-
-	const bcDistanceFormatter = (value) => {
-		if (value) return value.toFixed(2) + "%";
-	};
-
 	const symbolRenderer = (params) => {
-		return "<font size=3>" + params.value.replace("USDT", "</font> <font color='gray'>USDT</font>");
+		return "<font size=3>" + params.value.replace("USDT", "</font> <font color='gray'>USDT</font>"); // TODO: Use utils get pair object (to get separated symbol, quote)
 	};
 
 	return (
@@ -237,23 +215,15 @@ const CPRTable = observer((props) => {
 
 					<AgGridColumn headerName="Situation" valueGetter={(params) => situationGetter(params.data)} cellStyle={situationCellStyle}></AgGridColumn>
 
-					<AgGridColumn
-						headerName="P Distance"
-						valueFormatter={(params) => pivotDistanceFormatter(params.value)}
-						valueGetter={(params) => pivotDistanceGetter(params.data)}
-						filter="agNumberColumnFilter"></AgGridColumn>
-
-					<AgGridColumn
-						headerName="TC Distance"
-						valueFormatter={(params) => tcDistanceFormatter(params.value)}
-						valueGetter={(params) => tcDistanceGetter(params.data)}
-						filter="agNumberColumnFilter"></AgGridColumn>
-
-					<AgGridColumn
-						headerName="BC Distance"
-						valueFormatter={(params) => bcDistanceFormatter(params.value)}
-						valueGetter={(params) => bcDistanceGetter(params.data)}
-						filter="agNumberColumnFilter"></AgGridColumn>
+					{["p", "tc", "bc"].map((q) => {
+						return (
+							<AgGridColumn
+								headerName={q.toUpperCase() + " Distance"}
+								valueFormatter={(params) => distanceFormatter(params.value)}
+								valueGetter={(params) => distanceGetter(params.data, q)}
+								filter="agNumberColumnFilter"></AgGridColumn>
+						);
+					})}
 
 					<AgGridColumn headerName="CPR Width" cellRenderer={(params) => CPRWidthRenderer(params.value)} valueGetter={(params) => CPRWidthGetter(params.data)}></AgGridColumn>
 				</AgGridReact>
