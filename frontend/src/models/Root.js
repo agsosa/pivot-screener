@@ -104,26 +104,6 @@ const RootModel = types
 	})
 	.views((self) => {
 		return {
-			get remainingCloseTime() {
-				// TODO: Not working
-				if (self.tickers.length > 0) {
-					let fTicker = self.tickers[0];
-					if (!fTicker.candlesticks || !fTicker.latestOHLC) return 0;
-
-					let time = new Date(fTicker.latestOHLC.timestamp);
-
-					if (time) {
-						console.log(time);
-						var ms = moment(time, "DD/MM/YYYY HH:mm:ss").diff(moment(new Date(), "DD/MM/YYYY HH:mm:ss"));
-						var d = moment.duration(ms);
-						var s = Math.floor(d.asHours()) + moment.utc(ms).format(":mm:ss");
-
-						return s;
-					}
-				}
-
-				return null;
-			},
 			cprStats(timeframe) {
 				const result = { aboveCount: 0, belowCount: 0, neutralCount: 0, untestedCount: 0, bullsPercent: 0, bearsPercent: 0, wideCount: 0, tightCount: 0 };
 
