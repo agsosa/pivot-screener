@@ -1,7 +1,7 @@
 import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-material.css";
 import { AgGridColumn, AgGridReact } from "ag-grid-react";
-import { Badge, Result, Skeleton, Space, Spin } from "antd";
+import { Badge, Result, Skeleton, Space, Spin, Button, message } from "antd";
 import { autorun } from "mobx";
 import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
@@ -21,6 +21,7 @@ const CPRTable = observer((props) => {
 
 	const [gridApi, setGridApi] = useState(null);
 	const [gridColumnApi, setGridColumnApi] = useState(null);
+	const [filtersEnabled, setFiltersEnabled] = useState(false);
 
 	const [width, setWidth] = useState(window.innerWidth);
 
@@ -28,8 +29,10 @@ const CPRTable = observer((props) => {
 		setWidth(window.innerWidth);
 	}
 
-	const { tickers } = useMst((store) => ({
+	const { tickers, cprTableFilters, setCprTableFilters } = useMst((store) => ({
 		tickers: store.tickers,
+		cprTableFilters: store.cprTableFilters,
+		setCprTableFilters: store.setCprTableFilters,
 	}));
 
 	dispose = autorun(() => {
@@ -171,6 +174,43 @@ const CPRTable = observer((props) => {
 		}
 	};
 
+	const saveFilters = () => {
+		if (gridApi) {
+			const filterModel = gridApi.getFilterModel();
+			setCprTableFilters(filterModel);
+			message.success("Filters saved");
+		} else {
+			message.success("The table is not ready");
+		}
+	};
+
+	const loadFilters = () => {
+		if (gridApi) {
+			if (cprTableFilters) {
+				gridApi.setFilterModel(cprTableFilters);
+				message.success("Filters applied");
+			} else {
+				message.error("No saved filters found");
+			}
+		} else {
+			message.success("The table is not ready");
+		}
+	};
+
+	const clearFilters = () => {
+		if (gridApi) {
+			gridApi.setFilterModel(null);
+		} else {
+			message.success("The table is not ready");
+		}
+	};
+
+	const onFilterChanged = () => {
+		if (gridApi) {
+			setFiltersEnabled(gridApi.isAnyFilterPresent());
+		}
+	};
+
 	const symbolRenderer = (params) => {
 		return "<font size=3>" + params.value.replace("USDT", "</font> <font color='gray'>USDT</font>"); // TODO: Use utils get pair object (to get separated symbol, quote)
 	};
@@ -185,12 +225,26 @@ const CPRTable = observer((props) => {
 				<Badge style={{ backgroundColor: "#2196F3", marginBottom: 7 }} count={tickers.length} />
 				<SocketStatus style={{ marginBottom: 5 }} />
 			</Space>
+
 			<p style={{ marginTop: -5 }}>You can filter and sort any column. The data is updated automatically.</p>
+			<Space>
+				<Button onClick={saveFilters}>Save Filters</Button>
+				<Button onClick={loadFilters}>Load Saved Filters</Button>
+				<Button onClick={clearFilters}>Clear Filters</Button>
+			</Space>
+
+			{filtersEnabled ? (
+				<p style={{ marginTop: 10, color: "red" }}>
+					<b>* Using Filters *</b>
+				</p>
+			) : null}
+
 			<div className="ag-theme-material" style={{ height: 700, width: "100%" }}>
 				{/*<Button onClick={test}>test</Button>*/}
 				<AgGridReact
 					onGridReady={onGridReady}
 					animateRows
+					onFilterChanged={onFilterChanged}
 					onFirstDataRendered={onFirstDataRendered}
 					immutableData={true}
 					tooltipShowDelay={0}

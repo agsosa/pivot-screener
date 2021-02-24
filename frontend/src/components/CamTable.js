@@ -1,8 +1,8 @@
 import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-material.css";
 import { AgGridColumn, AgGridReact } from "ag-grid-react";
-import { Badge, Result, Skeleton, Space, Spin } from "antd";
-import { autorun } from "mobx";
+import { Badge, Result, Skeleton, Space, Spin, Button, message } from "antd";
+import { autorun, reaction } from "mobx";
 import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
 import { useMst } from "../models/Root";
@@ -14,13 +14,16 @@ import SocketStatus from "./SocketStatus";
 // TODO: Merge with CPRTable
 
 const CamTable = observer((props) => {
-	let dispose;
+	let dispose1;
 
 	const [gridApi, setGridApi] = useState(null);
 	const [gridColumnApi, setGridColumnApi] = useState(null);
+	const [filtersEnabled, setFiltersEnabled] = useState(false);
 
-	const { tickers } = useMst((store) => ({
+	const { tickers, camTableFilters, setCamTableFilters } = useMst((store) => ({
 		tickers: store.tickers,
+		camTableFilters: store.camTableFilters,
+		setCamTableFilters: store.setCamTableFilters,
 	}));
 
 	const [width, setWidth] = useState(window.innerWidth);
@@ -34,7 +37,7 @@ const CamTable = observer((props) => {
 
 		return () => {
 			window.removeEventListener("resize", handleWindowSizeChange);
-			if (dispose) dispose();
+			if (dispose1) dispose1();
 		};
 	}, []);
 
@@ -51,7 +54,7 @@ const CamTable = observer((props) => {
 		params.api.hideOverlay();
 	};
 
-	dispose = autorun(() => {
+	dispose1 = autorun(() => {
 		if (gridApi) {
 			if (tickers && tickers.length > 0) {
 				gridApi.setRowData(tickers);
@@ -126,6 +129,43 @@ const CamTable = observer((props) => {
 		return "<font size=3>" + params.value.replace("USDT", "</font> <font color='gray'>USDT</font>"); // TODO: Use utils get pair object (to get separated symbol, quote)
 	};
 
+	const saveFilters = () => {
+		if (gridApi) {
+			const filterModel = gridApi.getFilterModel();
+			setCamTableFilters(filterModel);
+			message.success("Filters saved");
+		} else {
+			message.success("The table is not ready");
+		}
+	};
+
+	const loadFilters = () => {
+		if (gridApi) {
+			if (camTableFilters) {
+				gridApi.setFilterModel(camTableFilters);
+				message.success("Filters applied");
+			} else {
+				message.error("No saved filters found");
+			}
+		} else {
+			message.success("The table is not ready");
+		}
+	};
+
+	const clearFilters = () => {
+		if (gridApi) {
+			gridApi.setFilterModel(null);
+		} else {
+			message.success("The table is not ready");
+		}
+	};
+
+	const onFilterChanged = () => {
+		if (gridApi) {
+			setFiltersEnabled(gridApi.isAnyFilterPresent());
+		}
+	};
+
 	return (
 		<div>
 			<CamStats timeframe={props.timeframe} />
@@ -137,12 +177,24 @@ const CamTable = observer((props) => {
 				<SocketStatus style={{ marginBottom: 5 }} />
 			</Space>
 			<p style={{ marginTop: -5 }}>You can filter and sort any column. The data is updated automatically.</p>
+			<Space>
+				<Button onClick={saveFilters}>Save Filters</Button>
+				<Button onClick={loadFilters}>Load Saved Filters</Button>
+				<Button onClick={clearFilters}>Clear Filters</Button>
+			</Space>
+
+			{filtersEnabled ? (
+				<p style={{ marginTop: 10, color: "red" }}>
+					<b>* Using Filters *</b>
+				</p>
+			) : null}
 
 			<div className="ag-theme-material" style={{ height: 700, width: "100%" }}>
 				{/*<Button onClick={test}>test</Button>*/}
 				<AgGridReact
 					onGridReady={onGridReady}
 					animateRows
+					onFilterChanged={onFilterChanged}
 					onFirstDataRendered={onFirstDataRendered}
 					immutableData={true}
 					tooltipShowDelay={0}

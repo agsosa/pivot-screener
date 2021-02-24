@@ -19,6 +19,8 @@ const RootModel = types
 		symbolsList: types.array(types.string),
 		socketConnected: false,
 		chartOptions: ChartOptions,
+		camTableFilters: types.optional(types.frozen()),
+		cprTableFilters: types.optional(types.frozen()),
 	})
 	.actions((self) => {
 		let socket;
@@ -69,7 +71,7 @@ const RootModel = types
 			}
 		};
 
-		const stopReceivingData = function () {
+		const stopReceivingData = () => {
 			currentQuery = null;
 			self.tickers.clear();
 			socket.close();
@@ -83,12 +85,20 @@ const RootModel = types
 			self.socketConnected = b;
 			console.log("setisSocketConnected " + self.socketConnected);
 		}
-		const toggleCPRStatsPanel = function () {
+		const toggleCPRStatsPanel = () => {
 			self.cprStatsPanelVisible = !self.cprStatsPanelVisible;
 		};
 
-		const toggleCamStatsPanel = function () {
+		const toggleCamStatsPanel = () => {
 			self.camStatsPanelVisible = !self.camStatsPanelVisible;
+		};
+
+		const setCamTableFilters = (filters) => {
+			self.camTableFilters = filters;
+		};
+
+		const setCprTableFilters = (filters) => {
+			self.cprTableFilters = filters;
 		};
 
 		return {
@@ -100,6 +110,8 @@ const RootModel = types
 			setTickers,
 			setSocketConnected,
 			toggleCamStatsPanel,
+			setCamTableFilters,
+			setCprTableFilters,
 		};
 	})
 	.views((self) => {
@@ -173,7 +185,7 @@ let initialState = RootModel.create({
 });
 
 persist("PivotSC", initialState, {
-	whitelist: ["cprStatsPanelVisible", "camStatsPanelVisible", "chartOptions"],
+	whitelist: ["cprStatsPanelVisible", "camStatsPanelVisible", "chartOptions", "cprTableFilters", "camTableFilters"],
 });
 
 export const rootStore = initialState;
