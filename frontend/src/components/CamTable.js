@@ -177,7 +177,7 @@ const CamTable = observer((props) => {
 				<Badge style={{ backgroundColor: "#2196F3", marginBottom: 7 }} count={tickers.length} />
 				<SocketStatus style={{ marginBottom: 5 }} />
 			</Space>
-			<p style={{ marginTop: -5 }}>You can filter and sort any column. The data is updated automatically.</p>
+			<p style={{ marginTop: -5 }}>You can filter, short and move any column. The data is updated automatically.</p>
 			<Space>
 				<Button onClick={saveFilters}>Save Filters</Button>
 				<Button onClick={loadFilters}>Load Saved Filters</Button>
@@ -220,18 +220,18 @@ const CamTable = observer((props) => {
 					}}>
 					<AgGridColumn width={150} headerName="Symbol" field="symbol" cellRenderer={symbolRenderer}></AgGridColumn>
 
-					<AgGridColumn width={150} headerName="Exchange" field="exchange"></AgGridColumn>
+					<AgGridColumn width={125} headerName="Exchange" field="exchange"></AgGridColumn>
 
-					<AgGridColumn width={150} headerName="Price" field="price" filter="agNumberColumnFilter"></AgGridColumn>
+					<AgGridColumn width={120} headerName="Price" field="price" filter="agNumberColumnFilter"></AgGridColumn>
 
-					<AgGridColumn width={110} headerName="Nearest" valueGetter={(params) => nearestLevelGetter(params.data)}></AgGridColumn>
+					<AgGridColumn width={100} headerName="Nearest" valueGetter={(params) => nearestLevelGetter(params.data)}></AgGridColumn>
 
 					<AgGridColumn width={160} headerName="Situation" valueGetter={(params) => situationGetter(params.data)} cellStyle={situationCellStyle}></AgGridColumn>
 
 					{["h3", "h4", "h5", "h6", "l3", "l4", "l5", "l6"].map((q) => {
 						return (
 							<AgGridColumn
-								width={110}
+								width={120}
 								headerName={q.toUpperCase() + " Distance"}
 								valueFormatter={(params) => distanceFormatter(params.value)}
 								valueGetter={(params) => distanceGetter(params.data, q)}

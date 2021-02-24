@@ -18,7 +18,7 @@ export default function Sidebar(props) {
 	//! Menu IDS should be the same as Route Path to visually select the corresponding menu when loading a pages directly
 	return (
 		<Sider theme="dark" style={{}} collapsible collapsed={collapsed} onCollapse={onCollapse}>
-			<Menu style={{ height: 100 }} theme="dark" mode="inline" selectedKeys={[location.pathname]}>
+			<Menu style={{ height: 100 }} theme="dark" mode="inline" selectedKeys={[location.pathname]} openKeys={["sub2", "sub1"]}>
 				<Menu.Item key="/" icon={<HomeOutlined />}>
 					<NavLink to="/">Chart</NavLink>
 				</Menu.Item>

@@ -115,7 +115,7 @@ const CPRTable = observer((props) => {
 
 	const cprStatusCellRenderer = (params) => {
 		if (params.value) {
-			const approximation = params.data.getCPR(timeframe).closestApproximation.toFixed(1);
+			const approximation = params.data.getCPR(timeframe).closestApproximation.toFixed(2);
 
 			return params.value === "Tested" ? "✔️ Tested" : "🧲 Untested <sup><font color='gray'>" + approximation + "%</font></sup>";
 		}
@@ -227,7 +227,7 @@ const CPRTable = observer((props) => {
 				<SocketStatus style={{ marginBottom: 5 }} />
 			</Space>
 
-			<p style={{ marginTop: -5 }}>You can filter and sort any column. The data is updated automatically.</p>
+			<p style={{ marginTop: -5 }}>You can filter, sort and move any column. The data is updated automatically.</p>
 			<Space>
 				<Button onClick={saveFilters}>Save Filters</Button>
 				<Button onClick={loadFilters}>Load Saved Filters</Button>
