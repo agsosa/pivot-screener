@@ -131,7 +131,7 @@ const RootModel = types
 					result.tightCount += cpr.width <= 1 ? 1 : 0;
 
 					// isTested will be undefined for new pairs with only 1 candle and should count this case as tested, otherwise just return isTested value.
-					result.untestedCount += (cpr.isTested === undefined ? true : cpr.isTested) ? 1 : 0;
+					result.untestedCount += (cpr.isTested === undefined ? true : cpr.isTested) ? 0 : 1;
 				});
 
 				// Neutrals are ignored in bulls/bears percentage
