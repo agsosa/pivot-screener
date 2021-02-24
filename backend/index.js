@@ -18,12 +18,14 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-const port = 4000;
-const sockets_port = 4001;
+let port = process.env.PORT;
+if (port == null || port == "") {
+  port = 8000;
+}
 const sockets = require('./sockets.js');
-sockets.initialize(app, sockets_port);
+sockets.initialize(app, port);
 
-console.log("Socket Initialized on port "+sockets_port)
+console.log("Socket Initialized on port "+port)
 
 // Validations
 const candlesticksValidation = {
