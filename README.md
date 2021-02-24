@@ -5,3 +5,5 @@ Daily, Weekly and Monthly timeframes supported.
 Cryptocurrency, Forex, Indices, Commodities, Stocks supported.
 
 ReactJS+NodeJS
+
+https://pivotscreener.netlify.app/#/
