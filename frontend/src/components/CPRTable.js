@@ -274,7 +274,7 @@ const CPRTable = observer((props) => {
 
 					<AgGridColumn width={150} headerName="Price" field="price" filter="agNumberColumnFilter"></AgGridColumn>
 
-					<AgGridColumn width={150} cellStyle={cprStatusCellStyle} cellRenderer={cprStatusCellRenderer} headerName="CPR Status" valueGetter={(params) => cprStatusGetter(params.data)}></AgGridColumn>
+					<AgGridColumn width={170} cellStyle={cprStatusCellStyle} cellRenderer={cprStatusCellRenderer} headerName="CPR Status" valueGetter={(params) => cprStatusGetter(params.data)}></AgGridColumn>
 
 					<AgGridColumn width={150} headerName="Magnet Side" valueGetter={(params) => magnetSideGetter(params.data)} cellStyle={magnetSideCellStyle}></AgGridColumn>
 
