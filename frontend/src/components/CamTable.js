@@ -241,20 +241,6 @@ const CamTable = observer((props) => {
 					})}
 				</AgGridReact>
 			</div>
-			{!tickers || tickers.length === 0 ? (
-				<Skeleton />
-			) : (
-				<>
-					<p style={{ marginTop: 20, paddingTop: 10 }}>
-						● The percentage shown above the <i>Untested</i> label is the closest approximation to the CPR. <i>Example:</i> Untested <sup>0.1%</sup> means that there was a candle that came within 0.1%
-						of the CPR.
-						<br />● The Sideways/Trending label on the CPR Width column shouldn't be taken seriously, the parameters need to be adjusted.
-						<br />● P Distance is the distance between the current price and the pivot level.
-						<br />● TC Distance is the distance between the current price and the top pivot level.
-						<br />● BC Distance is the distance between the current price and the bottom pivot level.
-					</p>
-				</>
-			)}
 		</div>
 	);
 });
