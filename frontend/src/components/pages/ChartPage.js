@@ -25,7 +25,6 @@ const ChartPage = observer((props) => {
 	}));
 
 	async function fetchCandles() {
-		console.log("fetchcandles with " + symbol);
 		const result = await apiFetchCandlesticksLocally(symbol);
 		if (symbol === result.symbol) setTickers([{ symbol: symbol, market: "", exchange: "", candlesticks: result.candlesticks }]);
 		fetchTimeout.current = setTimeout(() => {
@@ -37,7 +36,6 @@ const ChartPage = observer((props) => {
 
 	function cancelFetchCandles() {
 		if (fetchTimeout.current) {
-			console.log("clearing fetchTimeout");
 			clearTimeout(fetchTimeout.current);
 		}
 	}

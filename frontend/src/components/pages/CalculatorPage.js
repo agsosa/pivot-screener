@@ -47,7 +47,6 @@ export default function CalculatorPage(props) {
 		if (state.high && state.low && state.close) {
 			let cam = calculateCamarilla(state.high, state.low, state.close);
 			let cpr = calculateCPR(state.high, state.low, state.close);
-			console.log(cam);
 
 			setState((prevState) => {
 				return {
@@ -65,7 +64,6 @@ export default function CalculatorPage(props) {
 					bc: cpr.bc,
 				};
 			});
-			console.log(state);
 		} else {
 			message.error("Please input High, Low and Close prices greater than 0");
 		}

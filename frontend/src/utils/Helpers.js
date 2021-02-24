@@ -111,24 +111,21 @@ export function clamp(val, min, max) {
 }
 
 export function getPairObject(symbol) {
-	// TODO: Arreglar esto y par BTCBUSD en tabla
-	// Turns pairs (BTCUSDT, ETHUSDT, ADAETH, ADABNB, LTCUSD, BTCBUSD) into object { symbol, quote }
-	/*const QUOTES = [ USDT, BUSD, BTC, ETH, BNB, "USD"];
+	// BTCUSDT -> { primary: "BTC", secondary: "USDT"}
+	const QUOTES = ["USDT", "BUSD", "BTC", "ETH", "BNB", "USD", "LTC"];
+	let result = { primary: "", secondary: "" };
 
-    const QUOTES = [ "USDT", "BUSD", "BTC", "ETH", "BNB", "USD", "LTC"];
-const symbol = "LTCBTC";
-let result = { symbol: "", quote: "" }
+	for (let i = 0; i < QUOTES.length; i++) {
+		const q = QUOTES[i];
+		//	let regex = /+q+$/gi
+		let regex = new RegExp(q + "$", "i");
+		let test = symbol.replace(regex, "");
+		if (test.length < symbol.length) {
+			result.primary = test;
+			result.secondary = q;
+			break;
+		}
+	}
 
-for(let i = 0; i < QUOTES.length; i++) {
-	const q = QUOTES[i];
-//	let regex = /+q+$/gi
-  let regex = new RegExp(q+"$", 'i' );
-  let test = symbol.replace(regex, "")
-  if (test.length < symbol.length) {
-  	console.log("FOUND")
-  	result.symbol = test;
-    result.quote = q;
-    console.log(result);
-    break
-  }*/
+	return result;
 }

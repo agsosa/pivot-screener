@@ -10,10 +10,8 @@ const { SubMenu } = Menu;
 export default function Sidebar(props) {
 	const [collapsed, setCollapsed] = useState(false);
 	const location = useLocation();
-	console.log(location.pathname);
 
 	const onCollapse = (x) => {
-		console.log(x);
 		setCollapsed(x);
 	};
 

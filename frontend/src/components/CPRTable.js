@@ -6,7 +6,7 @@ import { autorun } from "mobx";
 import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
 import { useMst } from "../models/Root";
-import { capitalizeFirstLetter } from "../utils/Helpers";
+import { capitalizeFirstLetter, getPairObject } from "../utils/Helpers";
 import "./AGGridOverrides.css";
 import CPRStats from "./CPRStats";
 import SocketStatus from "./SocketStatus";
@@ -212,7 +212,8 @@ const CPRTable = observer((props) => {
 	};
 
 	const symbolRenderer = (params) => {
-		return "<font size=3>" + params.value.replace("USDT", "</font> <font color='gray'>USDT</font>"); // TODO: Use utils get pair object (to get separated symbol, quote)
+		const pair = getPairObject(params.value);
+		return `<font size=3>${pair.primary}</font> <font color='gray'>${pair.secondary}</font>`;
 	};
 
 	return (
@@ -269,7 +270,7 @@ const CPRTable = observer((props) => {
 					}}>
 					<AgGridColumn width={150} headerName="Symbol" field="symbol" cellRenderer={symbolRenderer}></AgGridColumn>
 
-					<AgGridColumn width={150} headerName="Exchange" field="exchange" cellRenderer={symbolRenderer}></AgGridColumn>
+					<AgGridColumn width={150} headerName="Exchange" field="exchange"></AgGridColumn>
 
 					<AgGridColumn width={150} headerName="Price" field="price" filter="agNumberColumnFilter"></AgGridColumn>
 
