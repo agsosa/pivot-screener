@@ -20,10 +20,10 @@ app.use(bodyParser.json());
 
 let port = process.env.PORT;
 if (port == null || port == "") {
-  port = 8000;
+  port = 4000;
 }
 const sockets = require('./sockets.js');
-sockets.initialize(app, port);
+const httpServer = sockets.initialize(app, port);
 
 console.log("Socket Initialized on port "+port)
 
@@ -94,4 +94,4 @@ app.use(function(err, req, res, next) {
     return res.status(500).json(err)
 })
 
-app.listen(port, () => console.log(`Backend listening on port ${port}`))
+httpServer.listen(port, () => console.log(`Backend listening on port ${port}`))

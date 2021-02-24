@@ -1,6 +1,6 @@
 import { Layout } from "antd";
 import React from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { HashRouter as Router, Route, Switch } from "react-router-dom";
 import LayoutFooter from "./LayoutFooter";
 import LayoutHeader from "./LayoutHeader";
 import "./MainLayout.css";

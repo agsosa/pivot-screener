@@ -1,3 +1,7 @@
+export function isDev() {
+	return !process.env.NODE_ENV || process.env.NODE_ENV === "development";
+}
+
 export const ohlcArrayToObject = (ohlc_array) => {
 	if (!Array.isArray(ohlc_array)) return ohlc_array;
 	if (!ohlc_array || ohlc_array.length < 4) return null;

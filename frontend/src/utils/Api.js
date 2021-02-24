@@ -1,7 +1,8 @@
 import axios from "axios";
 import jsonpack from "jsonpack";
+import { isDev } from "./Helpers";
 
-const BASE_URL = "http://localhost:4000/api/";
+const BASE_URL = isDev() ? "http://localhost:4000/api/" : "https://pivotscreener.herokuapp.com/api/";
 
 export function apiFetchTickers(timeframes = "daily,weekly,monthly,hourly", symbols = "") {
 	// TODO: Eliminar

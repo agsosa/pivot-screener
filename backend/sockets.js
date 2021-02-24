@@ -30,7 +30,9 @@ function initialize(app, port) {
      });
 
     
-    httpServer.listen(port);
+    //httpServer.listen(port+1);
+
+    return httpServer;
 
     console.log("Socket Initialized on port "+port)
 }

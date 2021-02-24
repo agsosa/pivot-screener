@@ -6,6 +6,9 @@ import { persist } from "mst-persist";
 import { io } from "socket.io-client";
 import jsonpack from "jsonpack";
 import { ChartOptions } from "./ChartOptions";
+import { isDev } from "./../utils/Helpers";
+
+const SOCKET_URL = isDev() ? "http://localhost:4000" : "https://pivotscreener.herokuapp.com/";
 
 // TODO: Optimize views/computeds (array filter) use cache or something
 
@@ -26,7 +29,7 @@ const RootModel = types
 		let currentQuery = null;
 
 		function afterCreate() {
-			socket = io("http://localhost:4001/", {
+			socket = io(SOCKET_URL, {
 				transports: ["websocket"],
 				upgrade: true,
 				autoConnect: false,
