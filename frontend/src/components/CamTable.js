@@ -26,17 +26,17 @@ const CamTable = observer((props) => {
 		setCamTableFilters: store.setCamTableFilters,
 	}));
 
-	const [width, setWidth] = useState(window.innerWidth);
+	/*const [width, setWidth] = useState(window.innerWidth);
 
 	function handleWindowSizeChange() {
 		setWidth(window.innerWidth);
-	}
+	}*/
 
 	useEffect(() => {
-		window.addEventListener("resize", handleWindowSizeChange);
+		//window.addEventListener("resize", handleWindowSizeChange);
 
 		return () => {
-			window.removeEventListener("resize", handleWindowSizeChange);
+			//window.removeEventListener("resize", handleWindowSizeChange);
 			if (dispose1) dispose1();
 		};
 	}, []);
@@ -206,7 +206,7 @@ const CamTable = observer((props) => {
 						enableCellChangeFlash: true,
 						editable: false,
 						sortable: true,
-						flex: width <= 768 ? 0 : 1,
+						//flex: width <= 768 ? 0 : 1,
 						filter: true,
 						resizable: true,
 					}}
@@ -217,19 +217,20 @@ const CamTable = observer((props) => {
 					getRowNodeId={(data) => {
 						return data.symbol;
 					}}>
-					<AgGridColumn headerName="Symbol" field="symbol" cellRenderer={symbolRenderer}></AgGridColumn>
+					<AgGridColumn width={150} headerName="Symbol" field="symbol" cellRenderer={symbolRenderer}></AgGridColumn>
 
-					<AgGridColumn headerName="Exchange" field="exchange" cellRenderer={symbolRenderer}></AgGridColumn>
+					<AgGridColumn width={150} headerName="Exchange" field="exchange" cellRenderer={symbolRenderer}></AgGridColumn>
 
-					<AgGridColumn headerName="Price" field="price" filter="agNumberColumnFilter"></AgGridColumn>
+					<AgGridColumn width={150} headerName="Price" field="price" filter="agNumberColumnFilter"></AgGridColumn>
 
-					<AgGridColumn headerName="Nearest" valueGetter={(params) => nearestLevelGetter(params.data)}></AgGridColumn>
+					<AgGridColumn width={110} headerName="Nearest" valueGetter={(params) => nearestLevelGetter(params.data)}></AgGridColumn>
 
-					<AgGridColumn headerName="Situation" valueGetter={(params) => situationGetter(params.data)} cellStyle={situationCellStyle}></AgGridColumn>
+					<AgGridColumn width={160} headerName="Situation" valueGetter={(params) => situationGetter(params.data)} cellStyle={situationCellStyle}></AgGridColumn>
 
 					{["h3", "h4", "h5", "h6", "l3", "l4", "l5", "l6"].map((q) => {
 						return (
 							<AgGridColumn
+								width={110}
 								headerName={q.toUpperCase() + " Distance"}
 								valueFormatter={(params) => distanceFormatter(params.value)}
 								valueGetter={(params) => distanceGetter(params.data, q)}

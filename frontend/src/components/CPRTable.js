@@ -23,11 +23,11 @@ const CPRTable = observer((props) => {
 	const [gridColumnApi, setGridColumnApi] = useState(null);
 	const [filtersEnabled, setFiltersEnabled] = useState(false);
 
-	const [width, setWidth] = useState(window.innerWidth);
+	/*const [width, setWidth] = useState(window.innerWidth);
 
 	function handleWindowSizeChange() {
 		setWidth(window.innerWidth);
-	}
+	}*/
 
 	const { tickers, cprTableFilters, setCprTableFilters } = useMst((store) => ({
 		tickers: store.tickers,
@@ -44,10 +44,10 @@ const CPRTable = observer((props) => {
 	});
 
 	useEffect(() => {
-		window.addEventListener("resize", handleWindowSizeChange);
+		//window.addEventListener("resize", handleWindowSizeChange);
 
 		return () => {
-			window.removeEventListener("resize", handleWindowSizeChange);
+			//window.removeEventListener("resize", handleWindowSizeChange);
 			if (dispose) dispose();
 		};
 	}, []);
@@ -256,7 +256,7 @@ const CPRTable = observer((props) => {
 						enableCellChangeFlash: true,
 						editable: false,
 						sortable: true,
-						flex: width <= 768 ? 0 : 1,
+						//flex: width <= 768 ? 0 : 1,
 						filter: true,
 						resizable: true,
 					}}
@@ -267,21 +267,22 @@ const CPRTable = observer((props) => {
 					getRowNodeId={(data) => {
 						return data.symbol;
 					}}>
-					<AgGridColumn headerName="Symbol" field="symbol" cellRenderer={symbolRenderer}></AgGridColumn>
+					<AgGridColumn width={150} headerName="Symbol" field="symbol" cellRenderer={symbolRenderer}></AgGridColumn>
 
-					<AgGridColumn headerName="Exchange" field="exchange" cellRenderer={symbolRenderer}></AgGridColumn>
+					<AgGridColumn width={150} headerName="Exchange" field="exchange" cellRenderer={symbolRenderer}></AgGridColumn>
 
-					<AgGridColumn headerName="Price" field="price" filter="agNumberColumnFilter"></AgGridColumn>
+					<AgGridColumn width={150} headerName="Price" field="price" filter="agNumberColumnFilter"></AgGridColumn>
 
-					<AgGridColumn cellStyle={cprStatusCellStyle} cellRenderer={cprStatusCellRenderer} headerName="CPR Status" valueGetter={(params) => cprStatusGetter(params.data)}></AgGridColumn>
+					<AgGridColumn width={150} cellStyle={cprStatusCellStyle} cellRenderer={cprStatusCellRenderer} headerName="CPR Status" valueGetter={(params) => cprStatusGetter(params.data)}></AgGridColumn>
 
-					<AgGridColumn headerName="Magnet Side" valueGetter={(params) => magnetSideGetter(params.data)} cellStyle={magnetSideCellStyle}></AgGridColumn>
+					<AgGridColumn width={150} headerName="Magnet Side" valueGetter={(params) => magnetSideGetter(params.data)} cellStyle={magnetSideCellStyle}></AgGridColumn>
 
-					<AgGridColumn headerName="Situation" valueGetter={(params) => situationGetter(params.data)} cellStyle={situationCellStyle}></AgGridColumn>
+					<AgGridColumn width={150} headerName="Situation" valueGetter={(params) => situationGetter(params.data)} cellStyle={situationCellStyle}></AgGridColumn>
 
 					{["p", "tc", "bc"].map((q) => {
 						return (
 							<AgGridColumn
+								width={150}
 								headerName={q.toUpperCase() + " Distance"}
 								valueFormatter={(params) => distanceFormatter(params.value)}
 								valueGetter={(params) => distanceGetter(params.data, q)}
@@ -289,7 +290,7 @@ const CPRTable = observer((props) => {
 						);
 					})}
 
-					<AgGridColumn headerName="CPR Width" cellRenderer={(params) => CPRWidthRenderer(params.value)} valueGetter={(params) => CPRWidthGetter(params.data)}></AgGridColumn>
+					<AgGridColumn width={150} headerName="CPR Width" cellRenderer={(params) => CPRWidthRenderer(params.value)} valueGetter={(params) => CPRWidthGetter(params.data)}></AgGridColumn>
 				</AgGridReact>
 			</div>
 			{!tickers || tickers.length === 0 ? (
