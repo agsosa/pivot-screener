@@ -48,22 +48,22 @@ const CPRScreenerPage = observer((props) => {
 					<>
 						<Tabs defaultActiveKey="1">
 							<TabPane tab="Daily" key="1">
-								<CPRTable timeframe="daily" market={market} />
+								<CPRTable timeframe="daily" market={market} futureMode={false} />
 							</TabPane>
 							<TabPane tab="Weekly" key="2">
-								<CPRTable timeframe="weekly" market={market} />
+								<CPRTable timeframe="weekly" market={market} futureMode={false} />
 							</TabPane>
 							<TabPane tab="Monthly" key="3">
-								<CPRTable timeframe="monthly" market={market} />
+								<CPRTable timeframe="monthly" market={market} futureMode={false} />
 							</TabPane>
-							<TabPane tab="Tomorrow" key="4" disabled>
-								<CPRTable timeframe="tomorrow" market={market} />
+							<TabPane tab="Tomorrow" key="4">
+								<CPRTable timeframe="daily" market={market} futureMode={true} />
 							</TabPane>
-							<TabPane tab="Next Week" key="5" disabled>
-								<CPRTable timeframe="nextweek" market={market} />
+							<TabPane tab="Next Week" key="5">
+								<CPRTable timeframe="weekly" market={market} futureMode={true} />
 							</TabPane>
-							<TabPane tab="Next Month" key="6" disabled>
-								<CPRTable timeframe="nextmonth" market={market} />
+							<TabPane tab="Next Month" key="6">
+								<CPRTable timeframe="monthly" market={market} futureMode={true} />
 							</TabPane>
 						</Tabs>
 					</>

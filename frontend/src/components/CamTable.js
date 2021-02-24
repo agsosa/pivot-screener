@@ -71,7 +71,7 @@ const CamTable = observer((props) => {
 	}
 
 	const situationGetter = (data) => {
-		const cam = data.getCamarilla(props.timeframe);
+		const cam = data.getCamarilla(props.timeframe, props.futureMode);
 
 		if (cam) {
 			return cam.situation;
@@ -108,7 +108,7 @@ const CamTable = observer((props) => {
 	};
 
 	const distanceGetter = (data, levelStr) => {
-		const dist = data.getCamarilla(props.timeframe).distance;
+		const dist = data.getCamarilla(props.timeframe, props.futureMode).distance;
 		if (dist && dist[levelStr]) {
 			return dist[levelStr];
 		}
@@ -119,7 +119,7 @@ const CamTable = observer((props) => {
 	};
 
 	const nearestLevelGetter = (data, levelStr) => {
-		const nearest = data.getCamarilla(props.timeframe).nearest;
+		const nearest = data.getCamarilla(props.timeframe, props.futureMode).nearest;
 		if (nearest) {
 			return nearest.toUpperCase();
 		}
@@ -169,7 +169,7 @@ const CamTable = observer((props) => {
 
 	return (
 		<div>
-			<CamStats timeframe={props.timeframe} />
+			<CamStats timeframe={props.timeframe} futureMode={props.futureMode} />
 			<Space style={{ padding: 1 }}>
 				<h1>
 					{capitalizeFirstLetter(props.market)} / {capitalizeFirstLetter(props.timeframe)}

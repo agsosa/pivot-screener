@@ -15,7 +15,7 @@ import SocketStatus from "./SocketStatus";
 // TODO: Merge with CamTable
 
 const CPRTable = observer((props) => {
-	const { timeframe } = props;
+	const { timeframe, futureMode } = props;
 
 	let dispose;
 
@@ -74,7 +74,7 @@ const CPRTable = observer((props) => {
 	}
 
 	const distanceGetter = (data, objectStr) => {
-		const dist = data.getCPR(timeframe).distance;
+		const dist = data.getCPR(timeframe, futureMode).distance;
 		if (dist && dist[objectStr]) {
 			return dist[objectStr];
 		}
@@ -85,7 +85,7 @@ const CPRTable = observer((props) => {
 	};
 
 	const CPRWidthGetter = (data) => {
-		const value = data.getCPR(timeframe).width;
+		const value = data.getCPR(timeframe, futureMode).width;
 
 		if (value) return value;
 	};
@@ -108,16 +108,18 @@ const CPRTable = observer((props) => {
 	};
 
 	const cprStatusGetter = (data) => {
-		const value = data.getCPR(timeframe).isTested;
+		const value = data.getCPR(timeframe, futureMode).isTested;
 
 		if (value !== undefined) return value ? "Tested" : "Untested";
 	};
 
 	const cprStatusCellRenderer = (params) => {
 		if (params.value) {
-			const approximation = params.data.getCPR(timeframe).closestApproximation.toFixed(2);
+			const approximation = params.data.getCPR(timeframe, futureMode).closestApproximation.toFixed(2);
 
-			return params.value === "Tested" ? "✔️ Tested" : "🧲 Untested <sup><font color='gray'>" + approximation + "%</font></sup>";
+			const apString = approximation > 0 ? "<sup><font color='gray'>" + approximation + "%</font></sup>" : "";
+
+			return params.value === "Tested" ? "✔️ Tested" : "🧲 Untested " + apString;
 		}
 	};
 
@@ -129,7 +131,7 @@ const CPRTable = observer((props) => {
 	};
 
 	const magnetSideGetter = (data) => {
-		const cpr = data.getCPR(timeframe);
+		const cpr = data.getCPR(timeframe, futureMode);
 		if (cpr) {
 			const tested = cpr.isTested;
 			if (tested !== undefined) {
@@ -149,7 +151,7 @@ const CPRTable = observer((props) => {
 	};
 
 	const situationGetter = (data) => {
-		const cpr = data.getCPR(timeframe);
+		const cpr = data.getCPR(timeframe, futureMode);
 
 		if (cpr) {
 			if (cpr.price_position !== undefined) {
@@ -218,7 +220,7 @@ const CPRTable = observer((props) => {
 
 	return (
 		<div>
-			<CPRStats timeframe={timeframe} />
+			<CPRStats timeframe={timeframe} futureMode={futureMode} />
 			<Space style={{ padding: 1 }}>
 				<h1>
 					{capitalizeFirstLetter(props.market)} / {capitalizeFirstLetter(timeframe)}
@@ -274,7 +276,7 @@ const CPRTable = observer((props) => {
 
 					<AgGridColumn width={150} headerName="Price" field="price" filter="agNumberColumnFilter"></AgGridColumn>
 
-					<AgGridColumn width={170} cellStyle={cprStatusCellStyle} cellRenderer={cprStatusCellRenderer} headerName="CPR Status" valueGetter={(params) => cprStatusGetter(params.data)}></AgGridColumn>
+					<AgGridColumn width={185} cellStyle={cprStatusCellStyle} cellRenderer={cprStatusCellRenderer} headerName="CPR Status" valueGetter={(params) => cprStatusGetter(params.data)}></AgGridColumn>
 
 					<AgGridColumn width={150} headerName="Magnet Side" valueGetter={(params) => magnetSideGetter(params.data)} cellStyle={magnetSideCellStyle}></AgGridColumn>
 

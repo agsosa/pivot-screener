@@ -44,22 +44,22 @@ const CamScreenerPage = observer((props) => {
 					<>
 						<Tabs defaultActiveKey="1">
 							<TabPane tab="Daily" key="1">
-								<CamTable timeframe="daily" market={market} />
+								<CamTable timeframe="daily" market={market} futureMode={false} />
 							</TabPane>
 							<TabPane tab="Weekly" key="2">
-								<CamTable timeframe="weekly" market={market} />
+								<CamTable timeframe="weekly" market={market} futureMode={false} />
 							</TabPane>
 							<TabPane tab="Monthly" key="3">
-								<CamTable timeframe="monthly" market={market} />
+								<CamTable timeframe="monthly" market={market} futureMode={false} />
 							</TabPane>
-							<TabPane tab="Tomorrow" key="4" disabled>
-								<CamTable timeframe="tomorrow" market={market} />
+							<TabPane tab="Tomorrow" key="4">
+								<CamTable timeframe="daily" market={market} futureMode={true} />
 							</TabPane>
-							<TabPane tab="Next Week" key="5" disabled>
-								<CamTable timeframe="nextweek" market={market} />
+							<TabPane tab="Next Week" key="5">
+								<CamTable timeframe="weekly" market={market} futureMode={true} />
 							</TabPane>
-							<TabPane tab="Next Month" key="6" disabled>
-								<CamTable timeframe="nextmonth" market={market} />
+							<TabPane tab="Next Month" key="6">
+								<CamTable timeframe="monthly" market={market} futureMode={true} />
 							</TabPane>
 						</Tabs>
 					</>

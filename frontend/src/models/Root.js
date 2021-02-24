@@ -84,7 +84,6 @@ const RootModel = types
 
 		function setSocketConnected(b) {
 			self.socketConnected = b;
-			console.log("setisSocketConnected " + self.socketConnected);
 		}
 		const toggleCPRStatsPanel = () => {
 			self.cprStatsPanelVisible = !self.cprStatsPanelVisible;
@@ -117,11 +116,11 @@ const RootModel = types
 	})
 	.views((self) => {
 		return {
-			cprStats(timeframe) {
+			cprStats(timeframe, futureMode = false) {
 				const result = { aboveCount: 0, belowCount: 0, neutralCount: 0, untestedCount: 0, bullsPercent: 0, bearsPercent: 0, wideCount: 0, tightCount: 0 };
 
 				self.tickers.forEach((q) => {
-					const cpr = q.getCPR(timeframe);
+					const cpr = q.getCPR(timeframe, futureMode);
 
 					result.aboveCount += cpr.price_position === "above" ? 1 : 0;
 					result.belowCount += cpr.price_position === "below" ? 1 : 0;
@@ -140,10 +139,10 @@ const RootModel = types
 
 				return result;
 			},
-			camStats(timeframe) {
+			camStats(timeframe, futureMode = false) {
 				const result = { aboveH4: 0, belowL4: 0, aboveH3: 0, belowL3: 0, betweenL3H3: 0, bullsPercent: 0, bearsPercent: 0 };
 				self.tickers.forEach((q) => {
-					const cam = q.getCamarilla(timeframe);
+					const cam = q.getCamarilla(timeframe, futureMode);
 
 					/*result.aboveH4 += cam.h4_priceStatus === "above" ? 1 : 0;
 					result.aboveH3 += cam.h3_priceStatus === "above" && cam.h4_priceStatus !== "above" ? 1 : 0;
@@ -171,8 +170,8 @@ const RootModel = types
 					}
 				});
 
-				result.bullsPercent = calcPercent(result.aboveH4 + result.aboveH3, self.tickers.length - result.betweenL3H3);
-				result.bearsPercent = calcPercent(result.belowL4 + result.belowL3, self.tickers.length - result.betweenL3H3);
+				result.bullsPercent = calcPercent(result.aboveH4 + result.aboveH3, self.tickers.length);
+				result.bearsPercent = calcPercent(result.belowL4 + result.belowL3, self.tickers.length);
 
 				return result;
 			},

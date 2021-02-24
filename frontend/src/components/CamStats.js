@@ -14,7 +14,7 @@ const CamStats = observer((props) => {
 
 	if (!tickers || (tickers.length === 0 && camStatsPanelVisible)) return <Skeleton />;
 
-	const stats = camStats(props.timeframe);
+	const stats = camStats(props.timeframe, props.futureMode);
 
 	return (
 		<>
@@ -59,7 +59,7 @@ const CamStats = observer((props) => {
 						<div style={{ paddingTop: 10 }}>
 							{" "}
 							🐂 <font color="green">Bulls {stats.bullsPercent.toFixed(1)}%</font> <b>vs</b> <font color="red">{stats.bearsPercent.toFixed(1)}% Bears</font> 🐻
-							<Progress percent={100} success={{ percent: stats.bullsPercent }} showInfo={false} strokeColor="red" />
+							<Progress percent={100} success={{ percent: stats.bullsPercent }} showInfo={false} strokeColor={stats.bearsPercent === 0 && stats.bullsPercent === 0 ? "gray" : "red"} />
 						</div>
 					</>
 				) : null}

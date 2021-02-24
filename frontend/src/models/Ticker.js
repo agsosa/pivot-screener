@@ -55,19 +55,20 @@ export const Ticker = types
 				result.p = (session.high + session.low + session.close) / 3.0;
 				result.bc = (session.high + session.low) / 2.0;
 				result.tc = result.p - result.bc + result.p;
+
 				if (result.bc > result.tc) {
 					result.bc = [result.tc, (result.tc = result.bc)][0];
 				}
 				const width_result = ((Math.abs(result.tc - result.bc) / result.p) * 100).toFixed(2);
 				result.width = width_result;
 
-				result.isTested = inRange(result.bc, currSession.low, currSession.high) || inRange(result.tc, currSession.low, currSession.high);
+				result.isTested = future ? false : inRange(result.bc, currSession.low, currSession.high) || inRange(result.tc, currSession.low, currSession.high);
 				result.price_position = currSession.close >= result.tc ? "above" : currSession.close <= result.bc ? "below" : "neutral";
 				result.distance.p = percentDifference(currSession.close, result.p);
 				result.distance.bc = percentDifference(currSession.close, result.bc);
 				result.distance.tc = percentDifference(currSession.close, result.tc);
 
-				result.closestApproximation = result.price_position === "above" ? percentDifference(currSession.low, result.tc) : percentDifference(currSession.high, result.bc);
+				result.closestApproximation = future ? 0 : result.price_position === "above" ? percentDifference(currSession.low, result.tc) : percentDifference(currSession.high, result.bc);
 
 				return result;
 			},

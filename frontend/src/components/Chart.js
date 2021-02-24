@@ -110,7 +110,7 @@ export const Chart = observer((props) => {
 				const showCPR = t[2];
 				const showCam = t[3];
 				// CPR
-				const cpr = data.getCPR(label);
+				const cpr = data.getCPR(label, chartOptions.futureMode);
 				if (cpr && showCPR) {
 					const p = series.current.createPriceLine({ price: cpr.p, color: color, lineWidth: 3, lineStyle: LineStyle.Dotted, axisLabelVisible: true, title: label + " P" });
 					const bc = series.current.createPriceLine({ price: cpr.bc, color: color, lineWidth: 3, lineStyle: LineStyle.Dotted, axisLabelVisible: true, title: label + " BC" });
@@ -118,7 +118,7 @@ export const Chart = observer((props) => {
 					drawings.current[label + "CPR"] = [p, bc, tc];
 				}
 				// Camarilla
-				const cam = data.getCamarilla(label);
+				const cam = data.getCamarilla(label, chartOptions.futureMode);
 				if (cam && showCam) {
 					const levels = ["h4", "h3", "h5", "h6", "l4", "l3", "l5", "l6"];
 					for (let i = 0; i < levels.length; i++) {
@@ -224,10 +224,9 @@ export const Chart = observer((props) => {
 						<Button onClick={() => chartOptions.toggleAllMonthly()}>Toggle Monthly</Button>
 					</span>
 					<span style={{ marginRight: 20 }}>
-						Show developing pivots:{" "}
+						<span style={chartOptions.futureMode ? { fontWeight: "bold", color: "red" } : {}}>Show developing pivots: </span>
 						<Switch
 							size="small"
-							disabled
 							checked={chartOptions.futureMode}
 							onChange={(checked) => {
 								chartOptions.setFutureMode(checked);

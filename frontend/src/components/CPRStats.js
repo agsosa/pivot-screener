@@ -14,7 +14,7 @@ const CPRStats = observer((props) => {
 
 	if (!tickers || (tickers.length === 0 && cprStatsPanelVisible)) return <Skeleton />;
 
-	const stats = cprStats(props.timeframe);
+	const stats = cprStats(props.timeframe, props.futureMode);
 
 	return (
 		<>
