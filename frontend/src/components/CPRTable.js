@@ -297,16 +297,17 @@ const CPRTable = observer((props) => {
 			{!tickers || tickers.length === 0 ? (
 				<Skeleton />
 			) : (
-				<>
-					<p style={{ marginTop: 20, paddingTop: 10 }}>
-						● The percentage shown above the <i>Untested</i> label is the closest approximation to the CPR. <i>Example:</i> Untested <sup>0.1%</sup> means that there was a candle that came within 0.1%
-						of the CPR.
-						{/*<br />● The Sideways/Trending label on the CPR Width column shouldn't be taken seriously, the parameters need to be adjusted.*/}
-						<br />● P Distance is the distance between the current price and the pivot level.
-						<br />● TC Distance is the distance between the current price and the top pivot level.
-						<br />● BC Distance is the distance between the current price and the bottom pivot level.
-					</p>
-				</>
+				<div style={{ textAlign: "left", marginTop: 30 }}>
+					<ul>
+						<li>
+							The percentage shown above the <i>Untested</i> label is the closest approximation to the CPR. <i>Example:</i> Untested <sup>0.1%</sup> means that there was a candle that came within 0.1%
+							of the CPR.
+						</li>
+						<li>P Distance is the distance between the current price and the pivot level.</li>
+						<li>TC Distance is the distance between the current price and the top pivot level.</li>
+						<li>BC Distance is the distance between the current price and the bottom pivot level.</li>
+					</ul>
+				</div>
 			)}
 		</div>
 	);

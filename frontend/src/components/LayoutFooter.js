@@ -19,7 +19,7 @@ export default function LayoutFooter(props) {
 					Any amount of money can help me to maintain the site. Thank you!
 					<br />
 					<br />
-					<ul style={{ padding: 10 }}>
+					<ul style={{ padding: 1 }}>
 						<li>
 							<b>BTC/BCH:</b> 17oGi5Qc3ru599vY8mWgPj723SJgfAqdBn
 						</li>
@@ -44,7 +44,7 @@ export default function LayoutFooter(props) {
 					message={
 						<>
 							For any suggestion or bug report you can send me a message on Telegram{" "}
-							<a href="https://t.me/xref1x" target="_blank" rel="noreferrer" style={{ marginLeft: 100 }}>
+							<a href="https://t.me/xref1x" target="_blank" rel="noopener noreferrer" style={{ marginLeft: 100 }}>
 								💬 Telegram
 							</a>
 						</>
@@ -76,7 +76,7 @@ export default function LayoutFooter(props) {
 			</Modal>
 			<br />
 			<br />
-			<p style={{ whiteSpace: "pre-wrap", overflowWrap: "break-word", marginLeft: "20%", marginRight: "20%", marginBottom: 10 }}>
+			<p style={{ whiteSpace: "pre-wrap", overflowWrap: "break-word", marginLeft: "10%", marginRight: "10%", marginBottom: 10 }}>
 				Disclaimer: The information provided on this website does not constitute Investment or trading advice. The sole purpose of this website is informational and/or Educational. Pivot Screener is
 				not responsible for any misuse of the information presented on this website.
 			</p>

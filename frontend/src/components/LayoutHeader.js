@@ -1,5 +1,5 @@
 import { BellOutlined } from "@ant-design/icons";
-import { Alert, Badge, Col, notification, Row, Space } from "antd";
+import { Alert, Badge, Col, notification, Row } from "antd";
 import { createRef, useEffect, useState } from "react";
 import "./LayoutHeader.css";
 import DailyCloseTime from "./DailyCloseTime";
@@ -66,7 +66,7 @@ export default function LayoutHeader(props) {
 
 	return (
 		<>
-			<div className="header-title" style={{ padding: 14, flex: 1 }}>
+			<div className="header-title" style={{}}>
 				<div className="widget_container">
 					<div className="tradingview-widget-container" ref={hRef}>
 						<div className="tradingview-widget-container__widget"></div>
@@ -87,8 +87,8 @@ export default function LayoutHeader(props) {
 							display: "flex",
 							justifyContent: "center",
 						}}>
-						<a href="/" style={{ fontSize: "XXX-LARGE", color: "white" }}>
-							Pivot Screener <sup style={{ fontSize: 20 }}>Beta</sup>
+						<a href="/" style={{ fontSize: "XX-LARGE", color: "white", marginTop: 10 }}>
+							Pivot Screener <sup style={{ fontSize: 15 }}>Beta</sup>
 						</a>
 					</Col>
 					<Col
@@ -129,7 +129,7 @@ export default function LayoutHeader(props) {
 					message={
 						<>
 							<b>Camarilla Pivot Trading Telegram</b> •{" "}
-							<a href="https://t.me/camarillacruisin" target="_blank" rel="noreferrer">
+							<a href="https://t.me/camarillacruisin" target="_blank" rel="noopener noreferrer">
 								<b>Click here to join the group!</b>
 							</a>
 						</>

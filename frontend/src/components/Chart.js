@@ -1,10 +1,9 @@
 import { createChart, CrosshairMode, LineStyle, PriceScaleMode } from "lightweight-charts";
-import React, { useState, useRef } from "react";
+import React, { useRef } from "react";
 import { percentage } from "../utils/Helpers";
 import { observer } from "mobx-react-lite";
 import { useMst } from "./../models/Root";
-import { reaction, autorun } from "mobx";
-import moment from "moment";
+import { reaction } from "mobx";
 import { Switch, Space, Button } from "antd";
 
 export const Chart = observer((props) => {

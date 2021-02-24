@@ -2,7 +2,7 @@ import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-material.css";
 import { AgGridColumn, AgGridReact } from "ag-grid-react";
 import { Badge, Result, Skeleton, Space, Spin, Button, message } from "antd";
-import { autorun, reaction } from "mobx";
+import { autorun } from "mobx";
 import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
 import { useMst } from "../models/Root";

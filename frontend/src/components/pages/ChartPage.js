@@ -4,8 +4,7 @@ import Breadcrumb from "./../Breadcrumb";
 import { Chart } from "../Chart";
 import { useMst } from "./../../models/Root";
 import { observer } from "mobx-react-lite";
-import SocketStatus from "./../SocketStatus";
-import { Spin, Button, Space, Alert, message, Switch, AutoComplete } from "antd";
+import { Spin, Button, Space,  message, AutoComplete } from "antd";
 import { apiFetchSymbolsList, apiFetchCandlesticksLocally } from "../../utils/Api";
 
 const SYMBOLS_LIST_FETCH_INTERVAL = 1000 * 15;

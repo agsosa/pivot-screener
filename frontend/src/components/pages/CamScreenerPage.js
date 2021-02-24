@@ -2,9 +2,6 @@ import { Result, Tabs } from "antd";
 import { Content } from "antd/lib/layout/layout";
 import React, { useEffect } from "react";
 import { useMst } from "../../models/Root";
-import { Tag } from "antd";
-import { CheckCircleOutlined, SyncOutlined, CloseCircleOutlined, ExclamationCircleOutlined, ClockCircleOutlined, MinusCircleOutlined } from "@ant-design/icons";
-
 import { capitalizeFirstLetter } from "../../utils/Helpers";
 import { isValidMarket } from "../../utils/Markets";
 import CamTable from "../CamTable";

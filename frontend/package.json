@@ -3,17 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@testing-library/jest-dom": "^5.11.9",
-    "@testing-library/react": "^11.2.5",
-    "@testing-library/user-event": "^12.7.1",
     "ag-grid-community": "^25.0.1",
     "ag-grid-react": "^25.0.1",
     "antd": "^4.12.3",
     "axios": "^0.21.1",
-    "axios-retry": "^3.1.9",
     "jsonpack": "^1.1.5",
     "lightweight-charts": "^3.3.0",
-    "localforage": "^1.9.0",
     "mobx": "^6.1.7",
     "mobx-react-lite": "^3.2.0",
     "mobx-state-tree": "^5.0.1",
@@ -21,13 +16,13 @@
     "mst-persist": "^0.1.3",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
-    "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.2",
     "socket.io-client": "^3.1.1",
-    "web-vitals": "^1.1.0"
+    "source-map-explorer": "^2.5.2"
   },
   "scripts": {
+    "analyze": "source-map-explorer 'build/static/js/*.js'",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
@@ -52,11 +47,8 @@
     ]
   },
   "devDependencies": {
-    "eslint-config-airbnb": "^18.1.0",
-    "eslint-config-prettier": "^6.10.1",
     "eslint-plugin-import": "^2.20.2",
     "eslint-plugin-jsx-a11y": "^6.2.3",
-    "eslint-plugin-prettier": "^3.1.3",
     "eslint-plugin-react": "^7.19.0",
     "eslint-plugin-react-hooks": "^2.5.1"
   }

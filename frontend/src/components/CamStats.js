@@ -3,7 +3,6 @@ import { Card, Statistic, Row, Col, Progress, Skeleton, Button } from "antd";
 import { FallOutlined, RiseOutlined, ExclamationCircleOutlined, ColumnHeightOutlined } from "@ant-design/icons";
 import { useMst } from "../models/Root";
 import { observer } from "mobx-react-lite";
-import { calcPercent } from "../utils/Helpers";
 
 const CamStats = observer((props) => {
 	const { tickers, toggleCamStatsPanel, camStatsPanelVisible, camStats } = useMst((store) => ({
