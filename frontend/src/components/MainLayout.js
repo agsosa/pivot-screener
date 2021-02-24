@@ -21,7 +21,7 @@ export default function MainLayout(props) {
 				<Layout className="site-layout">
 					<LayoutHeader />
 
-					<Content style={{ margin: "24px 16px 0" }}>
+					<Content style={{}}>
 						<Switch>
 							<Route exact path="/calculator" component={CalculatorPage} />
 							<Route exact path="/cpr-screener/:market" component={CPRScreenerPage} />

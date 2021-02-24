@@ -124,7 +124,7 @@ export default function LayoutHeader(props) {
 				</Row>
 			</div>
 
-			<div style={{ alignSelf: "center", paddingTop: 10 }}>
+			<div style={{ alignSelf: "center", paddingTop: 15, paddingBottom: 10 }}>
 				<Alert
 					message={
 						<>
