@@ -181,7 +181,7 @@ const RootModel = types
 let initialState = RootModel.create({
 	cprStatsPanelVisible: true,
 	camStatsPanelVisible: true,
-	chartOptions: { dailyCPR: true, weeklyCPR: true, monthlyCPR: true, dailyCam: false, weeklyCam: true, monthlyCam: false, futureMode: false },
+	chartOptions: { dailyCPR: false, weeklyCPR: true, monthlyCPR: false, dailyCam: false, weeklyCam: true, monthlyCam: false, futureMode: false },
 });
 
 persist("PivotSC", initialState, {

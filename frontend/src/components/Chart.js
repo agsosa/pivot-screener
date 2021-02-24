@@ -8,10 +8,6 @@ import moment from "moment";
 import { Switch, Space, Button } from "antd";
 
 export const Chart = observer((props) => {
-	/*const [chart, setChart] = useState();
-	const [series, setSeries] = useState();*/
-	//const [chartOptions, setChartOptions] = useState({ dailyCPR: false, weeklyCPR: false, monthlyCPR: true, dailyCAM: false, weeklyCAM: false, monthlyCAM: true, futureMode: false });
-	const [ready, setReady] = useState(false);
 	const chart = useRef(null);
 	const series = useRef(null);
 	const dispose = useRef(null);
@@ -58,7 +54,6 @@ export const Chart = observer((props) => {
 
 	function updateChart(data, forceDrawingsRefresh = false) {
 		if (data) {
-			console.log("Chart updateChart symbol = " + data.symbol + "price = " + data.price);
 			if (data.candlesticks && data.candlesticks.hourlyCandles && data.candlesticks.dailyCandles) {
 				series.current.setData([]);
 
@@ -72,9 +67,6 @@ export const Chart = observer((props) => {
 						vertAlign: "bottom",
 					},
 				});
-				/*data.candlesticks.dailyCandles.sort(function (a, b) {
-				return new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime();
-			});*/
 
 				for (let i = 0; i < data.candlesticks.hourlyCandles.length; i++) {
 					let e = data.candlesticks.hourlyCandles[i];
@@ -87,9 +79,6 @@ export const Chart = observer((props) => {
 					series.current.update(d);
 				}
 
-				console.log("1");
-				// initializeDrawings solo debe ser llamado cuando se cambie de symbol o cuando se detecte una nueva dailyCandle
-				//if (lastData && (lastData.symbol != data.symbol || lastData.candlesticks.dailyCandles != data.candlesticks.dailyCandles)) clearDrawings();
 				if (!lastData.current) initializeDrawings(data);
 				else {
 					const a = lastData.current.candlesticks.dailyCandles;
@@ -99,7 +88,7 @@ export const Chart = observer((props) => {
 						initializeDrawings(data);
 					}
 				}
-				console.log("End of updatedat");
+
 				lastData.current = data;
 			}
 		}
@@ -108,7 +97,6 @@ export const Chart = observer((props) => {
 	function initializeDrawings(data) {
 		if (data) {
 			clearDrawings();
-			console.log("initializedrawings");
 
 			const timeframes = [
 				// label, color, togglecpr, togglecam
@@ -130,10 +118,12 @@ export const Chart = observer((props) => {
 					const tc = series.current.createPriceLine({ price: cpr.tc, color: color, lineWidth: 3, lineStyle: LineStyle.Dotted, axisLabelVisible: true, title: label + " TC" });
 					drawings.current[label + "CPR"] = [p, bc, tc];
 				}
-
+				// Camarilla
 				const cam = data.getCamarilla(label);
 				if (cam && showCam) {
-					for (const [key, value] of Object.entries(cam)) {
+					const levels = ["h4", "h3", "h5", "h6", "l4", "l3", "l5", "l6"];
+					for (let i = 0; i < levels.length; i++) {
+						const key = levels[i];
 						const obj = series.current.createPriceLine({ price: cam[key], color: color, lineWidth: 2, lineStyle: LineStyle.Solid, axisLabelVisible: true, title: label + " " + key.toUpperCase() });
 						drawings.current[label + "Cam"].push(obj);
 					}
@@ -143,22 +133,10 @@ export const Chart = observer((props) => {
 	}
 
 	function clearDrawings() {
-		console.log("clearDrawings llamado");
-
 		for (const [key, value] of Object.entries(drawings.current)) {
-			console.log(`${key}: ${value}`);
 			drawings.current[key].map((q) => series.current.removePriceLine(q));
 			drawings.current[key] = [];
 		}
-		console.log("end of cleardrawings");
-
-		/*drawings.forEach((d) => {
-			d.forEach((q) => {
-				series.removePriceLine(q);
-			});
-
-			d = [];
-		});*/
 	}
 
 	React.useEffect(() => {
@@ -223,18 +201,13 @@ export const Chart = observer((props) => {
 				},
 			});
 
-			//InitializeDrawings();
-			//updateChart();
-			setReady(true);
 			if (props.onLoadComplete) props.onLoadComplete();
 		}
 
 		return () => {
-			// On unmount
 			chart.current.remove();
 			dispose.current();
 			dispose2.current();
-			//currentSymbolData = null;
 		};
 	}, []);
 
