@@ -25,10 +25,10 @@ export default function DailyCloseTime(props) {
 	});
 
 	return (
-		<p>
+		<div>
 			Binance Daily Close: {binanceTimeleft.toString()}
 			<br />
 			Huobi Daily Close: {huobiTimeleft.toString()}
-		</p>
+		</div>
 	);
 }
