@@ -16,7 +16,8 @@ const ChartPage = observer((props) => {
 	const [symbol, setSymbol] = useState("BTCUSDT");
 	const [symbolsList, setSymbolsList] = useState([]);
 
-	let fetchTimeout = useRef(null);
+	let fetchCandlesTimeout = useRef(null);
+	let fetchSymbolsListTimeout = useRef(null);
 
 	const { tickers, setTickers } = useMst((store) => ({
 		tickers: store.tickers,
@@ -26,32 +27,37 @@ const ChartPage = observer((props) => {
 	async function fetchCandles() {
 		const result = await apiFetchCandlesticksLocally(symbol);
 		if (symbol === result.symbol) setTickers([{ symbol: symbol, market: "", exchange: "", candlesticks: result.candlesticks }]);
-		fetchTimeout.current = setTimeout(() => {
+		fetchCandlesTimeout.current = setTimeout(() => {
 			fetchCandles();
+		}, SYMBOLS_LIST_FETCH_INTERVAL);
+	}
+
+	async function fetchSymbolsList() {
+		let result = await apiFetchSymbolsList();
+		if (result && Array.isArray(result)) {
+			result = result.map((q) => {
+				return { value: q };
+			});
+			setSymbolsList(result);
+		}
+
+		fetchSymbolsListTimeout.current = setTimeout(() => {
+			fetchSymbolsList();
 		}, SYMBOLS_LIST_FETCH_INTERVAL);
 	}
 
 	function onChartLoadComplete() {}
 
 	function cancelFetchCandles() {
-		if (fetchTimeout.current) {
-			clearTimeout(fetchTimeout.current);
+		if (fetchCandlesTimeout.current) {
+			clearTimeout(fetchCandlesTimeout.current);
 		}
 	}
 
-	function getSymbolsList() {
-		apiFetchSymbolsList().then((data) => {
-			if (data && Array.isArray(data)) {
-				data = data.map((q) => {
-					return { value: q };
-				});
-				setSymbolsList(data);
-			}
-
-			setTimeout(() => {
-				getSymbolsList();
-			}, SYMBOLS_LIST_FETCH_INTERVAL);
-		});
+	function cancelFetchSymbolsList() {
+		if (fetchSymbolsListTimeout.current) {
+			clearTimeout(fetchSymbolsListTimeout.current);
+		}
 	}
 
 	useEffect(() => {
@@ -60,10 +66,11 @@ const ChartPage = observer((props) => {
 	}, [symbol]);
 
 	useEffect(() => {
-		getSymbolsList();
+		fetchSymbolsList();
 
 		return () => {
 			cancelFetchCandles();
+			cancelFetchSymbolsList();
 			setTickers([]);
 		};
 	}, []);

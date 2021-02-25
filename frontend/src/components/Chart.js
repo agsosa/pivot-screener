@@ -22,7 +22,9 @@ export const Chart = observer((props) => {
 	dispose2.current = reaction(
 		() => chartOptions,
 		(chartOptions) => {
-			updateChart(tickers[0], true);
+			if (tickers && tickers.length >= 1) {
+				updateChart(tickers[0], true);
+			}
 		},
 		{ fireImmediately: true }
 	);
