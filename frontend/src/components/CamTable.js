@@ -26,7 +26,7 @@ const CamTable = observer((props) => {
 
 	useEffect(() => {
 		const dispose = autorun(() => {
-			if (gridApi && tickers) {
+			if (gridApi && tickers && tickers.length > 0) {
 				gridApi.setRowData(tickers);
 			}
 		});

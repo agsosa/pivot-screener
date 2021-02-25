@@ -29,8 +29,7 @@ const CPRTable = observer((props) => {
 
 	useEffect(() => {
 		const dispose = autorun(() => {
-			console.log("cprTable autorun");
-			if (gridApi && tickers) {
+			if (gridApi && tickers && tickers.length > 0) {
 				gridApi.setRowData(tickers);
 			}
 		});
