@@ -2,7 +2,7 @@ import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-material.css";
 import { AgGridColumn, AgGridReact } from "ag-grid-react";
 import { Badge, Result, Skeleton, Space, Spin, Button, message } from "antd";
-import { autorun } from "mobx";
+import { autorun, reaction } from "mobx";
 import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
 import { useMst } from "../models/Root";
@@ -17,17 +17,9 @@ import SocketStatus from "./SocketStatus";
 const CPRTable = observer((props) => {
 	const { timeframe, futureMode } = props;
 
-	let dispose;
-
 	const [gridApi, setGridApi] = useState(null);
-	const [gridColumnApi, setGridColumnApi] = useState(null);
+	//const [gridColumnApi, setGridColumnApi] = useState(null);
 	const [filtersEnabled, setFiltersEnabled] = useState(false);
-
-	/*const [width, setWidth] = useState(window.innerWidth);
-
-	function handleWindowSizeChange() {
-		setWidth(window.innerWidth);
-	}*/
 
 	const { tickers, cprTableFilters, setCprTableFilters } = useMst((store) => ({
 		tickers: store.tickers,
@@ -35,28 +27,32 @@ const CPRTable = observer((props) => {
 		setCprTableFilters: store.setCprTableFilters,
 	}));
 
-	dispose = autorun(() => {
-		if (gridApi) {
-			if (tickers && tickers.length > 0) {
+	useEffect(() => {
+		const dispose = autorun(() => {
+			console.log("cprTable autorun");
+			if (gridApi && tickers) {
 				gridApi.setRowData(tickers);
 			}
-		}
+		});
+
+		return () => {
+			dispose();
+		};
 	});
 
 	useEffect(() => {
-		//window.addEventListener("resize", handleWindowSizeChange);
-
 		return () => {
-			//window.removeEventListener("resize", handleWindowSizeChange);
-			if (dispose) dispose();
+			if (gridApi) {
+				gridApi.destroy();
+			}
 		};
 	}, []);
 
 	const onGridReady = (params) => {
 		setGridApi(params.api);
-		setGridColumnApi(params.columnApi);
+		//setGridColumnApi(params.columnApi);
 
-		if (tickers && tickers.length > 0) {
+		if (tickers) {
 			params.api.setRowData(tickers);
 		} else params.api.showLoadingOverlay();
 	};

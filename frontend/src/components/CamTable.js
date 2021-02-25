@@ -1,7 +1,7 @@
 import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-material.css";
 import { AgGridColumn, AgGridReact } from "ag-grid-react";
-import { Badge, Result, Skeleton, Space, Spin, Button, message } from "antd";
+import { Badge, Result, Space, Spin, Button, message } from "antd";
 import { autorun } from "mobx";
 import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
@@ -14,10 +14,8 @@ import SocketStatus from "./SocketStatus";
 // TODO: Merge with CPRTable
 
 const CamTable = observer((props) => {
-	let dispose1;
-
 	const [gridApi, setGridApi] = useState(null);
-	const [gridColumnApi, setGridColumnApi] = useState(null);
+	//const [gridColumnApi, setGridColumnApi] = useState(null);
 	const [filtersEnabled, setFiltersEnabled] = useState(false);
 
 	const { tickers, camTableFilters, setCamTableFilters } = useMst((store) => ({
@@ -26,24 +24,29 @@ const CamTable = observer((props) => {
 		setCamTableFilters: store.setCamTableFilters,
 	}));
 
-	/*const [width, setWidth] = useState(window.innerWidth);
-
-	function handleWindowSizeChange() {
-		setWidth(window.innerWidth);
-	}*/
-
 	useEffect(() => {
-		//window.addEventListener("resize", handleWindowSizeChange);
+		const dispose = autorun(() => {
+			if (gridApi && tickers) {
+				gridApi.setRowData(tickers);
+			}
+		});
 
 		return () => {
-			//window.removeEventListener("resize", handleWindowSizeChange);
-			if (dispose1) dispose1();
+			dispose();
+		};
+	});
+
+	useEffect(() => {
+		return () => {
+			if (gridApi) {
+				gridApi.destroy();
+			}
 		};
 	}, []);
 
 	const onGridReady = (params) => {
 		setGridApi(params.api);
-		setGridColumnApi(params.columnApi);
+		//setGridColumnApi(params.columnApi);
 
 		if (tickers && tickers.length > 0) {
 			params.api.setRowData(tickers);
@@ -53,14 +56,6 @@ const CamTable = observer((props) => {
 	const onFirstDataRendered = (params) => {
 		params.api.hideOverlay();
 	};
-
-	dispose1 = autorun(() => {
-		if (gridApi) {
-			if (tickers && tickers.length > 0) {
-				gridApi.setRowData(tickers);
-			}
-		}
-	});
 
 	function CustomLoadingOverlay(props) {
 		return <Spin tip="Loading..." />;
