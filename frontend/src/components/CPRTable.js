@@ -2,12 +2,13 @@ import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-material.css";
 import { AgGridColumn, AgGridReact } from "ag-grid-react";
 import { Badge, Result, Skeleton, Space, Spin, Button, message } from "antd";
-import { autorun, reaction } from "mobx";
+import { autorun } from "mobx";
 import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
 import { useMst } from "../models/Root";
 import { capitalizeFirstLetter, getPairObject } from "../utils/Helpers";
 import "./AGGridOverrides.css";
+import "./Table.css";
 import CPRStats from "./CPRStats";
 import SocketStatus from "./SocketStatus";
 
@@ -209,8 +210,16 @@ const CPRTable = observer((props) => {
 	};
 
 	const symbolRenderer = (params) => {
-		const pair = getPairObject(params.value);
-		return `<font size=3>${pair.primary}</font> <font color='gray'>${pair.secondary}</font>`;
+		const { data, value } = params;
+
+		const pair = getPairObject(value);
+		const tv = data.tradingViewTicker;
+		return `<a href="https://www.tradingview.com/chart?symbol=${tv}" target="_blank" class="external"><font size=3 color='black'>${pair.primary}</font> <font color='gray'>${pair.secondary}</font></a>`;
+	};
+
+	const exchangeRenderer = (params) => {
+		const { data, value } = params;
+		return `<a href="https://www.binance.com/en/futures/${data.symbol}" target="_blank" class="external">${value}</a>`;
 	};
 
 	return (
@@ -267,7 +276,7 @@ const CPRTable = observer((props) => {
 					}}>
 					<AgGridColumn width={150} headerName="Symbol" field="symbol" cellRenderer={symbolRenderer}></AgGridColumn>
 
-					<AgGridColumn width={150} headerName="Exchange" field="exchange"></AgGridColumn>
+					<AgGridColumn width={150} headerName="Exchange" field="exchange" cellRenderer={exchangeRenderer}></AgGridColumn>
 
 					<AgGridColumn width={150} headerName="Price" field="price" filter="agNumberColumnFilter"></AgGridColumn>
 

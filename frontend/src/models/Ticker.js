@@ -17,6 +17,18 @@ export const Ticker = types
 	}))
 	.views((self) => {
 		return {
+			get tradingViewTicker() {
+				let str;
+				switch (self.exchange) {
+					case "Binance Futures":
+						str = `BINANCE:${self.symbol.toUpperCase()}PERP`;
+						break;
+					default:
+						str = `BINANCE:${self.symbol.toUpperCase()}`;
+						break;
+				}
+				return str;
+			},
 			get price() {
 				const session = self.getCurrentSessionOHLC();
 				return !session ? 0 : session.close;

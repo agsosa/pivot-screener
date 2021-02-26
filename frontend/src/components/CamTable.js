@@ -121,8 +121,16 @@ const CamTable = observer((props) => {
 	};
 
 	const symbolRenderer = (params) => {
-		const pair = getPairObject(params.value);
-		return `<font size=3>${pair.primary}</font> <font color='gray'>${pair.secondary}</font>`;
+		const { data, value } = params;
+
+		const pair = getPairObject(value);
+		const tv = data.tradingViewTicker;
+		return `<a href="https://www.tradingview.com/chart?symbol=${tv}" target="_blank" class="external"><font size=3 color='black'>${pair.primary}</font> <font color='gray'>${pair.secondary}</font></a>`;
+	};
+
+	const exchangeRenderer = (params) => {
+		const { data, value } = params;
+		return `<a href="https://www.binance.com/en/futures/${data.symbol}" target="_blank" class="external">${value}</a>`;
 	};
 
 	const saveFilters = () => {
@@ -215,7 +223,7 @@ const CamTable = observer((props) => {
 					}}>
 					<AgGridColumn width={150} headerName="Symbol" field="symbol" cellRenderer={symbolRenderer}></AgGridColumn>
 
-					<AgGridColumn width={125} headerName="Exchange" field="exchange"></AgGridColumn>
+					<AgGridColumn width={140} headerName="Exchange" field="exchange" cellRenderer={exchangeRenderer}></AgGridColumn>
 
 					<AgGridColumn width={120} headerName="Price" field="price" filter="agNumberColumnFilter"></AgGridColumn>
 
