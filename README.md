@@ -6,4 +6,4 @@ Cryptocurrency, Forex, Indices, Commodities, Stocks supported.
 
 ReactJS+NodeJS
 
-Published: https://pivotscreener.netlify.app
+Published: https://pivotscreener.com - https://pivotscreener.netlify.app
