@@ -4,6 +4,6 @@ Web app to analyze markets pivot point data. Useful to find trade setups based o
 Daily, Weekly and Monthly timeframes supported.
 Cryptocurrency, Forex, Indices, Commodities, Stocks supported.
 
-Made with React
+Made with React and Nodejs
 
 Published: https://pivotscreener.com - https://pivotscreener.netlify.app
