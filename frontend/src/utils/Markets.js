@@ -1,9 +1,9 @@
 export const markets = [
-	{ market: "Cryptocurrency", disabled: false },
-	{ market: "Forex", disabled: true },
-	{ market: "Commodities", disabled: true },
-	{ market: "Indices", disabled: true },
-	{ market: "Stocks", disabled: true },
+	{ market: 'Cryptocurrency', disabled: false },
+	{ market: 'Forex', disabled: true },
+	{ market: 'Commodities', disabled: true },
+	{ market: 'Indices', disabled: true },
+	{ market: 'Stocks', disabled: true },
 ];
 
 export function isValidMarket(market) {

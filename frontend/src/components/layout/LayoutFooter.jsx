@@ -1,10 +1,10 @@
-import { Alert, Button, Layout, Modal, Space } from "antd";
-import React, { useState } from "react";
-import Contact from "./Contact.js";
+import { Alert, Button, Layout, Modal, Space } from 'antd';
+import React, { useState } from 'react';
+import Contact from '../Contact';
 
 const { Footer } = Layout;
 
-export default function LayoutFooter(props) {
+export default function LayoutFooter() {
 	const [isModalVisible, setIsModalVisible] = useState(false);
 
 	const handleOk = () => {
@@ -13,9 +13,9 @@ export default function LayoutFooter(props) {
 
 	function info() {
 		Modal.info({
-			title: "Donations",
+			title: 'Donations',
 			content: (
-				<div style={{ marginLeft: "-10%", marginRight: "-10%" }}>
+				<div style={{ marginLeft: '-10%', marginRight: '-10%' }}>
 					Any amount of money can help me to maintain the site. Thank you!
 					<br />
 					<br />
@@ -37,14 +37,14 @@ export default function LayoutFooter(props) {
 	}
 
 	return (
-		<Footer style={{ textAlign: "center" }}>
-			<Space direction="vertical">
+		<Footer style={{ textAlign: 'center' }}>
+			<Space direction='vertical'>
 				<Alert
-					type="info"
+					type='info'
 					message={
 						<>
-							For any suggestion or bug report you can send me a message on Telegram{" "}
-							<a href="https://t.me/xref1x" target="_blank" rel="noopener noreferrer" style={{ marginLeft: 100 }}>
+							For any suggestion or bug report you can send me a message on Telegram{' '}
+							<a href='https://t.me/xref1x' target='_blank' rel='noopener noreferrer' style={{ marginLeft: 100 }}>
 								💬 Telegram
 							</a>
 						</>
@@ -54,16 +54,16 @@ export default function LayoutFooter(props) {
 				<Alert
 					message={
 						<>
-							With the help of donations I can maintain the server and make improvements to the website{" "}
-							<Button onClick={info} style={{ borderWidth: 0, backgroundColor: "transparent", color: "#2196F3" }}>
+							With the help of donations I can maintain the server and make improvements to the website{' '}
+							<Button onClick={info} style={{ borderWidth: 0, backgroundColor: 'transparent', color: '#2196F3' }}>
 								❤️ Donate Crypto
 							</Button>
 						</>
 					}
-					type="success"
+					type='success'
 				/>
 			</Space>
-			<Modal title="Donations" visible={isModalVisible} onOk={handleOk}>
+			<Modal title='Donations' visible={isModalVisible} onOk={handleOk}>
 				Any amount of money can help me to maintain the site. Thank you!
 				<br />
 				<br />
@@ -76,7 +76,7 @@ export default function LayoutFooter(props) {
 			</Modal>
 			<br />
 			<br />
-			<p style={{ whiteSpace: "pre-wrap", overflowWrap: "break-word", marginLeft: "10%", marginRight: "10%", marginBottom: 10 }}>
+			<p style={{ whiteSpace: 'pre-wrap', overflowWrap: 'break-word', marginLeft: '10%', marginRight: '10%', marginBottom: 10 }}>
 				Disclaimer: The information provided on this website does not constitute Investment or trading advice. The sole purpose of this website is informational and/or Educational. Pivot Screener is
 				not responsible for any misuse of the information presented on this website.
 			</p>

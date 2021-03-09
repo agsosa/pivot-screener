@@ -1,16 +1,16 @@
-import "ag-grid-community/dist/styles/ag-grid.css";
-import "ag-grid-community/dist/styles/ag-theme-material.css";
-import { AgGridColumn, AgGridReact } from "ag-grid-react";
-import { Badge, Result, Skeleton, Space, Spin, Button, message } from "antd";
-import { autorun } from "mobx";
-import { observer } from "mobx-react-lite";
-import React, { useEffect, useState } from "react";
-import { useMst } from "../models/Root";
-import { capitalizeFirstLetter, getPairObject } from "../utils/Helpers";
-import "./AGGridOverrides.css";
-import "./Table.css";
-import CPRStats from "./CPRStats";
-import SocketStatus from "./SocketStatus";
+import 'ag-grid-community/dist/styles/ag-grid.css';
+import 'ag-grid-community/dist/styles/ag-theme-material.css';
+import { AgGridColumn, AgGridReact } from 'ag-grid-react';
+import { Badge, Result, Skeleton, Space, Spin, Button, message } from 'antd';
+import { autorun } from 'mobx';
+import { observer } from 'mobx-react-lite';
+import React, { useEffect, useState } from 'react';
+import { useMst } from '../models/Root';
+import { capitalizeFirstLetter, getPairObject } from '../utils/Helpers';
+import './AGGridOverrides.css';
+import './Table.css';
+import CPRStats from './CPRStats';
+import SocketStatus from './SocketStatus';
 
 // TODO: Implementar tooltip en las distancias de pivote para mostrar precio del pivote
 // TODO: Merge with CamTable
@@ -19,7 +19,7 @@ const CPRTable = observer((props) => {
 	const { timeframe, futureMode } = props;
 
 	const [gridApi, setGridApi] = useState(null);
-	//const [gridColumnApi, setGridColumnApi] = useState(null);
+	// const [gridColumnApi, setGridColumnApi] = useState(null);
 	const [filtersEnabled, setFiltersEnabled] = useState(false);
 
 	const { tickers, cprTableFilters, setCprTableFilters } = useMst((store) => ({
@@ -40,17 +40,18 @@ const CPRTable = observer((props) => {
 		};
 	});
 
-	useEffect(() => {
-		return () => {
+	useEffect(
+		() => () => {
 			if (gridApi) {
 				gridApi.destroy();
 			}
-		};
-	}, []);
+		},
+		[]
+	);
 
 	const onGridReady = (params) => {
 		setGridApi(params.api);
-		//setGridColumnApi(params.columnApi);
+		// setGridColumnApi(params.columnApi);
 
 		if (tickers) {
 			params.api.setRowData(tickers);
@@ -61,12 +62,12 @@ const CPRTable = observer((props) => {
 		params.api.hideOverlay();
 	};
 
-	function CustomLoadingOverlay(props) {
-		return <Spin tip="Loading..." />;
+	function CustomLoadingOverlay() {
+		return <Spin tip='Loading...' />;
 	}
 
-	function CustomNoRowsOverlay(props) {
-		return <Result status="warning" title="No data found. Please try reloading the page." />;
+	function CustomNoRowsOverlay() {
+		return <Result status='warning' title='No data found. Please try reloading the page.' />;
 	}
 
 	const distanceGetter = (data, objectStr) => {
@@ -74,56 +75,66 @@ const CPRTable = observer((props) => {
 		if (dist && dist[objectStr]) {
 			return dist[objectStr];
 		}
+		return undefined;
 	};
 
 	const distanceFormatter = (value) => {
-		if (value) return value.toFixed(2) + "%";
+		if (value) return `${value.toFixed(2)}%`;
+		return undefined;
 	};
 
 	const CPRWidthGetter = (data) => {
 		const value = data.getCPR(timeframe, futureMode).width;
 
 		if (value) return value;
+		return undefined;
 	};
 
 	const CPRWidthRenderer = (value) => {
 		if (value) {
-			let str = "";
-			let font = "";
+			let str = '';
+			let font = '';
 
 			if (value <= 1) {
 				font = "<font color='#DF4294'>";
-				str = "</font>";
+				str = '</font>';
 			} else {
 				font = "<font color='#2196F3'>";
-				str = "</font>";
+				str = '</font>';
 			}
 
-			return font + value + "% " + str;
+			return `${font + value}% ${str}`;
 		}
+
+		return undefined;
 	};
 
 	const cprStatusGetter = (data) => {
 		const value = data.getCPR(timeframe, futureMode).isTested;
 
-		if (value !== undefined) return value ? "Tested" : "Untested";
+		if (value !== undefined) return value ? 'Tested' : 'Untested';
+
+		return undefined;
 	};
 
 	const cprStatusCellRenderer = (params) => {
 		if (params.value) {
 			const approximation = params.data.getCPR(timeframe, futureMode).closestApproximation.toFixed(2);
+			const apString = approximation > 0 ? `<sup><font color='gray'>${approximation}%</font></sup>` : '';
 
-			const apString = approximation > 0 ? "<sup><font color='gray'>" + approximation + "%</font></sup>" : "";
-
-			return params.value === "Tested" ? "✔️ Tested" : "🧲 Untested " + apString;
+			return params.value === 'Tested' ? '✔️ Tested' : `🧲 Untested ${apString}`;
 		}
+
+		return undefined;
 	};
 
 	const cprStatusCellStyle = (params) => {
 		if (params && params.value) {
-			const extra = { fontSize: "15px" };
-			return params.value === "Untested" ? { ...extra, backgroundColor: "rgba(255, 0, 0, 0.1)" } : { ...extra, backgroundColor: "rgba(0, 255, 0, 0.1)" };
+			const extra = { fontSize: '15px' };
+			return params.value === 'Untested' ? { ...extra, backgroundColor: 'rgba(255, 0, 0, 0.1)' } : { ...extra, backgroundColor: 'rgba(0, 255, 0, 0.1)' };
 		}
+
+		return undefined;
 	};
 
 	const magnetSideGetter = (data) => {
@@ -131,19 +142,28 @@ const CPRTable = observer((props) => {
 		if (cpr) {
 			const tested = cpr.isTested;
 			if (tested !== undefined) {
-				if (tested) return "None";
+				if (tested) return 'None';
 
-				const isAboveCPR = cpr.price_position === "above";
-				if (isAboveCPR !== undefined) return isAboveCPR ? "Short" : "Long";
+				const isAboveCPR = cpr.price_position === 'above';
+				if (isAboveCPR !== undefined) return isAboveCPR ? 'Short' : 'Long';
 			}
 		}
+
+		return undefined;
 	};
 
 	const magnetSideCellStyle = (params) => {
 		if (params && params.value) {
-			const extra = { fontSize: "15px" };
-			return params.value === "Short" ? { ...extra, color: "rgba(255, 0, 0, 1)" } : params.value === "Long" ? { ...extra, color: "#4BAA4E" } : { ...extra, color: "#858585" };
+			const extra = { fontSize: '15px' };
+
+			let result = { ...extra, color: '#858585' };
+			if (params.value === 'Short') result = { ...extra, color: 'rgba(255, 0, 0, 1)' };
+			else if (params.value === 'Long') result = { ...extra, color: '#4BAA4E' };
+
+			return result;
 		}
+
+		return undefined;
 	};
 
 	const situationGetter = (data) => {
@@ -151,34 +171,39 @@ const CPRTable = observer((props) => {
 
 		if (cpr) {
 			if (cpr.price_position !== undefined) {
-				const neutral = cpr.price_position === "neutral";
-				if (neutral !== undefined && neutral) return "Neutral";
+				const neutral = cpr.price_position === 'neutral';
+				if (neutral !== undefined && neutral) return 'Neutral';
 
-				const above = cpr.price_position === "above";
-				if (above !== undefined && above) return "Above CPR";
-				else return "Below CPR";
+				const above = cpr.price_position === 'above';
+				if (above !== undefined && above) return 'Above CPR';
+				return 'Below CPR';
 			}
 		}
+
+		return undefined;
 	};
 
 	const situationCellStyle = (params) => {
 		if (params && params.value) {
-			const extra = { fontSize: "15px" };
-			return params.value === "Below CPR"
-				? { ...extra, backgroundColor: "rgba(255, 0, 0, 0.1)" }
-				: params.value === "Above CPR"
-				? { ...extra, backgroundColor: "rgba(0, 255, 0, 0.1)" }
-				: { ...extra, backgroundColor: "rgb(103, 124, 135, 0.1)" };
+			const extra = { fontSize: '15px' };
+
+			let result = { ...extra, backgroundColor: 'rgb(103, 124, 135, 0.1)' };
+			if (params.value === 'Below CPR') result = { ...extra, backgroundColor: 'rgba(255, 0, 0, 0.1)' };
+			else if (params.value === 'Above CPR') result = { ...extra, backgroundColor: 'rgba(0, 255, 0, 0.1)' };
+
+			return result;
 		}
+
+		return undefined;
 	};
 
 	const saveFilters = () => {
 		if (gridApi) {
 			const filterModel = gridApi.getFilterModel();
 			setCprTableFilters(filterModel);
-			message.success("Filters saved");
+			message.success('Filters saved');
 		} else {
-			message.success("The table is not ready");
+			message.success('The table is not ready');
 		}
 	};
 
@@ -186,12 +211,12 @@ const CPRTable = observer((props) => {
 		if (gridApi) {
 			if (cprTableFilters) {
 				gridApi.setFilterModel(cprTableFilters);
-				message.success("Filters applied");
+				message.success('Filters applied');
 			} else {
-				message.error("No saved filters found");
+				message.error('No saved filters found');
 			}
 		} else {
-			message.success("The table is not ready");
+			message.success('The table is not ready');
 		}
 	};
 
@@ -199,7 +224,7 @@ const CPRTable = observer((props) => {
 		if (gridApi) {
 			gridApi.setFilterModel(null);
 		} else {
-			message.success("The table is not ready");
+			message.success('The table is not ready');
 		}
 	};
 
@@ -228,8 +253,8 @@ const CPRTable = observer((props) => {
 			<Space style={{ padding: 1 }}>
 				<h1>
 					{capitalizeFirstLetter(props.market)} / {capitalizeFirstLetter(timeframe)}
-				</h1>{" "}
-				<Badge style={{ backgroundColor: "#2196F3", marginBottom: 7 }} count={tickers.length} />
+				</h1>{' '}
+				<Badge style={{ backgroundColor: '#2196F3', marginBottom: 7 }} count={tickers.length} />
 				<SocketStatus style={{ marginBottom: 5 }} />
 			</Space>
 
@@ -241,19 +266,19 @@ const CPRTable = observer((props) => {
 			</Space>
 
 			{filtersEnabled ? (
-				<p style={{ marginTop: 10, color: "red" }}>
+				<p style={{ marginTop: 10, color: 'red' }}>
 					<b>* Using Filters *</b>
 				</p>
 			) : null}
 
-			<div className="ag-theme-material" style={{ height: 700, width: "100%" }}>
-				{/*<Button onClick={test}>test</Button>*/}
+			<div className='ag-theme-material' style={{ height: 700, width: '100%' }}>
+				{/* <Button onClick={test}>test</Button> */}
 				<AgGridReact
 					onGridReady={onGridReady}
 					animateRows
 					onFilterChanged={onFilterChanged}
 					onFirstDataRendered={onFirstDataRendered}
-					immutableData={true}
+					immutableData
 					tooltipShowDelay={0}
 					frameworkComponents={{
 						customNoRowsOverlay: CustomNoRowsOverlay,
@@ -263,47 +288,45 @@ const CPRTable = observer((props) => {
 						enableCellChangeFlash: true,
 						editable: false,
 						sortable: true,
-						//flex: width <= 768 ? 0 : 1,
+						// flex: width <= 768 ? 0 : 1,
 						filter: true,
 						resizable: true,
 					}}
-					loadingOverlayComponent={"customLoadingOverlay"}
-					noRowsOverlayComponent={"customNoRowsOverlay"}
+					loadingOverlayComponent='customLoadingOverlay'
+					noRowsOverlayComponent='customNoRowsOverlay'
 					rowData={null}
-					enableBrowserTooltips={true}
-					getRowNodeId={(data) => {
-						return data.symbol;
-					}}>
-					<AgGridColumn width={150} headerName="Symbol" field="symbol" cellRenderer={symbolRenderer}></AgGridColumn>
+					enableBrowserTooltips
+					getRowNodeId={(data) => data.symbol}>
+					<AgGridColumn width={150} headerName='Symbol' field='symbol' cellRenderer={symbolRenderer} />
 
-					<AgGridColumn width={150} headerName="Exchange" field="exchange" cellRenderer={exchangeRenderer}></AgGridColumn>
+					<AgGridColumn width={150} headerName='Exchange' field='exchange' cellRenderer={exchangeRenderer} />
 
-					<AgGridColumn width={150} headerName="Price" field="price" filter="agNumberColumnFilter"></AgGridColumn>
+					<AgGridColumn width={150} headerName='Price' field='price' filter='agNumberColumnFilter' />
 
-					<AgGridColumn width={185} cellStyle={cprStatusCellStyle} cellRenderer={cprStatusCellRenderer} headerName="CPR Status" valueGetter={(params) => cprStatusGetter(params.data)}></AgGridColumn>
+					<AgGridColumn width={185} cellStyle={cprStatusCellStyle} cellRenderer={cprStatusCellRenderer} headerName='CPR Status' valueGetter={(params) => cprStatusGetter(params.data)} />
 
-					<AgGridColumn width={150} headerName="Magnet Side" valueGetter={(params) => magnetSideGetter(params.data)} cellStyle={magnetSideCellStyle}></AgGridColumn>
+					<AgGridColumn width={150} headerName='Magnet Side' valueGetter={(params) => magnetSideGetter(params.data)} cellStyle={magnetSideCellStyle} />
 
-					<AgGridColumn width={150} headerName="Situation" valueGetter={(params) => situationGetter(params.data)} cellStyle={situationCellStyle}></AgGridColumn>
+					<AgGridColumn width={150} headerName='Situation' valueGetter={(params) => situationGetter(params.data)} cellStyle={situationCellStyle} />
 
-					{["p", "tc", "bc"].map((q) => {
-						return (
-							<AgGridColumn
-								width={150}
-								headerName={q.toUpperCase() + " Distance"}
-								valueFormatter={(params) => distanceFormatter(params.value)}
-								valueGetter={(params) => distanceGetter(params.data, q)}
-								filter="agNumberColumnFilter"></AgGridColumn>
-						);
-					})}
+					{['p', 'tc', 'bc'].map((q) => (
+						<AgGridColumn
+							key={q}
+							width={150}
+							headerName={`${q.toUpperCase()} Distance`}
+							valueFormatter={(params) => distanceFormatter(params.value)}
+							valueGetter={(params) => distanceGetter(params.data, q)}
+							filter='agNumberColumnFilter'
+						/>
+					))}
 
-					<AgGridColumn width={150} headerName="CPR Width" cellRenderer={(params) => CPRWidthRenderer(params.value)} valueGetter={(params) => CPRWidthGetter(params.data)}></AgGridColumn>
+					<AgGridColumn width={150} headerName='CPR Width' cellRenderer={(params) => CPRWidthRenderer(params.value)} valueGetter={(params) => CPRWidthGetter(params.data)} />
 				</AgGridReact>
 			</div>
 			{!tickers || tickers.length === 0 ? (
 				<Skeleton />
 			) : (
-				<div style={{ textAlign: "left", marginTop: 30 }}>
+				<div style={{ textAlign: 'left', marginTop: 30 }}>
 					<ul>
 						<li>
 							The percentage shown above the <i>Untested</i> label is the closest approximation to the CPR. <i>Example:</i> Untested <sup>0.1%</sup> means that there was a candle that came within 0.1%

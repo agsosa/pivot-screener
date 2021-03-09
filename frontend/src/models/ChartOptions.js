@@ -1,8 +1,8 @@
-import { types } from "mobx-state-tree";
+import { types } from 'mobx-state-tree';
 
-//{ dailyCPR: false, weeklyCPR: false, monthlyCPR: true, dailyCAM: false, weeklyCAM: false, monthlyCAM: true, futureMode: false }
+// { dailyCPR: false, weeklyCPR: false, monthlyCPR: true, dailyCAM: false, weeklyCAM: false, monthlyCAM: true, futureMode: false }
 
-export const ChartOptions = types
+const ChartOptions = types
 	.model({
 		dailyCPR: types.boolean,
 		weeklyCPR: types.boolean,
@@ -47,3 +47,5 @@ export const ChartOptions = types
 			self.monthlyCam = !self.monthlyCam;
 		},
 	}));
+
+export default ChartOptions;

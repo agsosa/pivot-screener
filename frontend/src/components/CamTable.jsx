@@ -1,21 +1,21 @@
-import "ag-grid-community/dist/styles/ag-grid.css";
-import "ag-grid-community/dist/styles/ag-theme-material.css";
-import { AgGridColumn, AgGridReact } from "ag-grid-react";
-import { Badge, Result, Space, Spin, Button, message } from "antd";
-import { autorun } from "mobx";
-import { observer } from "mobx-react-lite";
-import React, { useEffect, useState } from "react";
-import { useMst } from "../models/Root";
-import { capitalizeFirstLetter, getPairObject } from "../utils/Helpers";
-import "./AGGridOverrides.css";
-import CamStats from "./CamStats";
-import SocketStatus from "./SocketStatus";
+import 'ag-grid-community/dist/styles/ag-grid.css';
+import 'ag-grid-community/dist/styles/ag-theme-material.css';
+import { AgGridColumn, AgGridReact } from 'ag-grid-react';
+import { Badge, Result, Space, Spin, Button, message } from 'antd';
+import { autorun } from 'mobx';
+import { observer } from 'mobx-react-lite';
+import React, { useEffect, useState } from 'react';
+import { useMst } from '../models/Root';
+import { capitalizeFirstLetter, getPairObject } from '../utils/Helpers';
+import './AGGridOverrides.css';
+import CamStats from './CamStats';
+import SocketStatus from './SocketStatus';
 
 // TODO: Merge with CPRTable
 
 const CamTable = observer((props) => {
 	const [gridApi, setGridApi] = useState(null);
-	//const [gridColumnApi, setGridColumnApi] = useState(null);
+	// const [gridColumnApi, setGridColumnApi] = useState(null);
 	const [filtersEnabled, setFiltersEnabled] = useState(false);
 
 	const { tickers, camTableFilters, setCamTableFilters } = useMst((store) => ({
@@ -36,17 +36,18 @@ const CamTable = observer((props) => {
 		};
 	});
 
-	useEffect(() => {
-		return () => {
+	useEffect(
+		() => () => {
 			if (gridApi) {
 				gridApi.destroy();
 			}
-		};
-	}, []);
+		},
+		[]
+	);
 
 	const onGridReady = (params) => {
 		setGridApi(params.api);
-		//setGridColumnApi(params.columnApi);
+		// setGridColumnApi(params.columnApi);
 
 		if (tickers && tickers.length > 0) {
 			params.api.setRowData(tickers);
@@ -57,12 +58,12 @@ const CamTable = observer((props) => {
 		params.api.hideOverlay();
 	};
 
-	function CustomLoadingOverlay(props) {
-		return <Spin tip="Loading..." />;
+	function CustomLoadingOverlay() {
+		return <Spin tip='Loading...' />;
 	}
 
-	function CustomNoRowsOverlay(props) {
-		return <Result status="warning" title="No data found. Please try reloading the page." />;
+	function CustomNoRowsOverlay() {
+		return <Result status='warning' title='No data found. Please try reloading the page.' />;
 	}
 
 	const situationGetter = (data) => {
@@ -71,35 +72,41 @@ const CamTable = observer((props) => {
 		if (cam) {
 			return cam.situation;
 		}
+
+		return 'Unknown';
 	};
 
 	const situationCellStyle = (params) => {
-		if (params && params.value) {
-			const extra = { fontSize: "15px" };
+		const extra = { fontSize: '15px' };
+		const defaultStyle = { ...extra, backgroundColor: 'rgb(103, 124, 135, 0.3)' };
 
+		if (params && params.value) {
 			switch (params.value) {
-				case "Above H4":
-					return { ...extra, backgroundColor: "rgba(0, 255, 0, 0.3)" };
-				case "Above H3":
-					return { ...extra, backgroundColor: "rgba(249, 211, 101, 0.3)" };
-				case "Below L3":
-					return { ...extra, backgroundColor: "rgba(249, 211, 101, 0.3)" };
-				case "Below L4":
-					return { ...extra, backgroundColor: "rgba(255, 0, 0, 0.3)" };
+				case 'Above H4':
+					return { ...extra, backgroundColor: 'rgba(0, 255, 0, 0.3)' };
+				case 'Above H3':
+					return { ...extra, backgroundColor: 'rgba(249, 211, 101, 0.3)' };
+				case 'Below L3':
+					return { ...extra, backgroundColor: 'rgba(249, 211, 101, 0.3)' };
+				case 'Below L4':
+					return { ...extra, backgroundColor: 'rgba(255, 0, 0, 0.3)' };
 				default:
-					return { ...extra, backgroundColor: "rgb(103, 124, 135, 0.3)" };
+					return defaultStyle;
 			}
 		}
+
+		return defaultStyle;
 	};
 
 	const distanceCellStyle = (params, level) => {
 		if (params && params.value && level && level.length >= 2) {
-			const extra = { fontSize: "15px" };
+			const extra = { fontSize: '15px' };
 
-			if (level[0] === "h") return { ...extra, backgroundColor: "rgba(33, 150, 243, 0.1)" };
-			// H4,H5,H3,H6
-			else if (level[0] === "l") return { ...extra, backgroundColor: "rgba(223, 66, 148, 0.1)" }; // L4,L5,L6,L3
+			if (level[0] === 'h') return { ...extra, backgroundColor: 'rgba(33, 150, 243, 0.1)' }; // H4,H5,H3,H6
+			if (level[0] === 'l') return { ...extra, backgroundColor: 'rgba(223, 66, 148, 0.1)' }; // L4,L5,L6,L3
 		}
+
+		return undefined;
 	};
 
 	const distanceGetter = (data, levelStr) => {
@@ -107,17 +114,22 @@ const CamTable = observer((props) => {
 		if (dist && dist[levelStr]) {
 			return dist[levelStr];
 		}
+		return undefined;
 	};
 
 	const distanceFormatter = (value) => {
-		if (value) return value.toFixed(2) + "%";
+		if (value) return `${value.toFixed(2)}%`;
+		return undefined;
 	};
 
-	const nearestLevelGetter = (data, levelStr) => {
-		const nearest = data.getCamarilla(props.timeframe, props.futureMode).nearest;
+	const nearestLevelGetter = (data) => {
+		const { nearest } = data.getCamarilla(props.timeframe, props.futureMode);
+
 		if (nearest) {
 			return nearest.toUpperCase();
 		}
+
+		return 'Unknown';
 	};
 
 	const symbolRenderer = (params) => {
@@ -137,9 +149,9 @@ const CamTable = observer((props) => {
 		if (gridApi) {
 			const filterModel = gridApi.getFilterModel();
 			setCamTableFilters(filterModel);
-			message.success("Filters saved");
+			message.success('Filters saved');
 		} else {
-			message.success("The table is not ready");
+			message.success('The table is not ready');
 		}
 	};
 
@@ -147,12 +159,12 @@ const CamTable = observer((props) => {
 		if (gridApi) {
 			if (camTableFilters) {
 				gridApi.setFilterModel(camTableFilters);
-				message.success("Filters applied");
+				message.success('Filters applied');
 			} else {
-				message.error("No saved filters found");
+				message.error('No saved filters found');
 			}
 		} else {
-			message.success("The table is not ready");
+			message.success('The table is not ready');
 		}
 	};
 
@@ -160,7 +172,7 @@ const CamTable = observer((props) => {
 		if (gridApi) {
 			gridApi.setFilterModel(null);
 		} else {
-			message.success("The table is not ready");
+			message.success('The table is not ready');
 		}
 	};
 
@@ -176,8 +188,8 @@ const CamTable = observer((props) => {
 			<Space style={{ padding: 1 }}>
 				<h1>
 					{capitalizeFirstLetter(props.market)} / {capitalizeFirstLetter(props.timeframe)}
-				</h1>{" "}
-				<Badge style={{ backgroundColor: "#2196F3", marginBottom: 7 }} count={tickers.length} />
+				</h1>{' '}
+				<Badge style={{ backgroundColor: '#2196F3', marginBottom: 7 }} count={tickers.length} />
 				<SocketStatus style={{ marginBottom: 5 }} />
 			</Space>
 			<p style={{ marginTop: -5 }}>You can filter, short and move any column. The data is updated automatically.</p>
@@ -188,19 +200,19 @@ const CamTable = observer((props) => {
 			</Space>
 
 			{filtersEnabled ? (
-				<p style={{ marginTop: 10, color: "red" }}>
+				<p style={{ marginTop: 10, color: 'red' }}>
 					<b>* Using Filters *</b>
 				</p>
 			) : null}
 
-			<div className="ag-theme-material" style={{ height: 700, width: "100%" }}>
-				{/*<Button onClick={test}>test</Button>*/}
+			<div className='ag-theme-material' style={{ height: 700, width: '100%' }}>
+				{/* <Button onClick={test}>test</Button> */}
 				<AgGridReact
 					onGridReady={onGridReady}
 					animateRows
 					onFilterChanged={onFilterChanged}
 					onFirstDataRendered={onFirstDataRendered}
-					immutableData={true}
+					immutableData
 					tooltipShowDelay={0}
 					frameworkComponents={{
 						customNoRowsOverlay: CustomNoRowsOverlay,
@@ -210,38 +222,36 @@ const CamTable = observer((props) => {
 						enableCellChangeFlash: true,
 						editable: false,
 						sortable: true,
-						//flex: width <= 768 ? 0 : 1,
+						// flex: width <= 768 ? 0 : 1,
 						filter: true,
 						resizable: true,
 					}}
-					loadingOverlayComponent={"customLoadingOverlay"}
-					noRowsOverlayComponent={"customNoRowsOverlay"}
+					loadingOverlayComponent='customLoadingOverlay'
+					noRowsOverlayComponent='customNoRowsOverlay'
 					rowData={null}
-					enableBrowserTooltips={true}
-					getRowNodeId={(data) => {
-						return data.symbol;
-					}}>
-					<AgGridColumn width={150} headerName="Symbol" field="symbol" cellRenderer={symbolRenderer}></AgGridColumn>
+					enableBrowserTooltips
+					getRowNodeId={(data) => data.symbol}>
+					<AgGridColumn width={150} headerName='Symbol' field='symbol' cellRenderer={symbolRenderer} />
 
-					<AgGridColumn width={140} headerName="Exchange" field="exchange" cellRenderer={exchangeRenderer}></AgGridColumn>
+					<AgGridColumn width={140} headerName='Exchange' field='exchange' cellRenderer={exchangeRenderer} />
 
-					<AgGridColumn width={120} headerName="Price" field="price" filter="agNumberColumnFilter"></AgGridColumn>
+					<AgGridColumn width={120} headerName='Price' field='price' filter='agNumberColumnFilter' />
 
-					<AgGridColumn width={100} headerName="Nearest" valueGetter={(params) => nearestLevelGetter(params.data)}></AgGridColumn>
+					<AgGridColumn width={120} headerName='Nearest' valueGetter={(params) => nearestLevelGetter(params.data)} />
 
-					<AgGridColumn width={160} headerName="Situation" valueGetter={(params) => situationGetter(params.data)} cellStyle={situationCellStyle}></AgGridColumn>
+					<AgGridColumn width={160} headerName='Situation' valueGetter={(params) => situationGetter(params.data)} cellStyle={situationCellStyle} />
 
-					{["h3", "h4", "h5", "h6", "l3", "l4", "l5", "l6"].map((q) => {
-						return (
-							<AgGridColumn
-								width={120}
-								headerName={q.toUpperCase() + " Distance"}
-								valueFormatter={(params) => distanceFormatter(params.value)}
-								valueGetter={(params) => distanceGetter(params.data, q)}
-								cellStyle={(params) => distanceCellStyle(params, q)}
-								filter="agNumberColumnFilter"></AgGridColumn>
-						);
-					})}
+					{['h3', 'h4', 'h5', 'h6', 'l3', 'l4', 'l5', 'l6'].map((q) => (
+						<AgGridColumn
+							key={q}
+							width={115}
+							headerName={`${q.toUpperCase()} Distance`}
+							valueFormatter={(params) => distanceFormatter(params.value)}
+							valueGetter={(params) => distanceGetter(params.data, q)}
+							cellStyle={(params) => distanceCellStyle(params, q)}
+							filter='agNumberColumnFilter'
+						/>
+					))}
 				</AgGridReact>
 			</div>
 		</div>

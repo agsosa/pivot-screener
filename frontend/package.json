@@ -1,55 +1,53 @@
 {
-  "name": "pivotscreener2",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "ag-grid-community": "^25.0.1",
-    "ag-grid-react": "^25.0.1",
-    "antd": "^4.12.3",
-    "axios": "^0.21.1",
-    "jsonpack": "^1.1.5",
-    "lightweight-charts": "^3.3.0",
-    "mobx": "^6.1.7",
-    "mobx-react-lite": "^3.2.0",
-    "mobx-state-tree": "^5.0.1",
-    "moment": "^2.29.1",
-    "mst-persist": "^0.1.3",
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1",
-    "react-router-dom": "^5.2.0",
-    "react-scripts": "4.0.2",
-    "socket.io-client": "^3.1.1",
-    "source-map-explorer": "^2.5.2"
-  },
-  "scripts": {
-    "analyze": "source-map-explorer 'build/static/js/*.js'",
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
-  "devDependencies": {
-    "eslint-plugin-import": "^2.20.2",
-    "eslint-plugin-jsx-a11y": "^6.2.3",
-    "eslint-plugin-react": "^7.19.0",
-    "eslint-plugin-react-hooks": "^2.5.1"
-  }
+	"name": "pivotscreener2",
+	"version": "0.2",
+	"private": true,
+	"dependencies": {
+		"@ant-design/icons": "^4.5.0",
+		"ag-grid-community": "^25.1.0",
+		"ag-grid-react": "^25.1.0",
+		"antd": "^4.13.1",
+		"axios": "^0.21.1",
+		"jsonpack": "^1.1.5",
+		"lightweight-charts": "^3.3.0",
+		"mobx": "^6.1.8",
+		"mobx-react-lite": "^3.2.0",
+		"mobx-state-tree": "^5.0.1",
+		"moment": "^2.29.1",
+		"mst-persist": "^0.1.3",
+		"prop-types": "^15.7.2",
+		"react": "^17.0.1",
+		"react-dom": "^17.0.1",
+		"react-router-dom": "^5.2.0",
+		"react-scripts": "4.0.2",
+		"socket.io-client": "^3.1.2",
+		"source-map-explorer": "^2.5.2"
+	},
+	"scripts": {
+		"analyze": "source-map-explorer 'build/static/js/*.js'",
+		"start": "react-scripts start",
+		"build": "react-scripts build",
+		"test": "react-scripts test",
+		"eject": "react-scripts eject"
+	},
+	"browserslist": {
+		"production": [
+			">0.2%",
+			"not dead",
+			"not op_mini all"
+		],
+		"development": [
+			"last 1 chrome version",
+			"last 1 firefox version",
+			"last 1 safari version"
+		]
+	},
+	"devDependencies": {
+		"eslint": "^7.21.0",
+		"eslint-config-airbnb": "^18.2.1",
+		"eslint-plugin-import": "^2.22.1",
+		"eslint-plugin-jsx-a11y": "^6.4.1",
+		"eslint-plugin-react": "^7.22.0",
+		"eslint-plugin-react-hooks": "^4.2.0"
+	}
 }
