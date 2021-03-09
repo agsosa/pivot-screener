@@ -5,7 +5,7 @@ import { Spin, Button, Space, message, AutoComplete } from 'antd';
 import Breadcrumb from '../../layout/Breadcrumb';
 import Chart from './Chart';
 import { useMst } from '../../../models/Root';
-import { apiFetchSymbolsList, apiFetchCandlesticksLocally } from '../../../lib/API';
+import { apiFetchSymbolsList, apiFetchBinanceCandlesticksLocally } from '../../../lib/API';
 
 const SYMBOLS_LIST_FETCH_INTERVAL = 1000 * 15;
 
@@ -25,7 +25,7 @@ const ChartPage = observer(() => {
 	}));
 
 	async function fetchCandles() {
-		const result = await apiFetchCandlesticksLocally(symbol);
+		const result = await apiFetchBinanceCandlesticksLocally(symbol);
 		if (symbol === result.symbol) setTickers([{ symbol, market: '', exchange: '', candlesticks: result.candlesticks }]);
 		fetchCandlesTimeout.current = setTimeout(() => {
 			fetchCandles();

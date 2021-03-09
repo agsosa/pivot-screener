@@ -1,29 +1,14 @@
 import axios from 'axios';
-import jsonpack from 'jsonpack';
 import { isDev } from './Helpers';
 
 const BASE_URL = isDev() ? 'http://localhost:4000/api/' : 'https://pivotscreener.herokuapp.com/api/';
 
-export function apiFetchTickers(timeframes = 'daily,weekly,monthly,hourly', symbols = '') {
-	// TODO: Eliminar
-	// TODO: Agregar market query
-	const timeFramesQuery = timeframes ? `timeframes=${timeframes.replaceAll(' ', '')}&` : '';
-	const symbolsQuery = symbols ? `symbols=${symbols.replaceAll(' ', '')}&` : ``;
+// TODO: Multiple markets/exchanges not supported yet!!! Only binance futures implemented atm
 
-	const QUERY = `candlesticks?${timeFramesQuery}${symbolsQuery}`;
-
-	return new Promise((resolve, reject) => {
-		axios
-			.get(BASE_URL + QUERY)
-			.then((res) => {
-				resolve(jsonpack.unpack(res.data));
-			})
-			.catch((error) => reject(new Error(error.toString())));
-	});
-}
-
+// Get supported list from the backend
+// TODO: Add retry
+// TODO: Add market/exchange support
 export function apiFetchSymbolsList(markets = undefined) {
-	// TODO: IMPLEMENTAR RETRY
 	const marketsQuery = markets ? `markets=${markets.replaceAll(' ', '')}` : ``;
 
 	const QUERY = `symbols-list?${marketsQuery}`;
@@ -38,8 +23,9 @@ export function apiFetchSymbolsList(markets = undefined) {
 	});
 }
 
-export function apiFetchCandlesticksLocally(symbol) {
-	// TODO: Add support for markets, make shared function with backend
+// Get candlesticks for a symbol (currently only binance futures)
+// TODO: Add support for multiple markets/exchanges, optimize (cache, only update prices and pivot state)
+export function apiFetchBinanceCandlesticksLocally(symbol) {
 	const timeframes = [
 		{ interval: '1d', objectName: 'daily', limit: 2 },
 		{ interval: '1w', objectName: 'weekly', limit: 2 },
@@ -53,6 +39,7 @@ export function apiFetchCandlesticksLocally(symbol) {
 		const proms = [];
 
 		timeframes.forEach((t) => {
+			// Consume binance public API
 			const url = `https://fapi.binance.com/fapi/v1/klines?symbol=${symbol}&interval=${t.interval}&limit=${t.limit}`;
 			const axiosPromise = axios
 				.get(url)
@@ -60,6 +47,7 @@ export function apiFetchCandlesticksLocally(symbol) {
 					if (!res || !res.data || res.data.length === 0 || res.data.code !== undefined) reject(new Error(`Invalid data received from Binance ${res}`));
 					const klines = [];
 
+					// Convert binance OHLC array to OHLC object
 					res.data.forEach((c) => {
 						klines.push({
 							open: parseFloat(c[1]),
@@ -70,6 +58,7 @@ export function apiFetchCandlesticksLocally(symbol) {
 						});
 					});
 
+					// Assign the timeframe Candles object to candlesticks
 					candlesticks[`${t.objectName}Candles`] = klines;
 				})
 				.catch((error) => console.log(error.toString()));
@@ -77,7 +66,7 @@ export function apiFetchCandlesticksLocally(symbol) {
 			proms.push(axiosPromise);
 		});
 
-		await Promise.allSettled(proms);
+		await Promise.allSettled(proms); // Wait for all timeframes to resolve
 
 		resolve({ candlesticks, symbol });
 	});
