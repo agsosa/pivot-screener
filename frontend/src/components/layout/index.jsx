@@ -1,15 +1,15 @@
 import React from 'react';
 import { Layout } from 'antd';
 import { HashRouter as Router, Route, Switch } from 'react-router-dom';
-import LayoutFooter from './layout/LayoutFooter';
+import LayoutFooter from './LayoutFooter';
 import LayoutHeader from './LayoutHeader';
-import './MainLayout.css';
-import CalculatorPage from './pages/CalculatorPage';
-import CamScreenerPage from './pages/CamScreenerPage';
-import ChartPage from './pages/ChartPage';
-import CPRScreenerPage from './pages/CPRScreenerPage';
-import ErrorPage from './pages/ErrorPage';
+import CalculatorPage from '../pages/CalculatorPage';
+import CamScreenerPage from '../pages/CamScreenerPage';
+import ChartPage from '../pages/ChartPage';
+import CPRScreenerPage from '../pages/CPRScreenerPage';
+import ErrorPage from '../pages/ErrorPage';
 import Sidebar from './Sidebar';
+import './index.css';
 
 const { Content } = Layout;
 

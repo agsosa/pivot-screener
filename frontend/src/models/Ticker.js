@@ -1,5 +1,5 @@
 import { types } from 'mobx-state-tree';
-import { inRange, percentDifference } from '../utils/Helpers';
+import { inRange, percentDifference } from '../lib/Helpers';
 
 // TODO: Optimize
 

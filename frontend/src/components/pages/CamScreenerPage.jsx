@@ -3,8 +3,8 @@ import { Content } from 'antd/lib/layout/layout';
 import React, { useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import { useMst } from '../../models/Root';
-import { capitalizeFirstLetter } from '../../utils/Helpers';
-import { isValidMarket } from '../../utils/Markets';
+import { capitalizeFirstLetter } from '../../lib/Helpers';
+import { isValidMarket } from '../../lib/Markets';
 import CamTable from '../CamTable';
 import Breadcrumb from '../Breadcrumb';
 

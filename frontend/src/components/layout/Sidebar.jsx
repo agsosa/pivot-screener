@@ -2,7 +2,7 @@ import { FundProjectionScreenOutlined, HomeOutlined, LineChartOutlined, MenuOutl
 import { Layout, Menu } from 'antd';
 import React, { useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { markets } from '../utils/Markets';
+import { markets } from '../../lib/Markets';
 
 const { Sider } = Layout;
 const { SubMenu } = Menu;

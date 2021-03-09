@@ -4,7 +4,7 @@ import { persist } from 'mst-persist';
 import { io } from 'socket.io-client';
 import jsonpack from 'jsonpack';
 import Ticker from './Ticker';
-import { calcPercent, isDev } from '../utils/Helpers';
+import { calcPercent, isDev } from '../lib/Helpers';
 import ChartOptions from './ChartOptions';
 
 const SOCKET_URL = isDev() ? 'http://localhost:4000' : 'https://pivotscreener.herokuapp.com/';

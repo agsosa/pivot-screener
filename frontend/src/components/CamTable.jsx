@@ -6,7 +6,7 @@ import { autorun } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import React, { useEffect, useState } from 'react';
 import { useMst } from '../models/Root';
-import { capitalizeFirstLetter, getPairObject } from '../utils/Helpers';
+import { capitalizeFirstLetter, getPairObject } from '../lib/Helpers';
 import './AGGridOverrides.css';
 import CamStats from './CamStats';
 import SocketStatus from './SocketStatus';

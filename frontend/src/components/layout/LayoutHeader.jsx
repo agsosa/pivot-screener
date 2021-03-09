@@ -3,7 +3,7 @@ import { BellOutlined } from '@ant-design/icons';
 import { Alert, Badge, Col, notification, Row } from 'antd';
 
 import './LayoutHeader.css';
-import DailyCloseTime from './DailyCloseTime';
+import DailyCloseTime from '../DailyCloseTime';
 
 export default function LayoutHeader() {
 	const [scriptMounted, setScriptMounted] = useState(false);

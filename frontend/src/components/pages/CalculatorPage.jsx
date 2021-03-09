@@ -2,7 +2,7 @@ import { CalculatorFilled, DeleteFilled } from '@ant-design/icons';
 import { Button, Divider, InputNumber, message, Space, Tag } from 'antd';
 import { Content } from 'antd/lib/layout/layout';
 import React, { useState } from 'react';
-import { calculateCamarilla, calculateCPR, toFixedEx } from '../../utils/Helpers';
+import { calculateCamarilla, calculateCPR, toFixedEx } from '../../lib/Helpers';
 import Breadcrumb from '../Breadcrumb';
 
 export default function CalculatorPage() {

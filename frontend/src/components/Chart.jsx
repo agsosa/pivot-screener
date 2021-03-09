@@ -4,7 +4,7 @@ import { observer } from 'mobx-react-lite';
 import { reaction } from 'mobx';
 import { Switch, Space, Button } from 'antd';
 import { useMst } from '../models/Root';
-import { percentage } from '../utils/Helpers';
+import { percentage } from '../lib/Helpers';
 
 const Chart = observer((props) => {
 	const chart = useRef(null);
