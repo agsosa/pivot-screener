@@ -5,11 +5,11 @@ import { Badge, Result, Space, Spin, Button, message } from 'antd';
 import { autorun } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import React, { useEffect, useState } from 'react';
-import { useMst } from '../models/Root';
-import { capitalizeFirstLetter, getPairObject } from '../lib/Helpers';
+import { useMst } from '../../models/Root';
+import { capitalizeFirstLetter, getPairObject } from '../../lib/Helpers';
 import './AGGridOverrides.css';
-import CamStats from './CamStats';
-import SocketStatus from './SocketStatus';
+import CamStats from '../pages/cam-screener/CamStats';
+import SocketStatus from '../SocketStatus';
 
 // TODO: Merge with CPRTable
 

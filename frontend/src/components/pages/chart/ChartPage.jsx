@@ -2,10 +2,10 @@ import { Content } from 'antd/lib/layout/layout';
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Spin, Button, Space, message, AutoComplete } from 'antd';
-import Breadcrumb from '../Breadcrumb';
-import Chart from '../Chart';
-import { useMst } from '../../models/Root';
-import { apiFetchSymbolsList, apiFetchCandlesticksLocally } from '../../lib/API';
+import Breadcrumb from '../../layout/Breadcrumb';
+import Chart from './Chart';
+import { useMst } from '../../../models/Root';
+import { apiFetchSymbolsList, apiFetchCandlesticksLocally } from '../../../lib/API';
 
 const SYMBOLS_LIST_FETCH_INTERVAL = 1000 * 15;
 

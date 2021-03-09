@@ -5,12 +5,12 @@ import { Badge, Result, Skeleton, Space, Spin, Button, message } from 'antd';
 import { autorun } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import React, { useEffect, useState } from 'react';
-import { useMst } from '../models/Root';
-import { capitalizeFirstLetter, getPairObject } from '../lib/Helpers';
+import { useMst } from '../../models/Root';
+import { capitalizeFirstLetter, getPairObject } from '../../lib/Helpers';
 import './AGGridOverrides.css';
 import './Table.css';
-import CPRStats from './CPRStats';
-import SocketStatus from './SocketStatus';
+import CPRStats from '../pages/cpr-screener/CPRStats';
+import SocketStatus from '../SocketStatus';
 
 // TODO: Implementar tooltip en las distancias de pivote para mostrar precio del pivote
 // TODO: Merge with CamTable

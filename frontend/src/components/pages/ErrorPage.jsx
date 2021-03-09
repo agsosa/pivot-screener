@@ -1,7 +1,7 @@
 import { Result } from 'antd';
 import { Content } from 'antd/lib/layout/layout';
 import React from 'react';
-import Breadcrumb from '../Breadcrumb';
+import Breadcrumb from '../layout/Breadcrumb';
 
 export default function ErrorPage() {
 	return (

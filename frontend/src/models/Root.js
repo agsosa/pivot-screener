@@ -188,12 +188,12 @@ const initialState = RootModel.create({
 	cprStatsPanelVisible: true,
 	camStatsPanelVisible: true,
 	chartOptions: {
-		dailyCPR: false,
+		dailyCPR: true,
 		weeklyCPR: true,
-		monthlyCPR: false,
+		monthlyCPR: true,
 		dailyCam: false,
-		weeklyCam: true,
-		monthlyCam: false,
+		weeklyCam: false,
+		monthlyCam: true,
 		futureMode: false,
 	},
 });

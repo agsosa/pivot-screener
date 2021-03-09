@@ -2,7 +2,7 @@ import React from 'react';
 import { Card, Statistic, Row, Col, Progress, Skeleton, Button } from 'antd';
 import { FallOutlined, RiseOutlined, ExclamationCircleOutlined, ColumnHeightOutlined } from '@ant-design/icons';
 import { observer } from 'mobx-react-lite';
-import { useMst } from '../models/Root';
+import { useMst } from '../../../models/Root';
 
 const CamStats = observer((props) => {
 	const { tickers, toggleCamStatsPanel, camStatsPanelVisible, camStats } = useMst((store) => ({

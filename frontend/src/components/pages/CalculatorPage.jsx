@@ -3,7 +3,7 @@ import { Button, Divider, InputNumber, message, Space, Tag } from 'antd';
 import { Content } from 'antd/lib/layout/layout';
 import React, { useState } from 'react';
 import { calculateCamarilla, calculateCPR, toFixedEx } from '../../lib/Helpers';
-import Breadcrumb from '../Breadcrumb';
+import Breadcrumb from '../layout/Breadcrumb';
 
 export default function CalculatorPage() {
 	const defaultState = {
