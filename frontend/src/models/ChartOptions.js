@@ -1,6 +1,7 @@
 import { types } from 'mobx-state-tree';
 
 // { dailyCPR: false, weeklyCPR: false, monthlyCPR: true, dailyCAM: false, weeklyCAM: false, monthlyCAM: true, futureMode: false }
+// TODO: Refactor, use object
 
 const ChartOptions = types
 	.model({

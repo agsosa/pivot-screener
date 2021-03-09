@@ -1,23 +1,12 @@
+// Returns true if environment is development
 export function isDev() {
 	return !process.env.NODE_ENV || process.env.NODE_ENV === 'development';
 }
 
-export const ohlcArrayToObject = (ohlcArray) => {
-	if (!Array.isArray(ohlcArray)) return ohlcArray;
-	if (!ohlcArray || ohlcArray.length < 4) return null;
-	return {
-		open: ohlcArray[0],
-		high: ohlcArray[1],
-		low: ohlcArray[2],
-		close: ohlcArray[3],
-		time: ohlcArray[4],
-	};
-};
-
+// Returns percentage % of a total
 export const percentage = (percent, total) => ((percent / 100) * total).toFixed(2);
 
-export const distancePct = (a, b) => Math.abs(((a - b) / a) * 100).toFixed(2);
-
+// Returns a camarilla object
 export const calculateCamarilla = (high, low, close) => {
 	let h4 = 0;
 	let h3 = 0;
@@ -43,6 +32,7 @@ export const calculateCamarilla = (high, low, close) => {
 	return { h6, h5, h4, h3, l3, l4, l5, l6 };
 };
 
+// Returns a CPR object
 export const calculateCPR = (high, low, close) => {
 	let p = 0;
 	let bc = 0;
@@ -61,25 +51,26 @@ export const calculateCPR = (high, low, close) => {
 	return { tc, p, bc };
 };
 
+// Number.fixed with two different cases
 export const toFixedEx = (x) => {
 	if (x <= 1) return x.toFixed(8);
 	return x.toFixed(2);
 };
 
+// "hola" => "Hola"
 export function capitalizeFirstLetter(string) {
 	return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-export function randomInteger(min, max) {
-	return Math.floor(Math.random() * (max - min + 1)) + min;
-}
+// Returns what percentage is v (value) of t (total)
+export const calcPercent = (v, t) => (100 * v) / t;
 
-export const calcPercent = (v, t) => (100 * v) / t; // What percentage is v (value) of t (total)
-
+// Returns true if a number is between min and max
 export function inRange(x, min, max) {
 	return (x - min) * (x - max) <= 0;
 }
 
+// Returns the percentage distance between a and b
 export function percentDifference(a, b) {
 	if (!a || !b || a + b === 0) return 0;
 
@@ -91,18 +82,14 @@ export function percentDifference(a, b) {
 	return result;
 }
 
-export function clamp(val, min, max) {
-	return Math.min(Math.max(val, min), max);
-}
-
+// Example: BTCUSDT -> { primary: "BTC", secondary: "USDT"}
 export function getPairObject(symbol) {
-	// BTCUSDT -> { primary: "BTC", secondary: "USDT"}
 	const QUOTES = ['USDT', 'BUSD', 'BTC', 'ETH', 'BNB', 'USD', 'LTC'];
 	const result = { primary: '', secondary: '' };
 
-	for (let i = 0; i < QUOTES.length; i++) {
+	for (let i = 0; i < QUOTES.length; i += 1) {
 		const q = QUOTES[i];
-		//	let regex = /+q+$/gi
+		//	regex: /+q+$/gi
 		const regex = new RegExp(`${q}$`, 'i');
 		const test = symbol.replace(regex, '');
 		if (test.length < symbol.length) {
