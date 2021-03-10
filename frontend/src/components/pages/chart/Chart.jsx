@@ -211,7 +211,7 @@ const Chart = observer((props) => {
 	}, []);
 
 	return (
-		<>
+		<div>
 			<Space direction='vertical'>
 				<Space>
 					<span style={{ marginRight: 10 }}>
@@ -260,7 +260,7 @@ const Chart = observer((props) => {
 			</Space>
 
 			<div ref={chartRef} />
-		</>
+		</div>
 	);
 });
 

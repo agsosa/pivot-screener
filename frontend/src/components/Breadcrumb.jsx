@@ -5,13 +5,11 @@ import { PropTypes } from 'prop-types';
 const Breadcrumb = ({ items }) => {
 	if (items) {
 		return (
-			<>
-				<BreadcrumbAntd style={{ paddingBottom: 15, textAlign: 'left' }}>
-					{items.map((i) => (
-						<BreadcrumbAntd.Item key={i}>{i}</BreadcrumbAntd.Item>
-					))}
-				</BreadcrumbAntd>
-			</>
+			<BreadcrumbAntd style={{ paddingBottom: 15, textAlign: 'left' }}>
+				{items.map((i) => (
+					<BreadcrumbAntd.Item key={i}>{i}</BreadcrumbAntd.Item>
+				))}
+			</BreadcrumbAntd>
 		);
 	}
 	return null;

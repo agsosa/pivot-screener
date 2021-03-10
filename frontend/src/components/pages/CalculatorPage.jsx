@@ -1,9 +1,8 @@
 import { CalculatorFilled, DeleteFilled } from '@ant-design/icons';
 import { Button, Divider, InputNumber, message, Space, Tag } from 'antd';
-import { Content } from 'antd/lib/layout/layout';
 import React, { useState } from 'react';
 import { calculateCamarilla, calculateCPR, toFixedEx } from '../../lib/Helpers';
-import Breadcrumb from '../layout/Breadcrumb';
+import ContentContainer from '../layout/ContentContainer';
 
 export default function CalculatorPage() {
 	const defaultState = {
@@ -68,112 +67,108 @@ export default function CalculatorPage() {
 	};
 
 	return (
-		<Content>
-			<div className='site-layout-background' style={{ padding: 24, minHeight: 360, marginTop: 10, textAlign: 'center' }}>
-				<Breadcrumb items={['Other Tools', 'CPR and Camarilla Calculator']} />
+		<ContentContainer breadcrumbItems={['Other Tools', 'CPR and Camarilla Calculator']}>
+			<h1>Central Pivot Range and Camarilla Support/Resistance Calculator</h1>
 
-				<h1>Central Pivot Range and Camarilla Support/Resistance Calculator</h1>
-
-				<p>
-					Calculate the CPR and Camarilla levels for the next session
-					<br />
-					<i>Example: if you want to calculate the current weekly CPR/Camarilla levels yo should input the High, Low and Close values of the previous weekly candle.</i>
-				</p>
-
-				<Space>
-					<p>
-						High:
-						<br />
-						<InputNumber placeholder='Price' min='0' value={state.high} onChange={(value) => setState((prevState) => ({ ...prevState, high: value }))} />
-					</p>
-					<p>
-						Low:
-						<br />
-						<InputNumber placeholder='Price' min='0' value={state.low} onChange={(value) => setState((prevState) => ({ ...prevState, low: value }))} />
-					</p>
-					<p>
-						Close:
-						<br />
-						<InputNumber placeholder='Price' min='0' value={state.close} onChange={(value) => setState((prevState) => ({ ...prevState, close: value }))} />
-					</p>
-				</Space>
+			<p>
+				Calculate the CPR and Camarilla levels for the next session
 				<br />
-				<Space>
-					<Button type='primary' icon={<CalculatorFilled />} onClick={() => calculate()}>
-						Calculate
-					</Button>
-					<Button type='secondary' inputMode='reset' icon={<DeleteFilled />} onClick={reset}>
-						Reset
-					</Button>
-				</Space>
+				<i>Example: if you want to calculate the current weekly CPR/Camarilla levels yo should input the High, Low and Close values of the previous weekly candle.</i>
+			</p>
 
-				<Divider />
-
+			<Space>
 				<p>
-					<h3>Central Pivot Range</h3>
+					High:
+					<br />
+					<InputNumber placeholder='Price' min='0' value={state.high} onChange={(value) => setState((prevState) => ({ ...prevState, high: value }))} />
 				</p>
 				<p>
+					Low:
+					<br />
+					<InputNumber placeholder='Price' min='0' value={state.low} onChange={(value) => setState((prevState) => ({ ...prevState, low: value }))} />
+				</p>
+				<p>
+					Close:
+					<br />
+					<InputNumber placeholder='Price' min='0' value={state.close} onChange={(value) => setState((prevState) => ({ ...prevState, close: value }))} />
+				</p>
+			</Space>
+			<br />
+			<Space>
+				<Button type='primary' icon={<CalculatorFilled />} onClick={() => calculate()}>
+					Calculate
+				</Button>
+				<Button type='secondary' inputMode='reset' icon={<DeleteFilled />} onClick={reset}>
+					Reset
+				</Button>
+			</Space>
+
+			<Divider />
+
+			<p>
+				<h3>Central Pivot Range</h3>
+			</p>
+			<p>
+				<Space direction='vertical'>
+					<p>
+						<Tag color='red'>TC</Tag>
+						{toFixedEx(state.tc)}
+					</p>
+					<p>
+						<Tag color='green'>PIVOT</Tag>
+						{toFixedEx(state.p)}
+					</p>
+					<p>
+						<Tag color='blue'>BC</Tag>
+						{toFixedEx(state.bc)}
+					</p>
+				</Space>
+			</p>
+			<Divider />
+			<p>
+				<h3>Camarilla Levels</h3>
+			</p>
+			<p>
+				<Space size={30}>
 					<Space direction='vertical'>
 						<p>
-							<Tag color='red'>TC</Tag>
-							{toFixedEx(state.tc)}
+							<Tag color='magenta'>H6</Tag>
+							{toFixedEx(state.h6)}
 						</p>
 						<p>
-							<Tag color='green'>PIVOT</Tag>
-							{toFixedEx(state.p)}
+							<Tag color='magenta'>H5</Tag>
+							{toFixedEx(state.h5)}
 						</p>
 						<p>
-							<Tag color='blue'>BC</Tag>
-							{toFixedEx(state.bc)}
+							<Tag color='red'>H4</Tag>
+							{toFixedEx(state.h4)}
+						</p>
+						<p>
+							<Tag color='volcano'>H3</Tag>
+							{toFixedEx(state.h3)}
 						</p>
 					</Space>
-				</p>
-				<Divider />
-				<p>
-					<h3>Camarilla Levels</h3>
-				</p>
-				<p>
-					<Space size={30}>
-						<Space direction='vertical'>
-							<p>
-								<Tag color='magenta'>H6</Tag>
-								{toFixedEx(state.h6)}
-							</p>
-							<p>
-								<Tag color='magenta'>H5</Tag>
-								{toFixedEx(state.h5)}
-							</p>
-							<p>
-								<Tag color='red'>H4</Tag>
-								{toFixedEx(state.h4)}
-							</p>
-							<p>
-								<Tag color='volcano'>H3</Tag>
-								{toFixedEx(state.h3)}
-							</p>
-						</Space>
 
-						<Space direction='vertical'>
-							<p>
-								<Tag color='purple'>L6</Tag>
-								{toFixedEx(state.l6)}
-							</p>
-							<p>
-								<Tag color='purple'>L5</Tag>
-								{toFixedEx(state.l5)}
-							</p>
-							<p>
-								<Tag color='geekblue'>L4</Tag>
-								{toFixedEx(state.l4)}
-							</p>
-							<p>
-								<Tag color='blue'>L3</Tag>
-								{toFixedEx(state.l3)}
-							</p>
-						</Space>
+					<Space direction='vertical'>
+						<p>
+							<Tag color='purple'>L6</Tag>
+							{toFixedEx(state.l6)}
+						</p>
+						<p>
+							<Tag color='purple'>L5</Tag>
+							{toFixedEx(state.l5)}
+						</p>
+						<p>
+							<Tag color='geekblue'>L4</Tag>
+							{toFixedEx(state.l4)}
+						</p>
+						<p>
+							<Tag color='blue'>L3</Tag>
+							{toFixedEx(state.l3)}
+						</p>
 					</Space>
-				</p>
-			</div>
-		</Content>
+				</Space>
+			</p>
+		</ContentContainer>
 	);
 }

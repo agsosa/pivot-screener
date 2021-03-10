@@ -3,7 +3,7 @@ import { React } from 'react';
 
 export default function Contact() {
 	return (
-		<>
+		<div>
 			<Button
 				style={{ backgroundColor: 'transparent', borderWidth: 0 }}
 				onClick={() => {
@@ -13,6 +13,6 @@ export default function Contact() {
 				}}>
 				<u>Contact</u>
 			</Button>
-		</>
+		</div>
 	);
 }

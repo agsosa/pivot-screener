@@ -1,11 +1,10 @@
-import { Content } from 'antd/lib/layout/layout';
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Spin, Button, Space, message, AutoComplete } from 'antd';
-import Breadcrumb from '../../layout/Breadcrumb';
 import Chart from './Chart';
 import { useMst } from '../../../models/Root';
 import { apiFetchSymbolsList, apiFetchBinanceCandlesticksLocally } from '../../../lib/API';
+import ContentContainer from '../../layout/ContentContainer';
 
 const SYMBOLS_LIST_FETCH_INTERVAL = 1000 * 15;
 
@@ -87,41 +86,38 @@ const ChartPage = observer(() => {
 	}, []);
 
 	return (
-		<Content>
-			<div className='site-layout-background' style={{ padding: 24, minHeight: 700, marginTop: 10, textAlign: 'center' }}>
-				<Breadcrumb items={['Home', 'Chart']} />
+		<ContentContainer breadcrumbItems={['Home', 'Chart']}>
+			<Space>
+				<h2> CPR + Camarilla Pivots Chart</h2>
+			</Space>
+			<br />
+			Displaying the latest 500 hours only. The data is updated automatically.
+			<br />
+			<Space direction='vertical' style={{ padding: 20 }}>
 				<Space>
-					<h2> CPR + Camarilla Pivots Chart</h2>
+					<AutoComplete
+						style={{ width: 200, marginBottom: 0 }}
+						options={symbolsList}
+						value={symbolInput}
+						placeholder='BTCUSDT'
+						onChange={(value) => onAutoCompleteInputChange(value)}
+						filterOption={(inputValue, option) => option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1}
+					/>{' '}
+					<Button type='primary' onClick={() => onChangeSymbolClick()}>
+						Change Symbol
+					</Button>
 				</Space>
-				<br />
-				Displaying the latest 500 hours only. The data is updated automatically.
-				<br />
-				<Space direction='vertical' style={{ padding: 20 }}>
-					<Space>
-						<AutoComplete
-							style={{ width: 200, marginBottom: 0 }}
-							options={symbolsList}
-							value={symbolInput}
-							placeholder='BTCUSDT'
-							onChange={(value) => onAutoCompleteInputChange(value)}
-							filterOption={(inputValue, option) => option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1}
-						/>{' '}
-						<Button type='primary' onClick={() => onChangeSymbolClick()}>
-							Change Symbol
-						</Button>
-					</Space>
-				</Space>
-				{!tickers ||
-					(tickers.length === 0 && (
-						<div style={{ textAlign: 'center', marginTop: 15 }}>
-							{' '}
-							<Spin tip='Loading Chart...' />
-						</div>
-					))}
-				<br />
-				<Chart onLoadComplete={onChartLoadComplete} symbol={symbol} />
-			</div>
-		</Content>
+			</Space>
+			{!tickers ||
+				(tickers.length === 0 && (
+					<div style={{ textAlign: 'center', marginTop: 15 }}>
+						{' '}
+						<Spin tip='Loading Chart...' />
+					</div>
+				))}
+			<br />
+			<Chart onLoadComplete={onChartLoadComplete} symbol={symbol} />
+		</ContentContainer>
 	);
 });
 
