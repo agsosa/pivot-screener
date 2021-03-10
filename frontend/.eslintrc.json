@@ -13,5 +13,5 @@
 		"sourceType": "module"
 	},
 	"plugins": ["react", "prettier", "eslint-plugin-no-inline-styles"],
-	"rules": { "no-param-reassign": 1, "no-plusplus": 1, "no-inline-styles/no-inline-styles": 0 }
+	"rules": { "no-param-reassign": 1, "no-plusplus": 1, "no-inline-styles/no-inline-styles": 2 }
 }
