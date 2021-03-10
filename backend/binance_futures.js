@@ -1,12 +1,8 @@
-const Binance = require('node-binance-api');
+const Binance = require('node-binance-api'); // TODO: Remove
 const axios = require('axios');
-const fetch = require('node-fetch');
 const datamanager = require('./data_manager');
 
-const binance = new Binance().options({
-	APIKEY: '<key>',
-	APISECRET: '<secret>',
-});
+const binanceClient = new Binance();
 
 const MARKET = 'Cryptocurrency';
 const EXCHANGE = 'Binance Futures';
@@ -15,7 +11,6 @@ const timeframes = [
 	{ interval: '1d', objectName: 'daily', limit: 2 },
 	{ interval: '1w', objectName: 'weekly', limit: 2 },
 	{ interval: '1M', objectName: 'monthly', limit: 2 },
-	// { interval: '1h', objectName: 'hourly', limit: 500},
 ];
 
 let fetchTickerDataInterval = 30 * 1000;
@@ -29,8 +24,8 @@ function binanceLimitToWeight(limit) {
 }
 
 function fetchTickersList() {
-	return new Promise(async (resolve, reject) => {
-		const res = await binance.futuresPrices();
+	return new Promise(async (resolve) => {
+		const res = await binanceClient.futuresPrices();
 		const list = [...Object.keys(res)];
 		list.map((q) => !q.includes('_') && datamanager.addTicker({ symbol: q, market: MARKET, exchange: EXCHANGE, candlesticks: {} }));
 
@@ -39,14 +34,13 @@ function fetchTickersList() {
 }
 
 function fetchTickersData() {
-	return new Promise(async (resolve, reject) => {
-		const candlesticksObjQueue = [];
+	return new Promise(async (resolve) => {
 		const promises = [];
 
 		// For each ticker in tickerList initialize data object and push to data.tickersData
 		const tickersList = datamanager.getTickersListByMarketExchange(MARKET, EXCHANGE);
 
-		for (let i = 0; i < tickersList.length; i++) {
+		for (let i = 0; i < tickersList.length; i += 1) {
 			const tickerObj = tickersList[i];
 			tickerObj.candlesticks = {};
 
@@ -59,7 +53,7 @@ function fetchTickersData() {
 						.get(url)
 						.then((res) => {
 							const { data } = res;
-							if (!data || data.length == 0) {
+							if (!data || data.length === 0) {
 								throw new Error(`Invalid data URL: ${url}`);
 							}
 
@@ -71,7 +65,7 @@ function fetchTickersData() {
 									high: parseFloat(c[2]),
 									low: parseFloat(c[3]),
 									close: parseFloat(c[4]),
-									timestamp: parseInt(c[6]),
+									timestamp: parseInt(c[6], 10),
 								});
 							});
 
@@ -86,57 +80,45 @@ function fetchTickersData() {
 		}
 
 		await Promise.allSettled(promises);
-
-		/* tickersList.forEach(q => {
-            if (!q.candlesticks["dailyCandles"]) console.log(`symbol: ${q.symbol} - dailycandles not found`);
-        }) */
-
 		resolve();
 	});
 }
 
 async function initialize() {
-	return new Promise((resolve, reject) => {
+	return new Promise((resolve) => {
 		fetchTickersList().then(async () => {
-			// Calculate fetch interval time
-			const total_tickers = datamanager.data.tickersList.length;
-			const calculated_weight_per_ticker = timeframes.reduce((a, b) => a + (binanceLimitToWeight(b.limit) || 0), 0);
-			const calculated_weight_total = total_tickers * calculated_weight_per_ticker;
-			const max_fetch_per_minute = 2400 / calculated_weight_total;
-			const calculated_fetch_interval = 60 / max_fetch_per_minute;
+			// Calculate fetch interval time for Binance API
+			const totalTickers = datamanager.data.tickersList.length;
+			const weightPerTicker = timeframes.reduce((a, b) => a + (binanceLimitToWeight(b.limit) || 0), 0);
+			const weightTotal = totalTickers * weightPerTicker;
+			const maxFetchPerMinute = 2400 / weightTotal;
+			const fetchInterval = 60 / maxFetchPerMinute;
 			const EXTRA_SECONDS = 3; // Safeguard
 
-			/* console.log(total_tickers);
-            console.log(calculated_weight_per_ticker);
-            console.log(calculated_weight_total);
-            console.log(max_fetch_per_minute);
-            console.log(calculated_fetch_interval) */
-
-			fetchTickerDataInterval = calculated_fetch_interval + EXTRA_SECONDS;
+			fetchTickerDataInterval = fetchInterval + EXTRA_SECONDS;
 			initialized = true;
-			console.log(`Calculated fetch interval: ${fetchTickerDataInterval} (total weight per fetch: ${calculated_weight_total})`);
+
+			console.log(`Calculated fetch interval: ${fetchTickerDataInterval} (total weight per fetch: ${weightTotal})`);
 
 			resolve();
 		});
 	});
 }
 
-function loop() {
+function doUpdate() {
 	if (initialized) {
 		fetchTickersData().then(() => {
-			// console.log("loop() done. Next interval in "+loop_interval+" seconds");
-
 			if (!datamanager.data.isReady) datamanager.data.isReady = true;
 
 			datamanager.emitDataUpdatedEvent();
 
 			setTimeout(() => {
-				loop();
+				doUpdate();
 			}, 1000 * fetchTickerDataInterval);
 		});
 	} else {
-		initialize().then(() => loop());
+		initialize().then(() => doUpdate());
 	}
 }
 
-loop();
+exports.doUpdate = doUpdate;

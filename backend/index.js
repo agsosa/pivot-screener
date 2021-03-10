@@ -1,3 +1,4 @@
+// TODO: DOCUMENTAR Y TESTEAR API
 const express = require('express');
 const bodyParser = require('body-parser');
 const helmet = require('helmet');
@@ -11,32 +12,29 @@ const binanceFutures = require('./binance_futures');
 const sockets = require('./sockets');
 
 const app = express();
+
+binanceFutures.doUpdate();
+
 app.use(helmet());
 app.use(compression());
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+// express-validation
+app.use((err, req, res) => {
+	if (err instanceof ValidationError) {
+		return res.status(err.statusCode).json(err);
+	}
+
+	return res.status(500).json(err);
+});
+
 let port = process.env.PORT;
 if (!port) port = 4000;
 const httpServer = sockets.initialize(app, port);
 
 console.log(`Socket initialized on port ${port}`);
-
-// Validations
-const candlesticksValidation = {
-	query: Joi.object({
-		symbols: Joi.string().optional(),
-		markets: Joi.string().optional(),
-		timeframes: Joi.string().optional(),
-	}),
-};
-
-const symbolListValidation = {
-	query: Joi.object({
-		markets: Joi.string().optional(),
-	}),
-};
 
 app.get('*', (req, res, next) => {
 	if (!datamanager.data.isReady) {
@@ -50,21 +48,11 @@ app.get('/', (req, res) => {
 	res.send('OK');
 });
 
-// /api/candlesticks. Query parameters acepted: tickers, markets, timeframes (daily, monthly, weekly, hourly).
-// TODO: Mejorar documentacion de la API
-app.get('/api/candlesticks', validate(candlesticksValidation, {}, {}), (req, res, next) => {
-	try {
-		const { symbols, markets, timeframes } = req.query;
-		const filtered = datamanager.getFilteredTickers(symbols, markets, timeframes);
-
-		res.send(jsonpack.pack(filtered));
-	} catch (e) {
-		const error = new Error(e.toString());
-		error.msg = e.toString();
-		error.status = 404;
-		next(error);
-	}
-});
+const symbolListValidation = {
+	query: Joi.object({
+		markets: Joi.string().optional(),
+	}),
+};
 
 app.get('/api/symbols-list', validate(symbolListValidation, {}, {}), (req, res, next) => {
 	try {
@@ -77,14 +65,6 @@ app.get('/api/symbols-list', validate(symbolListValidation, {}, {}), (req, res, 
 		error.status = 404;
 		next(error);
 	}
-});
-
-app.use((err, req, res, next) => {
-	if (err instanceof ValidationError) {
-		return res.status(err.statusCode).json(err);
-	}
-
-	return res.status(500).json(err);
 });
 
 httpServer.listen(port, () => console.log(`Server listening on port ${port}`));
