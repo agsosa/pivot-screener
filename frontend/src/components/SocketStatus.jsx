@@ -2,15 +2,16 @@ import React from 'react';
 import { Tag } from 'antd';
 import { observer } from 'mobx-react-lite';
 import { CloseCircleOutlined, CheckCircleOutlined } from '@ant-design/icons';
+import { PropTypes } from 'prop-types';
 import { useMst } from '../models/Root';
 
-const SocketStatus = observer((props) => {
+const SocketStatus = ({ className }) => {
 	const { socketConnected } = useMst((store) => ({
 		socketConnected: store.socketConnected,
 	}));
 
 	return (
-		<div style={{ ...props.style }}>
+		<div className={className}>
 			{socketConnected ? (
 				<Tag icon={<CheckCircleOutlined />} color='success'>
 					<b>ONLINE</b>
@@ -22,6 +23,14 @@ const SocketStatus = observer((props) => {
 			)}
 		</div>
 	);
-});
+};
 
-export default SocketStatus;
+SocketStatus.defaultProps = {
+	className: '',
+};
+
+SocketStatus.propTypes = {
+	className: PropTypes.string,
+};
+
+export default observer(SocketStatus);
