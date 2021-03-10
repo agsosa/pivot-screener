@@ -1,7 +1,6 @@
 import { types } from 'mobx-state-tree';
 
-// { dailyCPR: false, weeklyCPR: false, monthlyCPR: true, dailyCAM: false, weeklyCAM: false, monthlyCAM: true, futureMode: false }
-// TODO: Refactor, use object
+// TODO: Refactor actions
 
 const ChartOptions = types
 	.model({
@@ -11,7 +10,7 @@ const ChartOptions = types
 		dailyCam: types.boolean,
 		weeklyCam: types.boolean,
 		monthlyCam: types.boolean,
-		futureMode: types.boolean,
+		futureMode: types.boolean, // developing pivots
 	})
 	.actions((self) => ({
 		setFutureMode(value) {

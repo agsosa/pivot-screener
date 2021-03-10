@@ -9,7 +9,7 @@ import ChartOptions from './ChartOptions';
 
 const SOCKET_URL = isDev() ? 'http://localhost:4000' : 'https://pivotscreener.herokuapp.com/';
 
-// TODO: Optimize views/computeds (array filter) use cache or something
+// TODO: Optimize
 
 const RootModel = types
 	.model('RootModel', {
@@ -24,7 +24,6 @@ const RootModel = types
 	})
 	.actions((self) => {
 		let socket;
-
 		let currentQuery = null;
 
 		function afterCreate() {
@@ -37,7 +36,7 @@ const RootModel = types
 			socket.on('connect', () => {
 				self.setSocketConnected(true);
 				console.log('socket connected');
-				if (currentQuery != null) socket.emit('request_tickers', JSON.stringify(currentQuery));
+				if (currentQuery != null) socket.emit('request_tickers', JSON.stringify(currentQuery)); // request_tickers with the pending currentQuery
 			});
 
 			socket.on('disconnect', (reason) => {
@@ -84,6 +83,7 @@ const RootModel = types
 		function setSocketConnected(b) {
 			self.socketConnected = b;
 		}
+
 		const toggleCPRStatsPanel = () => {
 			self.cprStatsPanelVisible = !self.cprStatsPanelVisible;
 		};
@@ -177,8 +177,8 @@ const RootModel = types
 				}
 			});
 
-			result.bullsPercent = calcPercent(result.aboveH4 + result.aboveH3, self.tickers.length);
-			result.bearsPercent = calcPercent(result.belowL4 + result.belowL3, self.tickers.length);
+			result.bullsPercent = calcPercent(result.aboveH4 + result.aboveH3, self.tickers.length - result.betweenL3H3);
+			result.bearsPercent = calcPercent(result.belowL4 + result.belowL3, self.tickers.length - result.betweenL3H3);
 
 			return result;
 		},
@@ -203,9 +203,7 @@ persist('PivotSC', initialState, {
 });
 
 export const rootStore = initialState;
-
 const MSTContext = createContext(null);
-
 // eslint-disable-next-line prefer-destructuring
 export const Provider = MSTContext.Provider;
 
