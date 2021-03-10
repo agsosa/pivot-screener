@@ -1,25 +1,25 @@
 import { createChart, CrosshairMode, LineStyle, PriceScaleMode } from 'lightweight-charts';
 import React, { useRef } from 'react';
-import { observer } from 'mobx-react-lite';
+import { PropTypes } from 'prop-types';
 import { reaction } from 'mobx';
-import { Switch, Space, Button } from 'antd';
 import { useMst } from '../../../models/Root';
 import { percentage } from '../../../lib/Helpers';
+import './Chart.css';
 
-const Chart = observer((props) => {
+const Chart = ({ onLoadComplete }) => {
 	const chart = useRef(null);
 	const series = useRef(null);
 	const dispose = useRef(null);
 	const dispose2 = useRef(null);
-	const drawings = useRef({ dailyCPR: [], weeklyCPR: [], monthlyCPR: [], dailyCam: [], weeklyCam: [], monthlyCam: [] });
 	const lastData = useRef(null);
+	const chartRef = React.useRef(null);
+	const drawings = useRef({ dailyCPR: [], weeklyCPR: [], monthlyCPR: [], dailyCam: [], weeklyCam: [], monthlyCam: [] });
 
 	const { tickers, chartOptions } = useMst((store) => ({
 		tickers: store.tickers,
 		chartOptions: store.chartOptions,
 	}));
 
-	const chartRef = React.useRef(null);
 	const marginPctHeight = 0;
 	const marginPctWidth = 0;
 
@@ -78,7 +78,9 @@ const Chart = observer((props) => {
 		}
 	}
 
-	function updateChart(data, forceDrawingsRefresh = false) {
+	function updateChart(forceDrawingsRefresh = false) {
+		const data = tickers && tickers.length >= 1 ? tickers[0] : null;
+
 		if (data) {
 			if (data.candlesticks && data.candlesticks.hourlyCandles && data.candlesticks.dailyCandles) {
 				series.current.setData([]);
@@ -94,7 +96,7 @@ const Chart = observer((props) => {
 					},
 				});
 
-				for (let i = 0; i < data.candlesticks.hourlyCandles.length; i++) {
+				for (let i = 0; i < data.candlesticks.hourlyCandles.length; i += 1) {
 					const e = data.candlesticks.hourlyCandles[i];
 					const d = {};
 					d.open = +e.open;
@@ -115,27 +117,23 @@ const Chart = observer((props) => {
 					}
 				}
 
-				lastData.current = data;
+				lastData.current = JSON.parse(JSON.stringify(data));
 			}
 		}
 	}
 
 	dispose2.current = reaction(
-		() => chartOptions,
+		() => Object.keys(chartOptions).map((q) => chartOptions[q]),
 		() => {
-			if (tickers && tickers.length >= 1) {
-				updateChart(tickers[0], true);
-			}
+			if (lastData.current) updateChart(true);
 		},
 		{ fireImmediately: true }
 	);
 
 	dispose.current = reaction(
 		() => tickers,
-		(tickersState) => {
-			if (tickersState && tickersState.length >= 1) {
-				if (!lastData.current || tickersState[0].price !== lastData.current.price) updateChart(tickersState[0]);
-			}
+		() => {
+			updateChart();
 		},
 		{ fireImmediately: true }
 	);
@@ -200,7 +198,7 @@ const Chart = observer((props) => {
 				},
 			});
 
-			if (props.onLoadComplete) props.onLoadComplete();
+			if (onLoadComplete) onLoadComplete();
 		}
 
 		return () => {
@@ -210,58 +208,15 @@ const Chart = observer((props) => {
 		};
 	}, []);
 
-	return (
-		<div>
-			<Space direction='vertical'>
-				<Space>
-					<span style={{ marginRight: 10 }}>
-						<Button onClick={() => chartOptions.toggleAllDaily()}>Toggle Daily</Button>
-					</span>
-					<span style={{ marginRight: 10 }}>
-						<Button onClick={() => chartOptions.toggleAllWeekly()}>Toggle Weekly</Button>
-					</span>
-					<span style={{ marginRight: 10 }}>
-						<Button onClick={() => chartOptions.toggleAllMonthly()}>Toggle Monthly</Button>
-					</span>
-					<span style={{ marginRight: 20 }}>
-						<span style={chartOptions.futureMode ? { fontWeight: 'bold', color: 'red' } : {}}>Show developing pivots: </span>
-						<Switch
-							size='small'
-							checked={chartOptions.futureMode}
-							onChange={(checked) => {
-								chartOptions.setFutureMode(checked);
-							}}
-						/>
-					</span>
-				</Space>
-				<Space>
-					<span style={{ marginRight: 20 }}>
-						Daily CPR: <Switch size='small' checked={chartOptions.dailyCPR} onChange={(checked) => chartOptions.setDailyCPR(checked)} />
-					</span>
+	return <div ref={chartRef} />;
+};
 
-					<span style={{ marginRight: 20 }}>
-						Weekly CPR: <Switch size='small' checked={chartOptions.weeklyCPR} onChange={(checked) => chartOptions.setWeeklyCPR(checked)} />
-					</span>
-					<span style={{ marginRight: 20 }}>
-						Monthly CPR: <Switch size='small' checked={chartOptions.monthlyCPR} onChange={(checked) => chartOptions.setMonthlyCPR(checked)} />
-					</span>
-				</Space>
-				<Space>
-					<span style={{ marginRight: 20 }}>
-						Daily Camarilla: <Switch size='small' checked={chartOptions.dailyCam} onChange={(checked) => chartOptions.setDailyCam(checked)} />
-					</span>
-					<span style={{ marginRight: 20 }}>
-						Weekly Camarilla: <Switch size='small' checked={chartOptions.weeklyCam} onChange={(checked) => chartOptions.setWeeklyCam(checked)} />
-					</span>
-					<span style={{ marginRight: 20 }}>
-						Monthly Camarilla: <Switch size='small' checked={chartOptions.monthlyCam} onChange={(checked) => chartOptions.setMonthlyCam(checked)} />
-					</span>
-				</Space>
-			</Space>
+Chart.defaultProps = {
+	onLoadComplete: null,
+};
 
-			<div ref={chartRef} />
-		</div>
-	);
-});
+Chart.propTypes = {
+	onLoadComplete: PropTypes.func,
+};
 
 export default Chart;

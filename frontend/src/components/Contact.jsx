@@ -5,7 +5,7 @@ export default function Contact() {
 	return (
 		<div>
 			<Button
-				style={{ backgroundColor: 'transparent', borderWidth: 0 }}
+				type='link'
 				onClick={() => {
 					if (typeof window !== 'undefined') {
 						window.open('mailto:aleej.gs@gmail.com', '_blank');

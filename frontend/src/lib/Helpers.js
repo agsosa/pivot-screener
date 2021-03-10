@@ -1,3 +1,16 @@
+import React from 'react';
+
+export function useIsMounted() {
+	const ref = React.useRef(true);
+	React.useEffect(
+		() => () => {
+			ref.current = false;
+		},
+		[]
+	);
+	return React.useCallback(() => ref.current, []);
+}
+
 // Returns true if environment is development
 export function isDev() {
 	return !process.env.NODE_ENV || process.env.NODE_ENV === 'development';
