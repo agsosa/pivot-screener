@@ -1,8 +1,8 @@
 import React from 'react';
 import { Layout } from 'antd';
 import { HashRouter as Router, Route, Switch } from 'react-router-dom';
-import LayoutFooter from './LayoutFooter';
-import LayoutHeader from './LayoutHeader';
+import LayoutFooter from './Footer';
+import LayoutHeader from './Header';
 import CalculatorPage from '../pages/CalculatorPage';
 import CamScreenerPage from '../pages/cam-screener/CamScreenerPage';
 import ChartPage from '../pages/chart/ChartPage';
@@ -16,7 +16,7 @@ const { Content } = Layout;
 export default function MainLayout() {
 	return (
 		<Router>
-			<Layout style={{ minHeight: '100vh' }}>
+			<Layout className='main-layout'>
 				<Sidebar />
 				<Layout className='site-layout'>
 					<LayoutHeader />
