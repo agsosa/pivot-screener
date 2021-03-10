@@ -1,19 +1,20 @@
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-material.css';
 import { AgGridColumn, AgGridReact } from 'ag-grid-react';
-import { Badge, Result, Space, Spin, Button, message } from 'antd';
+import { Result, Spin, message } from 'antd';
 import { autorun } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import React, { useEffect, useState } from 'react';
+import { PropTypes } from 'prop-types';
 import { useMst } from '../../models/Root';
-import { capitalizeFirstLetter, getPairObject } from '../../lib/Helpers';
-import './AGGridOverrides.css';
+import { getPairObject } from '../../lib/Helpers';
+import './Table.css';
 import CamStats from '../pages/cam-screener/CamStats';
-import SocketStatus from '../SocketStatus';
+import FiltersMenu from './FiltersMenu';
 
 // TODO: Merge with CPRTable
 
-const CamTable = observer((props) => {
+const CamTable = ({ futureMode, market, timeframe }) => {
 	const [gridApi, setGridApi] = useState(null);
 	// const [gridColumnApi, setGridColumnApi] = useState(null);
 	const [filtersEnabled, setFiltersEnabled] = useState(false);
@@ -67,7 +68,7 @@ const CamTable = observer((props) => {
 	}
 
 	const situationGetter = (data) => {
-		const cam = data.getCamarilla(props.timeframe, props.futureMode);
+		const cam = data.getCamarilla(timeframe, futureMode);
 
 		if (cam) {
 			return cam.situation;
@@ -110,7 +111,7 @@ const CamTable = observer((props) => {
 	};
 
 	const distanceGetter = (data, levelStr) => {
-		const dist = data.getCamarilla(props.timeframe, props.futureMode).distance;
+		const dist = data.getCamarilla(timeframe, futureMode).distance;
 		if (dist && dist[levelStr]) {
 			return dist[levelStr];
 		}
@@ -123,7 +124,7 @@ const CamTable = observer((props) => {
 	};
 
 	const nearestLevelGetter = (data) => {
-		const { nearest } = data.getCamarilla(props.timeframe, props.futureMode);
+		const { nearest } = data.getCamarilla(timeframe, futureMode);
 
 		if (nearest) {
 			return nearest.toUpperCase();
@@ -184,29 +185,13 @@ const CamTable = observer((props) => {
 
 	return (
 		<div>
-			<CamStats timeframe={props.timeframe} futureMode={props.futureMode} />
-			<Space style={{ padding: 1 }}>
-				<h1>
-					{capitalizeFirstLetter(props.market)} / {capitalizeFirstLetter(props.timeframe)}
-				</h1>{' '}
-				<Badge style={{ backgroundColor: '#2196F3', marginBottom: 7 }} count={tickers.length} />
-				<SocketStatus style={{ marginBottom: 5 }} />
-			</Space>
-			<p style={{ marginTop: -5 }}>You can filter, short and move any column. The data is updated automatically.</p>
-			<Space>
-				<Button onClick={saveFilters}>Save Filters</Button>
-				<Button onClick={loadFilters}>Load Saved Filters</Button>
-				<Button onClick={clearFilters}>Clear Filters</Button>
-			</Space>
+			<CamStats timeframe={timeframe} futureMode={futureMode} />
 
-			{filtersEnabled ? (
-				<p style={{ marginTop: 10, color: 'red' }}>
-					<b>* Using Filters *</b>
-				</p>
-			) : null}
+			<FiltersMenu onSaveFilters={saveFilters} onLoadFilters={loadFilters} onClearFilters={clearFilters} timeframe={timeframe} market={market} tickersCount={tickers.length} />
 
-			<div className='ag-theme-material' style={{ height: 700, width: '100%' }}>
-				{/* <Button onClick={test}>test</Button> */}
+			{filtersEnabled && <p className='using-filters'>* Using Filters *</p>}
+
+			<div className='ag-theme-material ag-main'>
 				<AgGridReact
 					onGridReady={onGridReady}
 					animateRows
@@ -222,7 +207,6 @@ const CamTable = observer((props) => {
 						enableCellChangeFlash: true,
 						editable: false,
 						sortable: true,
-						// flex: width <= 768 ? 0 : 1,
 						filter: true,
 						resizable: true,
 					}}
@@ -256,6 +240,12 @@ const CamTable = observer((props) => {
 			</div>
 		</div>
 	);
-});
+};
 
-export default CamTable;
+CamTable.propTypes = {
+	futureMode: PropTypes.bool.isRequired,
+	market: PropTypes.string.isRequired,
+	timeframe: PropTypes.string.isRequired,
+};
+
+export default observer(CamTable);
