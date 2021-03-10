@@ -1,15 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import moment from 'moment';
 
-// TODO: Refactor
-
 export default function DailyCloseTime() {
 	const getDailyClose = (exchange = 'binance') => {
-		const now = moment();
-		const time = exchange === 'binance' ? moment(now) : moment(now).utcOffset(5);
-		const dif = time.endOf('day').diff(now);
+		let time;
 
-		return moment(dif).format('HH:mm:ss');
+		switch (exchange) {
+			case 'binance':
+				time = moment();
+				break;
+			case 'huobi':
+				time = moment().utcOffset(5);
+				break;
+			default:
+				time = undefined;
+		}
+
+		if (time) {
+			const now = moment();
+			const dif = time.endOf('day').diff(now);
+
+			return moment(dif).format('HH:mm:ss');
+		}
+
+		return '...';
 	};
 
 	const [binanceTimeleft, setBinanceTimeleft] = useState(getDailyClose('binance'));
