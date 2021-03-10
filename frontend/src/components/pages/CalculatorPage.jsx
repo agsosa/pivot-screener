@@ -68,7 +68,7 @@ export default function CalculatorPage() {
 
 	return (
 		<ContentContainer breadcrumbItems={['Other Tools', 'CPR and Camarilla Calculator']}>
-			<h1>Central Pivot Range and Camarilla Support/Resistance Calculator</h1>
+			<h1>Central Pivot Range and Camarilla S/R Calculator</h1>
 
 			<p>
 				Calculate the CPR and Camarilla levels for the next session
@@ -76,99 +76,94 @@ export default function CalculatorPage() {
 				<i>Example: if you want to calculate the current weekly CPR/Camarilla levels yo should input the High, Low and Close values of the previous weekly candle.</i>
 			</p>
 
-			<Space>
-				<p>
-					High:
-					<br />
-					<InputNumber placeholder='Price' min='0' value={state.high} onChange={(value) => setState((prevState) => ({ ...prevState, high: value }))} />
-				</p>
-				<p>
-					Low:
-					<br />
-					<InputNumber placeholder='Price' min='0' value={state.low} onChange={(value) => setState((prevState) => ({ ...prevState, low: value }))} />
-				</p>
-				<p>
-					Close:
-					<br />
-					<InputNumber placeholder='Price' min='0' value={state.close} onChange={(value) => setState((prevState) => ({ ...prevState, close: value }))} />
-				</p>
-			</Space>
-			<br />
-			<Space>
-				<Button type='primary' icon={<CalculatorFilled />} onClick={() => calculate()}>
-					Calculate
-				</Button>
-				<Button type='secondary' inputMode='reset' icon={<DeleteFilled />} onClick={reset}>
-					Reset
-				</Button>
+			<Space direction='vertical'>
+				<Space>
+					<Space direction='vertical'>
+						High:
+						<InputNumber placeholder='Price' min='0' value={state.high} onChange={(value) => setState((prevState) => ({ ...prevState, high: value }))} />
+					</Space>
+					<Space direction='vertical'>
+						Low:
+						<InputNumber placeholder='Price' min='0' value={state.low} onChange={(value) => setState((prevState) => ({ ...prevState, low: value }))} />
+					</Space>
+					<Space direction='vertical'>
+						Close:
+						<InputNumber placeholder='Price' min='0' value={state.close} onChange={(value) => setState((prevState) => ({ ...prevState, close: value }))} />
+					</Space>
+				</Space>
+
+				<Space>
+					<Button type='primary' icon={<CalculatorFilled />} onClick={() => calculate()}>
+						Calculate
+					</Button>
+					<Button type='secondary' inputMode='reset' icon={<DeleteFilled />} onClick={reset}>
+						Reset
+					</Button>
+				</Space>
 			</Space>
 
 			<Divider />
 
-			<p>
-				<h3>Central Pivot Range</h3>
-			</p>
-			<p>
-				<Space direction='vertical'>
-					<p>
-						<Tag color='red'>TC</Tag>
-						{toFixedEx(state.tc)}
-					</p>
-					<p>
-						<Tag color='green'>PIVOT</Tag>
-						{toFixedEx(state.p)}
-					</p>
-					<p>
-						<Tag color='blue'>BC</Tag>
-						{toFixedEx(state.bc)}
-					</p>
-				</Space>
-			</p>
-			<Divider />
-			<p>
-				<h3>Camarilla Levels</h3>
-			</p>
-			<p>
-				<Space size={30}>
-					<Space direction='vertical'>
-						<p>
-							<Tag color='magenta'>H6</Tag>
-							{toFixedEx(state.h6)}
-						</p>
-						<p>
-							<Tag color='magenta'>H5</Tag>
-							{toFixedEx(state.h5)}
-						</p>
-						<p>
-							<Tag color='red'>H4</Tag>
-							{toFixedEx(state.h4)}
-						</p>
-						<p>
-							<Tag color='volcano'>H3</Tag>
-							{toFixedEx(state.h3)}
-						</p>
-					</Space>
+			<h3>Central Pivot Range</h3>
 
-					<Space direction='vertical'>
-						<p>
-							<Tag color='purple'>L6</Tag>
-							{toFixedEx(state.l6)}
-						</p>
-						<p>
-							<Tag color='purple'>L5</Tag>
-							{toFixedEx(state.l5)}
-						</p>
-						<p>
-							<Tag color='geekblue'>L4</Tag>
-							{toFixedEx(state.l4)}
-						</p>
-						<p>
-							<Tag color='blue'>L3</Tag>
-							{toFixedEx(state.l3)}
-						</p>
-					</Space>
+			<Space direction='vertical' size={30}>
+				<div>
+					<Tag color='red'>TC</Tag>
+					{toFixedEx(state.tc)}
+				</div>
+				<div>
+					<Tag color='green'>PIVOT</Tag>
+					{toFixedEx(state.p)}
+				</div>
+				<div>
+					<Tag color='blue'>BC</Tag>
+					{toFixedEx(state.bc)}
+				</div>
+			</Space>
+
+			<Divider />
+
+			<h3>Camarilla Levels</h3>
+
+			<Space size={35}>
+				<Space direction='vertical' size={30}>
+					<div>
+						<Tag color='magenta'>H6</Tag>
+						{toFixedEx(state.h6)}
+					</div>
+					<div>
+						<Tag color='magenta'>H5</Tag>
+						{toFixedEx(state.h5)}
+					</div>
+					<div>
+						<Tag color='red'>H4</Tag>
+						{toFixedEx(state.h4)}
+					</div>
+					<div>
+						<Tag color='volcano'>H3</Tag>
+						{toFixedEx(state.h3)}
+					</div>
 				</Space>
-			</p>
+
+				<Space direction='vertical' size={30}>
+					<div>
+						<Tag color='purple'>L6</Tag>
+						{toFixedEx(state.l6)}
+					</div>
+					<div>
+						<Tag color='purple'>L5</Tag>
+						{toFixedEx(state.l5)}
+					</div>
+					<div>
+						<Tag color='geekblue'>L4</Tag>
+						{toFixedEx(state.l4)}
+					</div>
+					<div>
+						<Tag color='blue'>L3</Tag>
+						{toFixedEx(state.l3)}
+					</div>
+				</Space>
+			</Space>
 		</ContentContainer>
 	);
 }

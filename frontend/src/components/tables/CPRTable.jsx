@@ -248,9 +248,7 @@ const CPRTable = ({ timeframe, market, futureMode }) => {
 	return (
 		<div>
 			<CPRStats timeframe={timeframe} futureMode={futureMode} />
-
 			<FiltersMenu onSaveFilters={saveFilters} onLoadFilters={loadFilters} onClearFilters={clearFilters} timeframe={timeframe} market={market} tickersCount={tickers.length} />
-
 			{filtersEnabled && <p className='using-filters'>* Using Filters *</p>}
 
 			<div className='ag-theme-material ag-main'>

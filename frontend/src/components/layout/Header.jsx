@@ -1,8 +1,7 @@
 import React, { createRef, useEffect, useState } from 'react';
 import { BellOutlined } from '@ant-design/icons';
 import { Alert, Badge, Col, notification, Row } from 'antd';
-
-import './LayoutHeader.css';
+import './Header.css';
 import DailyCloseTime from '../DailyCloseTime';
 
 export default function LayoutHeader() {

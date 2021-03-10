@@ -1,8 +1,9 @@
-import { FundProjectionScreenOutlined, HomeOutlined, LineChartOutlined, MenuOutlined, MonitorOutlined, QuestionCircleOutlined, ToolOutlined } from '@ant-design/icons';
+import { FundProjectionScreenOutlined, HomeOutlined, LineChartOutlined, MenuOutlined, MonitorOutlined, QuestionCircleOutlined, ToolOutlined, CalculatorOutlined } from '@ant-design/icons';
 import { Layout, Menu } from 'antd';
 import React, { useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { markets } from '../../lib/Markets';
+import './Sidebar.css';
 
 const { Sider } = Layout;
 const { SubMenu } = Menu;
@@ -18,7 +19,7 @@ export default function Sidebar() {
 	//! Menu IDS should be the same as Route Path to visually select the corresponding menu when loading a pages directly
 	return (
 		<Sider theme='dark' style={{}} collapsible collapsed={collapsed} onCollapse={onCollapse}>
-			<Menu style={{ height: 100 }} theme='dark' mode='inline' selectedKeys={[location.pathname]}>
+			<Menu className='menu' theme='dark' mode='inline' selectedKeys={[location.pathname]}>
 				<Menu.Item key='/' icon={<HomeOutlined />}>
 					<NavLink to='/'>Chart</NavLink>
 				</Menu.Item>
@@ -42,7 +43,10 @@ export default function Sidebar() {
 				<Menu.Item key='/algo-screener' disabled icon={<MonitorOutlined />}>
 					<NavLink to='/algo-screener'>Algo Screener</NavLink>
 				</Menu.Item>
-				<Menu.Item key='/calculator' icon={<ToolOutlined />}>
+				<Menu.Item key='/backtesting' disabled icon={<ToolOutlined />}>
+					<NavLink to='/backtesting'>Backtesting</NavLink>
+				</Menu.Item>
+				<Menu.Item key='/calculator' icon={<CalculatorOutlined />}>
 					<NavLink to='/calculator'>Pivot Calculator</NavLink>
 				</Menu.Item>
 				<Menu.Item key='/learn' disabled icon={<QuestionCircleOutlined />}>

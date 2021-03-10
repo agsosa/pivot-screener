@@ -17,6 +17,7 @@ a.external {
 .info {
 	text-align: left;
 	margin-top: 30px;
+	margin-left: 20px;
 }
 
 .badge {
@@ -27,12 +28,8 @@ a.external {
 	margin-bottom: 5px;
 }
 
-.space {
-	padding: 1px;
-}
-
 .filter-hint {
-	margin-top: 5px;
+	margin-top: 1px;
 }
 
 .ag-theme-material .ag-row .ag-cell-data-changed {

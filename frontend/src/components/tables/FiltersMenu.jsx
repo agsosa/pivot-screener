@@ -6,8 +6,8 @@ import { capitalizeFirstLetter } from '../../lib/Helpers';
 import SocketStatus from '../SocketStatus';
 
 const FiltersMenu = ({ tickersCount, market, timeframe, onSaveFilters, onLoadFilters, onClearFilters }) => (
-	<div>
-		<Space className='space'>
+	<>
+		<Space>
 			<h1>
 				{capitalizeFirstLetter(market)} / {capitalizeFirstLetter(timeframe)}
 			</h1>
@@ -20,7 +20,7 @@ const FiltersMenu = ({ tickersCount, market, timeframe, onSaveFilters, onLoadFil
 			<Button onClick={onLoadFilters}>Load Saved Filters</Button>
 			<Button onClick={onClearFilters}>Clear Filters</Button>
 		</Space>
-	</div>
+	</>
 );
 
 FiltersMenu.propTypes = {

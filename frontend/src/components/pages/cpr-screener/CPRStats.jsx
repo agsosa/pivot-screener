@@ -3,6 +3,7 @@ import { Card, Statistic, Row, Col, Progress, Skeleton, Button } from 'antd';
 import { FallOutlined, RiseOutlined, ExpandOutlined, VerticalAlignMiddleOutlined, PauseOutlined } from '@ant-design/icons';
 import { observer } from 'mobx-react-lite';
 import { useMst } from '../../../models/Root';
+import '../Stats.css';
 
 const CPRStats = observer((props) => {
 	const { tickers, cprStats, toggleCPRStatsPanel, cprStatsPanelVisible } = useMst((store) => ({
@@ -18,7 +19,7 @@ const CPRStats = observer((props) => {
 
 	return (
 		<div>
-			<Button style={{ marginBottom: 10 }} onClick={toggleCPRStatsPanel}>
+			<Button className='btn' onClick={toggleCPRStatsPanel}>
 				{cprStatsPanelVisible ? 'Hide Statistics' : 'Show Statistics'}
 			</Button>
 
@@ -48,7 +49,7 @@ const CPRStats = observer((props) => {
 							</Col>
 							<Col span={12}>
 								<Card>
-									<Statistic title='CPR Width < 1%' value={stats.tightCount} precision={0} valueStyle={{ color: '#DF4294' }} prefix={<VerticalAlignMiddleOutlined />} suffix='' />
+									<Statistic title='CPR Width < 1%' value={stats.tightCount} precision={0} valueStyle={{ color: '#df4294' }} prefix={<VerticalAlignMiddleOutlined />} suffix='' />
 								</Card>
 							</Col>
 							<Col span={12}>
@@ -59,7 +60,7 @@ const CPRStats = observer((props) => {
 						</Row>
 					</div>
 
-					<div style={{ paddingTop: 10 }}>
+					<div className='progress-bar-container'>
 						🐂 <font color='green'>Bulls {stats.bullsPercent.toFixed(1)}%</font> <b>vs</b> <font color='red'>{stats.bearsPercent.toFixed(1)}% Bears</font> 🐻
 						<Progress percent={100} success={{ percent: stats.bullsPercent }} showInfo={false} strokeColor='red' />
 					</div>

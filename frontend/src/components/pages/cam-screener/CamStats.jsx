@@ -3,6 +3,7 @@ import { Card, Statistic, Row, Col, Progress, Skeleton, Button } from 'antd';
 import { FallOutlined, RiseOutlined, ExclamationCircleOutlined, ColumnHeightOutlined } from '@ant-design/icons';
 import { observer } from 'mobx-react-lite';
 import { useMst } from '../../../models/Root';
+import '../Stats.css';
 
 const CamStats = observer((props) => {
 	const { tickers, toggleCamStatsPanel, camStatsPanelVisible, camStats } = useMst((store) => ({
@@ -18,7 +19,7 @@ const CamStats = observer((props) => {
 
 	return (
 		<div>
-			<Button style={{ marginBottom: 10 }} onClick={toggleCamStatsPanel}>
+			<Button className='btn' onClick={toggleCamStatsPanel}>
 				{camStatsPanelVisible ? 'Hide Statistics' : 'Show Statistics'}
 			</Button>
 
@@ -55,7 +56,7 @@ const CamStats = observer((props) => {
 						</Row>
 					</div>
 
-					<div style={{ paddingTop: 10 }}>
+					<div className='progress-bar-container'>
 						🐂 <font color='green'>Bulls {stats.bullsPercent.toFixed(1)}%</font> <b>vs</b> <font color='red'>{stats.bearsPercent.toFixed(1)}% Bears</font> 🐻
 						<Progress percent={100} success={{ percent: stats.bullsPercent }} showInfo={false} strokeColor={stats.bearsPercent === 0 && stats.bullsPercent === 0 ? 'gray' : 'red'} />
 					</div>
