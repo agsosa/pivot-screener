@@ -6,7 +6,7 @@ const BASE_URL = isDev() ? 'http://localhost:4000/api/' : 'https://pivotscreener
 // TODO: Multiple markets/exchanges not supported yet!!! Only binance futures implemented atm
 
 // Get supported list from the backend
-// TODO: Add retry
+// TODO: Add infinite retry on error
 // TODO: Add market/exchange support
 export function apiFetchSymbolsList(markets = undefined) {
 	const marketsQuery = markets ? `markets=${markets.replaceAll(' ', '')}` : ``;
@@ -25,6 +25,7 @@ export function apiFetchSymbolsList(markets = undefined) {
 
 // Get candlesticks for a symbol (currently only binance futures)
 // TODO: Add support for multiple markets/exchanges, optimize (cache, only update prices and pivot state)
+// TODO: Optimize
 export function apiFetchBinanceCandlesticksLocally(symbol) {
 	const timeframes = [
 		{ interval: '1d', objectName: 'daily', limit: 2 },

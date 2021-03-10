@@ -15,3 +15,36 @@
 .widget_container {
 	size: auto;
 }
+
+.left-col {
+	margin-left: 1%;
+	display: flex;
+	justify-content: flex-start;
+}
+
+.center-col {
+	top: -10px;
+	display: flex;
+	justify-content: center;
+}
+
+.promoContainer {
+	align-self: center;
+	padding-top: 15px;
+	padding-bottom: 10px;
+}
+
+sup {
+	font-size: 15px;
+}
+
+.header-link {
+	font-size: XX-LARGE;
+	color: white;
+	margin-top: 10px;
+}
+
+.bell-container {
+	margin-right: 17%;
+	margin-top: 1%;
+}

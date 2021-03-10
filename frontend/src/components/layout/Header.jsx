@@ -1,6 +1,5 @@
 import React, { createRef, useEffect, useState } from 'react';
-import { BellOutlined } from '@ant-design/icons';
-import { Alert, Badge, Col, notification, Row } from 'antd';
+import { Alert, Col, Row } from 'antd';
 import './Header.css';
 import DailyCloseTime from '../DailyCloseTime';
 
@@ -9,15 +8,8 @@ export default function LayoutHeader() {
 
 	const hRef = createRef();
 
-	const openNotification = () => {
-		notification.open({
-			message: 'Error',
-			description: 'This feature is under development',
-			onClick: () => {},
-		});
-	};
-
 	useEffect(() => {
+		// TV Widget
 		if (!scriptMounted) {
 			const script = document.createElement('script');
 			script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-tickers.js';
@@ -66,7 +58,7 @@ export default function LayoutHeader() {
 
 	return (
 		<>
-			<div className='header-title' style={{}}>
+			<div className='header-title'>
 				<div className='widget_container'>
 					<div className='tradingview-widget-container' ref={hRef}>
 						<div className='tradingview-widget-container__widget' />
@@ -74,61 +66,24 @@ export default function LayoutHeader() {
 				</div>
 
 				<Row>
-					<Col span={8} style={{ marginTop: '1%', marginLeft: '1%', flex: 1, display: 'flex', justifyContent: 'flex-start' }}>
+					<Col span={8} className='left-col'>
 						<div>
 							<DailyCloseTime />
 						</div>
 					</Col>
-					<Col
-						span={8}
-						style={{
-							padding: 5,
-							flex: 1,
-							display: 'flex',
-							justifyContent: 'center',
-						}}>
-						<a href='/' style={{ fontSize: 'XX-LARGE', color: 'white', marginTop: 10 }}>
-							Pivot Screener <sup style={{ fontSize: 15 }}>Beta</sup>
+					<Col span={8} className='center-col'>
+						<a href='/' className='header-link'>
+							Pivot Screener <sup>Beta</sup>
 						</a>
-					</Col>
-					<Col
-						span={8}
-						style={{
-							padding: 15,
-							flex: 1,
-							display: 'flex',
-							justifyContent: 'flex-end',
-						}}>
-						<div style={{ marginRight: '15%', marginTop: '1%' }} />
-
-						<div style={{ marginRight: '2%' }}>
-							<Badge
-								count={5}
-								dot
-								offset={[-10, 10]}
-								style={{
-									width: 10,
-									height: 10,
-									display: 'flex',
-									justifyContent: 'center',
-									alignItems: 'center',
-									borderColor: 'red',
-									borderRadius: 24,
-									cursor: 'pointer',
-									marginLeft: 8,
-								}}>
-								<BellOutlined onClick={openNotification} style={{ color: 'white', fontSize: 32 }} />
-							</Badge>
-						</div>
 					</Col>
 				</Row>
 			</div>
 
-			<div style={{ alignSelf: 'center', paddingTop: 15, paddingBottom: 10 }}>
+			<div className='promoContainer'>
 				<Alert
 					message={
 						<>
-							<b>Camarilla Pivot Trading Telegram</b> •{' '}
+							<b>Camarilla Pivot Trading Telegram</b> •
 							<a href='https://t.me/camarillacruisin' target='_blank' rel='noopener noreferrer'>
 								<b>Click here to join the group!</b>
 							</a>
