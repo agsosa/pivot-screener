@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import moment from 'moment';
+import './DailyCloseTime.css';
 
 export default function DailyCloseTime() {
 	const getDailyClose = (exchange = 'binance') => {
@@ -38,10 +39,9 @@ export default function DailyCloseTime() {
 	});
 
 	return (
-		<div>
-			Binance Daily Close: {binanceTimeleft.toString()}
-			<br />
-			Huobi Daily Close: {huobiTimeleft.toString()}
+		<div className='container'>
+			<div>Binance Daily Close: {binanceTimeleft.toString()}</div>
+			<div>Huobi Daily Close: {huobiTimeleft.toString()}</div>
 		</div>
 	);
 }
