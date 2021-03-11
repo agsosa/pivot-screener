@@ -177,8 +177,8 @@ const RootModel = types
 				}
 			});
 
-			result.bullsPercent = calcPercent(result.aboveH4 + result.aboveH3, self.tickers.length - result.betweenL3H3);
-			result.bearsPercent = calcPercent(result.belowL4 + result.belowL3, self.tickers.length - result.betweenL3H3);
+			result.bullsPercent = calcPercent(result.aboveH4 + result.aboveH3, self.tickers.length);
+			result.bearsPercent = calcPercent(result.belowL4 + result.belowL3, self.tickers.length);
 
 			return result;
 		},
