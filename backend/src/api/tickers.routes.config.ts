@@ -1,8 +1,8 @@
-import { CommonRoutesConfig } from './common.routes.config';
+import CommonRoutesConfig from './common.routes.config';
 import express from 'express';
 import DataManager from '../data/DataManager';
 
-export class UsersRoutes extends CommonRoutesConfig {
+export default class TickersRoutes extends CommonRoutesConfig {
 	constructor(app: express.Application, dataManager: DataManager) {
 		super(app, dataManager, 'TickersRoutes');
 	}

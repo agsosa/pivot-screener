@@ -1,7 +1,7 @@
 import express from 'express';
 import DataManager from '../data/DataManager';
 
-export abstract class CommonRoutesConfig {
+export default abstract class CommonRoutesConfig {
 	app: express.Application;
 	dataManager: DataManager;
 	name: string;

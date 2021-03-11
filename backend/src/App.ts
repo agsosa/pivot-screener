@@ -4,8 +4,8 @@ import * as bodyparser from 'body-parser';
 import * as winston from 'winston';
 import * as expressWinston from 'express-winston';
 import cors from 'cors';
-import { CommonRoutesConfig } from './api/common.routes.config';
-import { UsersRoutes } from './api/tickers.routes.config';
+import CommonRoutesConfig from './api/common.routes.config';
+import TickersRoutes from './api/tickers.routes.config';
 import helmet from 'helmet';
 import compression from 'compression';
 import DataManager from './data/DataManager';
@@ -31,7 +31,7 @@ const dataManager: DataManager = new DataManager();
 const sockets: Sockets = new Sockets(app, dataManager);
 const server = sockets.start();
 const binanceFutures: BinanceFutures = new BinanceFutures(dataManager);
-routes.push(new UsersRoutes(app, dataManager));
+routes.push(new TickersRoutes(app, dataManager));
 
 // Error logger
 app.use(

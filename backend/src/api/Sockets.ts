@@ -42,8 +42,8 @@ export default class Sockets {
 		});
 	}
 
+	// Clients subscription to tickers data updates
 	handleSocketRequestTickers(socket: ExtSocket): void {
-		// Tickers update subscription
 		socket.on('request_tickers', (query) => {
 			if (query && !socket.tickersQuery) {
 				try {
@@ -59,6 +59,7 @@ export default class Sockets {
 		});
 	}
 
+	// Emit on data_updated event
 	handleIODataManagerEvents(): void {
 		this.dataManager.eventEmitter.on('data_updated', () => {
 			const { sockets } = this.io.of('/');
