@@ -1,8 +1,11 @@
-import Exchange from './Exchange';
-import ExchangeEnum from './ExchangeEnum';
-import MarketEnum from './MarketEnum';
+import Exchange from './base/Exchange';
+import ExchangeEnum from './base/ExchangeEnum';
+import MarketEnum from './base/MarketEnum';
 import DataManager from './../data/DataManager';
 import axios from 'axios';
+
+// TODO: Implement proxies to bypass binance api limits
+const BINANCE_API_LIMIT_PER_MIN = 1200;
 
 function binanceLimitToWeight(limit: number): number {
 	if (limit <= 100) return 1;
@@ -103,17 +106,17 @@ export default class BinanceFutures extends Exchange {
 	initialize(): Promise<void> {
 		const prom = new Promise<void>((resolve) => {
 			this.fetchTickersList().then(async () => {
-				// Calculate fetch interval time for Binance API
+				// Calculate the maximum fetch interval time possible to prevent rate limiting (BINANCE_API_LIMIT_PER_MIN)
 				const totalTickers = this.dataManager.tickersList.length;
-				const weightPerTicker = this.timeframes.reduce((a, b) => a + (binanceLimitToWeight(b.limit) || 0), 0);
+				const weightPerTicker = this.timeframes.reduce((a, b) => a + (binanceLimitToWeight(b.limit) || 0), 0); // Every ticker will request data for every this.timeframes, and the weight added will depend on the limit parameter
 				const weightTotal = totalTickers * weightPerTicker;
-				const maxFetchPerMinute = 2400 / weightTotal;
+				const maxFetchPerMinute = BINANCE_API_LIMIT_PER_MIN / weightTotal;
 				const fetchInterval = 60 / maxFetchPerMinute;
 				const EXTRA_SECONDS = 3; // Safeguard
 
 				this.fetchDataInterval = fetchInterval + EXTRA_SECONDS;
 
-				console.log(`Calculated fetch interval: ${this.fetchDataInterval} (total weight per fetch: ${weightTotal})`);
+				console.log(`[BINANCE] Calculated fetch interval: ${this.fetchDataInterval} (total weight per fetch: ${weightTotal}, free weight: ${BINANCE_API_LIMIT_PER_MIN - weightTotal})`);
 
 				resolve();
 			});

@@ -1,6 +1,6 @@
-import DataManager from './../data/DataManager';
 import ExchangeEnum from './ExchangeEnum';
 import MarketEnum from './MarketEnum';
+import DataManager from './../../data/DataManager';
 
 export default abstract class Exchange {
 	initialized: boolean = false;
