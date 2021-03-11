@@ -9,11 +9,6 @@ export default class DataManager {
 		return this._tickersList;
 	}
 
-	private _isReady: boolean = false;
-	get isReady(): boolean {
-		return this._isReady;
-	}
-
 	constructor() {
 		this.eventEmitter = new events.EventEmitter();
 		this._tickersList = [];
@@ -54,8 +49,6 @@ export default class DataManager {
 					const bMarkets: boolean = split != null && Array.isArray(split);
 					if (bMarkets) {
 						split = split.map((s) => s.toLowerCase());
-						console.log(split);
-						console.log(q.market);
 						if (markets.includes(q.market)) result.push(q.symbol);
 					}
 				} catch (error) {

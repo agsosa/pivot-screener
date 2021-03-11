@@ -48,7 +48,6 @@ export default class Sockets {
 			if (query && !socket.tickersQuery) {
 				try {
 					socket.tickersQuery = JSON.parse(query);
-					console.log(this.dataManager.isReady);
 
 					if (socket.tickersQuery) {
 						this.emitFilteredTickersTo(socket);
