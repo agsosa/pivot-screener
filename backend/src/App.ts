@@ -1,0 +1,55 @@
+import express from 'express';
+import * as http from 'http';
+import * as bodyparser from 'body-parser';
+import * as winston from 'winston';
+import * as expressWinston from 'express-winston';
+import cors from 'cors';
+import { CommonRoutesConfig } from './api/common.routes.config';
+import { UsersRoutes } from './api/tickers.routes.config';
+import helmet from 'helmet';
+import compression from 'compression';
+import DataManager from './data/DataManager';
+import BinanceFutures from './exchanges/BinanceFutures';
+import Sockets from './api/Sockets';
+
+const app: express.Application = express();
+//const server: http.Server = http.createServer(app); // Using server returned from Sockets.start()
+let port: any = process.env.PORT;
+if (!port) port = 4000;
+const routes: CommonRoutesConfig[] = [];
+
+// TODO: Add rate limiter
+
+// Express middlewares
+app.use(helmet());
+app.use(compression());
+app.use(bodyparser.json());
+app.use(cors());
+
+// Initialize modules
+const dataManager: DataManager = new DataManager();
+const sockets: Sockets = new Sockets(app, dataManager);
+const server = sockets.start();
+const binanceFutures: BinanceFutures = new BinanceFutures(dataManager);
+routes.push(new UsersRoutes(app, dataManager));
+
+// Error logger
+app.use(
+	expressWinston.errorLogger({
+		// TODO: Test
+		transports: [new winston.transports.Console()],
+		format: winston.format.combine(winston.format.colorize(), winston.format.json()),
+	})
+);
+
+app.get('/', (req: express.Request, res: express.Response) => {
+	res.status(200).send(`OK`);
+});
+
+server.listen(port, () => {
+	console.log(`Server running at http://localhost:${port}`);
+
+	routes.forEach((route: CommonRoutesConfig) => {
+		console.log(`Routes configured for ${route.getName()}`);
+	});
+});
