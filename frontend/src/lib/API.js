@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { isDev } from './Helpers';
 
-const BASE_URL = isDev() ? 'http://localhost:4000/api/' : 'https://pivotscreener.herokuapp.com/api/';
+const BASE_URL = isDev() ? 'http://localhost:4000/' : 'https://pivotscreener.herokuapp.com/';
 
 // TODO: Multiple markets/exchanges not supported yet!!! Only binance futures implemented atm
 
@@ -11,7 +11,7 @@ const BASE_URL = isDev() ? 'http://localhost:4000/api/' : 'https://pivotscreener
 export function apiFetchSymbolsList(markets = undefined) {
 	const marketsQuery = markets ? `markets=${markets.replaceAll(' ', '')}` : ``;
 
-	const QUERY = `symbols-list?${marketsQuery}`;
+	const QUERY = `tickers/symbols?${marketsQuery}`;
 
 	return new Promise((resolve, reject) => {
 		axios
