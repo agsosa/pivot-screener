@@ -1,27 +1,24 @@
 import { createChart, CrosshairMode, LineStyle, PriceScaleMode } from 'lightweight-charts';
-import React, { useRef } from 'react';
-import { PropTypes } from 'prop-types';
+import React, { useRef, useEffect } from 'react';
 import { reaction } from 'mobx';
 import { useMst } from '../../../models/Root';
 import { percentage } from '../../../lib/Helpers';
 import './Chart.css';
 
-const Chart = ({ onLoadComplete }) => {
+const marginPctHeight = 0;
+const marginPctWidth = 0;
+
+const Chart = () => {
 	const chart = useRef(null);
+	const chartRef = useRef(null);
 	const series = useRef(null);
-	const dispose = useRef(null);
-	const dispose2 = useRef(null);
 	const lastData = useRef(null);
-	const chartRef = React.useRef(null);
 	const drawings = useRef({ dailyCPR: [], weeklyCPR: [], monthlyCPR: [], dailyCam: [], weeklyCam: [], monthlyCam: [] });
 
 	const { tickers, chartOptions } = useMst((store) => ({
 		tickers: store.tickers,
 		chartOptions: store.chartOptions,
 	}));
-
-	const marginPctHeight = 0;
-	const marginPctWidth = 0;
 
 	const resizeObserver = new ResizeObserver((entries) => {
 		if (chart.current) {
@@ -78,6 +75,8 @@ const Chart = ({ onLoadComplete }) => {
 		}
 	}
 
+	// eslint-disable-next-line
+	// Force chart to update the series with the current first element at tickers state
 	function updateChart(forceDrawingsRefresh = false) {
 		const data = tickers && tickers.length >= 1 ? tickers[0] : null;
 
@@ -122,101 +121,93 @@ const Chart = ({ onLoadComplete }) => {
 		}
 	}
 
-	dispose2.current = reaction(
-		() => Object.keys(chartOptions).map((q) => chartOptions[q]),
-		() => {
-			if (lastData.current) updateChart(true);
-		},
-		{ fireImmediately: true }
-	);
+	// Create lightweight-chart
+	function initializeChart() {
+		const box = document.getElementsByClassName('site-layout-background')[0];
+		const width = box.offsetWidth - percentage(marginPctWidth, box.offsetWidth);
+		const height = box.offsetHeight - percentage(marginPctHeight, box.offsetHeight);
 
-	dispose.current = reaction(
-		() => tickers,
-		() => {
-			updateChart();
-		},
-		{ fireImmediately: true }
-	);
+		chart.current = createChart(chartRef.current, {
+			width,
+			height,
+			localization: {
+				timeFormatter: (businessDayOrTimestamp) => Date(businessDayOrTimestamp),
+			},
+			timeScale: {
+				timeVisible: true,
+				borderColor: '#D1D4DC',
+			},
+			rightPriceScale: {
+				borderColor: '#D1D4DC',
+			},
+			layout: {
+				backgroundColor: '#ffffff',
+				textColor: '#000',
+			},
+			grid: {
+				horzLines: {
+					visible: false,
+				},
+				vertLines: {
+					visible: false,
+				},
+			},
+		});
 
-	React.useEffect(() => {
-		if (chartRef.current) {
-			resizeObserver.observe(chartRef.current);
+		resizeObserver.observe(chartRef.current);
 
-			const box = document.getElementsByClassName('site-layout-background')[0];
-			const width = box.offsetWidth - percentage(marginPctWidth, box.offsetWidth);
-			const height = box.offsetHeight - percentage(marginPctHeight, box.offsetHeight);
+		series.current = chart.current.addCandlestickSeries({
+			upColor: 'rgb(38,166,154)',
+			downColor: 'rgb(255,82,82)',
+			wickUpColor: 'rgb(38,166,154)',
+			wickDownColor: 'rgb(255,82,82)',
+			borderVisible: false,
+		});
 
-			chart.current = createChart(chartRef.current, {
-				width,
-				height,
-				localization: {
-					timeFormatter: (businessDayOrTimestamp) => Date(businessDayOrTimestamp), // or whatever JS formatting you want here
-				},
-				timeScale: {
-					timeVisible: true,
-					borderColor: '#D1D4DC',
-				},
-				rightPriceScale: {
-					borderColor: '#D1D4DC',
-				},
-				layout: {
-					backgroundColor: '#ffffff',
-					textColor: '#000',
-				},
-				grid: {
-					horzLines: {
-						color: '#F0F3FA',
-						visible: false,
-					},
-					vertLines: {
-						visible: false,
-						color: '#F0F3FA',
-					},
-				},
-			});
+		series.current.applyOptions({ priceLineVisible: false, priceFormat: { type: 'price', minMove: 0.0000001, precision: 8 } });
 
-			series.current = chart.current.addCandlestickSeries({
-				upColor: 'rgb(38,166,154)',
-				downColor: 'rgb(255,82,82)',
-				wickUpColor: 'rgb(38,166,154)',
-				wickDownColor: 'rgb(255,82,82)',
-				borderVisible: false,
-			});
+		chart.current.applyOptions({
+			timeScale: {
+				rightOffset: 50,
+			},
+			crosshair: {
+				mode: CrosshairMode.Normal,
+			},
+			priceScale: {
+				autoScale: true,
+				mode: PriceScaleMode.Logarithmic,
+			},
+		});
+	}
 
-			series.current.applyOptions({ priceLineVisible: false, priceFormat: { type: 'price', minMove: 0.0000001, precision: 8 } });
+	useEffect(() => {
+		initializeChart();
 
-			chart.current.applyOptions({
-				timeScale: {
-					rightOffset: 50,
-				},
-				crosshair: {
-					mode: CrosshairMode.Normal,
-				},
-				priceScale: {
-					autoScale: true,
-					mode: PriceScaleMode.Logarithmic,
-				},
-			});
+		// Mobx
+		const dispose = reaction(
+			() => Object.keys(chartOptions).map((q) => chartOptions[q]),
+			() => {
+				if (lastData.current) updateChart(true);
+			},
+			{ fireImmediately: true }
+		);
 
-			if (onLoadComplete) onLoadComplete();
-		}
+		const dispose2 = reaction(
+			() => tickers.map((q) => q),
+			() => {
+				updateChart();
+			},
+			{ fireImmediately: true }
+		);
 
 		return () => {
 			chart.current.remove();
-			dispose.current();
-			dispose2.current();
+			dispose();
+			dispose2();
 		};
 	}, []);
 
 	return <div ref={chartRef} />;
-};
-
-Chart.defaultProps = {
-	onLoadComplete: null,
-};
-
-Chart.propTypes = {
-	onLoadComplete: PropTypes.func,
 };
 
 export default Chart;

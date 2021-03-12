@@ -28,6 +28,10 @@ a.external {
 	margin-bottom: 5px;
 }
 
+sup {
+	font-size: smaller;
+}
+
 .socket-status {
 	margin-bottom: 5px;
 }
