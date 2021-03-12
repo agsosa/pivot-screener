@@ -7,9 +7,9 @@ import Ticker from './Ticker';
 import { calcPercent, isDev } from '../lib/Helpers';
 import ChartOptions from './ChartOptions';
 
-const SOCKET_URL = isDev() ? 'http://localhost:4000' : 'https://pivotscreener.herokuapp.com/';
+// TODO: Move socket logic to /lib/
 
-// TODO: Optimize
+const SOCKET_URL = isDev() ? 'http://localhost:4000' : 'https://pivotscreener.herokuapp.com/';
 
 const RootModel = types
 	.model('RootModel', {
@@ -59,8 +59,7 @@ const RootModel = types
 			socket = null;
 		}
 
-		const startReceivingData = function (timeframes = undefined, markets = undefined, symbols = undefined) {
-			// TODO: Change to named arguments/object
+		const startReceivingData = (timeframes = undefined, markets = undefined, symbols = undefined) => {
 			if (socket && !socket.connected) socket.connect();
 
 			currentQuery = { timeframes, markets, symbols }; // Used on reconnection

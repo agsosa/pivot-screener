@@ -2,10 +2,11 @@ import React from 'react';
 import { Card, Statistic, Row, Col, Progress, Skeleton, Button } from 'antd';
 import { FallOutlined, RiseOutlined, ExpandOutlined, VerticalAlignMiddleOutlined, PauseOutlined } from '@ant-design/icons';
 import { observer } from 'mobx-react-lite';
+import { PropTypes } from 'prop-types';
 import { useMst } from '../../../models/Root';
 import '../Stats.css';
 
-const CPRStats = observer((props) => {
+const CPRStats = ({ timeframe, futureMode }) => {
 	const { tickers, cprStats, toggleCPRStatsPanel, cprStatsPanelVisible } = useMst((store) => ({
 		tickers: store.tickers,
 		cprStats: store.cprStats,
@@ -15,7 +16,7 @@ const CPRStats = observer((props) => {
 
 	if (!tickers || (tickers.length === 0 && cprStatsPanelVisible)) return <Skeleton />;
 
-	const stats = cprStats(props.timeframe, props.futureMode);
+	const stats = cprStats(timeframe, futureMode);
 
 	return (
 		<div>
@@ -68,6 +69,11 @@ const CPRStats = observer((props) => {
 			) : null}
 		</div>
 	);
-});
+};
 
-export default CPRStats;
+CPRStats.propTypes = {
+	timeframe: PropTypes.string.isRequired,
+	futureMode: PropTypes.bool.isRequired,
+};
+
+export default observer(CPRStats);

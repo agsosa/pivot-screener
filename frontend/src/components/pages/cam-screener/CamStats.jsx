@@ -2,10 +2,11 @@ import React from 'react';
 import { Card, Statistic, Row, Col, Progress, Skeleton, Button } from 'antd';
 import { FallOutlined, RiseOutlined, ExclamationCircleOutlined, ColumnHeightOutlined } from '@ant-design/icons';
 import { observer } from 'mobx-react-lite';
+import { PropTypes } from 'prop-types';
 import { useMst } from '../../../models/Root';
 import '../Stats.css';
 
-const CamStats = observer((props) => {
+const CamStats = observer(({ timeframe, futureMode }) => {
 	const { tickers, toggleCamStatsPanel, camStatsPanelVisible, camStats } = useMst((store) => ({
 		tickers: store.tickers,
 		toggleCamStatsPanel: store.toggleCamStatsPanel,
@@ -15,7 +16,7 @@ const CamStats = observer((props) => {
 
 	if (!tickers || (tickers.length === 0 && camStatsPanelVisible)) return <Skeleton />;
 
-	const stats = camStats(props.timeframe, props.futureMode);
+	const stats = camStats(timeframe, futureMode);
 
 	return (
 		<div>
@@ -65,5 +66,10 @@ const CamStats = observer((props) => {
 		</div>
 	);
 });
+
+CamStats.propTypes = {
+	futureMode: PropTypes.bool.isRequired,
+	timeframe: PropTypes.string.isRequired,
+};
 
 export default CamStats;

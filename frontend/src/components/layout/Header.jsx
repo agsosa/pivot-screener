@@ -73,7 +73,7 @@ export default function LayoutHeader() {
 					</Col>
 					<Col span={8} className='center-col'>
 						<a href='/' className='header-link'>
-							Pivot Screener <sup>Beta</sup>
+							Pivot Screener <sup className='beta-label'>Beta</sup>
 						</a>
 					</Col>
 				</Row>

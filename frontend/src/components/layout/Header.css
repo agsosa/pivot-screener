@@ -34,12 +34,14 @@
 	padding-bottom: 10px;
 }
 
-sup {
+.beta-label {
 	font-size: 15px;
+	left: -10px;
+	top: -20px;
 }
 
 .header-link {
-	font-size: XX-LARGE;
+	font-size: 32px;
 	color: white;
 	margin-top: 10px;
 }

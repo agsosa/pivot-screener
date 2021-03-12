@@ -3,7 +3,6 @@ import React, { useRef, useEffect } from 'react';
 import { reaction } from 'mobx';
 import { useMst } from '../../../models/Root';
 import { percentage } from '../../../lib/Helpers';
-import './Chart.css';
 
 const marginPctHeight = 0;
 const marginPctWidth = 0;

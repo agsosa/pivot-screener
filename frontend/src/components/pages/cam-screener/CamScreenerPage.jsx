@@ -1,14 +1,15 @@
 import { Result, Tabs } from 'antd';
 import React, { useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
+import { PropTypes } from 'prop-types';
 import { useMst } from '../../../models/Root';
 import { capitalizeFirstLetter } from '../../../lib/Helpers';
 import { isValidMarket } from '../../../lib/Markets';
 import CamTable from '../../tables/CamTable';
 import ContentContainer from '../../layout/ContentContainer';
 
-const CamScreenerPage = observer((props) => {
-	const { market } = props.match.params;
+const CamScreenerPage = ({ match }) => {
+	const { market } = match.params;
 	const validMarket = market && isValidMarket(market);
 	const { TabPane } = Tabs;
 
@@ -57,6 +58,10 @@ const CamScreenerPage = observer((props) => {
 			)}
 		</ContentContainer>
 	);
-});
+};
 
-export default CamScreenerPage;
+CamScreenerPage.propTypes = {
+	match: PropTypes.objectOf(PropTypes.any).isRequired,
+};
+
+export default observer(CamScreenerPage);

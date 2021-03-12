@@ -3,7 +3,6 @@ import { Layout, Menu } from 'antd';
 import React, { useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { markets } from '../../lib/Markets';
-import './Sidebar.css';
 
 const { Sider } = Layout;
 const { SubMenu } = Menu;
