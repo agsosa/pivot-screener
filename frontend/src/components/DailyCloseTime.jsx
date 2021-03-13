@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import moment from 'moment';
 import './DailyCloseTime.css';
+import { Space } from 'antd';
 
 export default function DailyCloseTime() {
 	const getDailyClose = (exchange = 'binance') => {
@@ -40,8 +41,9 @@ export default function DailyCloseTime() {
 
 	return (
 		<div className='container'>
-			<div>Binance Daily Close: {binanceTimeleft.toString()}</div>
-			<div>Huobi Daily Close: {huobiTimeleft.toString()}</div>
+			<Space size={15}>
+				<div>Binance Daily Close: {binanceTimeleft.toString()}</div> <div>Huobi Daily Close: {huobiTimeleft.toString()}</div>
+			</Space>
 		</div>
 	);
 }

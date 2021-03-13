@@ -1,5 +1,5 @@
 .container {
-	display: block;
-	margin-left: 10px;
+	margin-bottom: 3px;
+	align-self: center;
 	font-size: small;
 }

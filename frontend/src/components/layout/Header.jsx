@@ -1,5 +1,5 @@
 import React, { createRef, useEffect, useState } from 'react';
-import { Alert, Col, Row } from 'antd';
+import { Alert } from 'antd';
 import './Header.css';
 import DailyCloseTime from '../DailyCloseTime';
 
@@ -65,27 +65,21 @@ export default function LayoutHeader() {
 					</div>
 				</div>
 
-				<Row>
-					<Col span={8} className='left-col'>
-						<div>
-							<DailyCloseTime />
-						</div>
-					</Col>
-					<Col span={8} className='center-col'>
-						<a href='/' className='header-link'>
-							Pivot Screener
-						</a>
-					</Col>
-				</Row>
+				<a href='/' className='header-link'>
+					Pivot Screener
+				</a>
+
+				<DailyCloseTime />
 			</div>
 
 			<div className='promoContainer'>
 				<Alert
+					banner
 					message={
 						<>
 							<b>Camarilla Pivot Trading Telegram</b> •
 							<a href='https://t.me/camarillacruisin' target='_blank' rel='noopener noreferrer'>
-								<b>Click here to join the group!</b>
+								<b> Click here to join the group!</b>
 							</a>
 						</>
 					}

@@ -39,16 +39,13 @@ export default function LayoutFooter() {
 						💬 Telegram
 					</a>
 				</Space>
-				<Space>
-					With the help of donations I can maintain the server and make improvements to the website
-					<Button type='link' onClick={donateModal} className='btn'>
-						❤️ Donate Crypto
-					</Button>
-				</Space>
 				<p className='disclaimer'>
 					Disclaimer: The information provided on this website does not constitute Investment or trading advice. The sole purpose of this website is informational and/or Educational. PivotScreener.com
 					is not responsible for any misuse of the information presented on this website.
 				</p>
+				<Button type='link' onClick={donateModal} className='btn'>
+					❤️ Donate Crypto
+				</Button>
 				<Space>
 					Pivot Screener © 2021 <Contact />
 				</Space>
