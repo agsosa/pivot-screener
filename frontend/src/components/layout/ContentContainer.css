@@ -4,3 +4,7 @@
 	margin-top: 10px;
 	text-align: center;
 }
+
+.ant-layout-content {
+	flex: none;
+}
