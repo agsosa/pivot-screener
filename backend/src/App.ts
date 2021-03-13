@@ -15,7 +15,7 @@ import Sockets from './api/Sockets';
 const app: express.Application = express();
 //const server: http.Server = http.createServer(app); // Using server returned from Sockets.start()
 let port: any = process.env.PORT;
-if (!port) port = 4000;
+if (!port) port = 4001;
 const routes: CommonRoutesConfig[] = [];
 
 // TODO: Add rate limiter

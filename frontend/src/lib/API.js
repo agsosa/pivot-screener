@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { isDev } from './Helpers';
 
-const BASE_URL = isDev() ? 'http://localhost:4000/' : 'https://pivotscreener.herokuapp.com/';
+const BASE_URL = isDev() ? 'http://localhost:4001/' : 'https://pivotscreener.herokuapp.com/';
 
 // TODO: Multiple markets/exchanges not supported yet!!! Only binance futures implemented atm
 
