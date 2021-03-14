@@ -7,9 +7,9 @@ import Ticker from './Ticker';
 import { calcPercent, isDev } from '../lib/Helpers';
 import ChartOptions from './ChartOptions';
 
-// TODO: Move socket logic to /lib/
+// TODO: Move socket logic to /lib/API
 
-const SOCKET_URL = isDev() ? 'http://localhost:4000' : 'https://pivotscreener.herokuapp.com/';
+const SOCKET_URL = isDev() ? 'http://localhost:4001' : 'https://pivotscreener.herokuapp.com/';
 
 const RootModel = types
 	.model('RootModel', {
@@ -176,8 +176,9 @@ const RootModel = types
 				}
 			});
 
-			result.bullsPercent = calcPercent(result.aboveH4 + result.aboveH3, self.tickers.length);
-			result.bearsPercent = calcPercent(result.belowL4 + result.belowL3, self.tickers.length);
+			const a = self.tickers.length - result.betweenL3H3;
+			result.bullsPercent = calcPercent(result.aboveH4 + result.aboveH3, a === 0 ? self.tickers.length : a);
+			result.bearsPercent = calcPercent(result.belowL4 + result.belowL3, a === 0 ? self.tickers.length : a);
 
 			return result;
 		},
