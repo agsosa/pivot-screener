@@ -1,4 +1,4 @@
-import { FundProjectionScreenOutlined, HomeOutlined, LineChartOutlined, MenuOutlined, MonitorOutlined, QuestionCircleOutlined, ToolOutlined, CalculatorOutlined } from '@ant-design/icons';
+import { FundProjectionScreenOutlined, HomeOutlined, LineChartOutlined, MenuOutlined, QuestionCircleOutlined, ToolOutlined, CalculatorOutlined } from '@ant-design/icons';
 import { Layout, Menu } from 'antd';
 import React, { useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
@@ -38,9 +38,6 @@ export default function Sidebar() {
 				</SubMenu>
 				<Menu.Item key='/live-feed' disabled icon={<FundProjectionScreenOutlined />}>
 					<NavLink to='/live-feed'>Live Feed</NavLink>
-				</Menu.Item>
-				<Menu.Item key='/algo-screener' disabled icon={<MonitorOutlined />}>
-					<NavLink to='/algo-screener'>Algo Screener</NavLink>
 				</Menu.Item>
 				<Menu.Item key='/backtesting' disabled icon={<ToolOutlined />}>
 					<NavLink to='/backtesting'>Backtesting</NavLink>
