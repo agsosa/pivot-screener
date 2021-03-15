@@ -3,16 +3,7 @@ import ExchangeEnum from './base/ExchangeEnum';
 import MarketEnum from './base/MarketEnum';
 import DataManager from './../data/DataManager';
 import axios from 'axios';
-
-// TODO: Implement proxies to bypass binance api limits
-const BINANCE_API_LIMIT_PER_MIN = 1200;
-
-function binanceLimitToWeight(limit: number): number {
-	if (limit <= 100) return 1;
-	if (limit <= 500) return 2;
-	if (limit <= 100) return 5;
-	return 10;
-}
+import { BINANCE_API_LIMIT_PER_MIN, binanceLimitToWeight } from './BinanceCommon';
 
 export default class BinanceFutures extends Exchange {
 	readonly MARKET: MarketEnum = MarketEnum.CRYPTOCURRENCY;
