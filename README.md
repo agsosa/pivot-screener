@@ -15,5 +15,5 @@ Join our Trading Telegram group: https://t.me/camarillacruisin
 - Any Stocks private/public API integration (frontend/backend)
 - Backtesting module (frontend/backend)
 - Live feed page and alerts (frontend/backend)
-- Material/Responsive re-design
-- SEO/Learn module (frontend)
+- Material/Responsive re-design (frontend)
+- SEO/Learn page (frontend)
