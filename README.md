@@ -17,3 +17,4 @@ Join our Trading Telegram group: https://t.me/camarillacruisin
 - Live feed page and alerts (frontend/backend)
 - Material/Responsive re-design (frontend)
 - SEO/Learn page (frontend)
+- Telegram Bot?
