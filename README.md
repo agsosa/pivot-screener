@@ -9,3 +9,11 @@ Made with React.js and Express.js
 Live: https://pivotscreener.com - https://pivotscreener.netlify.app
 
 Join our Trading Telegram group: https://t.me/camarillacruisin
+
+#### Pending
+- OANDA private API integration (Forex/Indices/Commodities) (backend)
+- Any Stocks private/public API integration (frontend/backend)
+- Backtesting module (frontend/backend)
+- Live feed page and alerts (frontend/backend)
+- Material/Responsive re-design
+- SEO/Learn module (frontend)
