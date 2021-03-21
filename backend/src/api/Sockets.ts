@@ -27,7 +27,7 @@ export default class Sockets {
 
 	start(): httpServer {
 		this.server = createServer(this.app);
-		this.io = new Server(this.server);
+		this.io = new Server(this.server, { cors: { origin: 'http://pivotscreener.com' } });
 
 		this.handleConnections();
 		this.handleIODataManagerEvents();

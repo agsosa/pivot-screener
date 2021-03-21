@@ -21,7 +21,11 @@ const routes: CommonRoutesConfig[] = [];
 // Express middlewares
 app.use(helmet());
 app.use(compression());
-app.use(cors());
+app.use(
+	cors({
+		origin: 'http://pivotscreener.com',
+	})
+);
 
 // Initialize modules
 const dataManager: DataManager = new DataManager();
