@@ -23,7 +23,7 @@ app.use(helmet());
 app.use(compression());
 app.use(
 	cors({
-		origin: 'http://pivotscreener.com',
+		origin: ['https://pivotscreener.com', 'https://pivotscreener.netlify.app'],
 	})
 );
 
