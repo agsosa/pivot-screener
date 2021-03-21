@@ -37,7 +37,6 @@ export default class Sockets {
 
 	handleConnections(): void {
 		this.io.on('connection', (socket: ExtSocket) => {
-			console.log(`connection received ${socket.id} ${JSON.stringify(socket.handshake.query)}`);
 			this.handleSocketRequestTickers(socket);
 		});
 	}
@@ -63,8 +62,6 @@ export default class Sockets {
 	handleIODataManagerEvents(): void {
 		this.dataManager.eventEmitter.on('data_updated', () => {
 			const { sockets } = this.io.of('/');
-
-			console.log(`[data_updated] Sending to ${sockets.size} sockets`);
 
 			for (const [key, socket] of sockets.entries()) {
 				this.emitFilteredTickersTo(socket);
