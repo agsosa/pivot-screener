@@ -12,9 +12,6 @@ export default abstract class Exchange {
 		{ interval: '1M', name: 'monthly', limit: 2 },
 	];
 
-	abstract MARKET: MarketEnum;
-	abstract EXCHANGE: ExchangeEnum;
-
 	abstract fetchTickersList(): Promise<void>;
 	abstract fetchTickersData(): Promise<void>;
 	abstract initialize(): Promise<void>;

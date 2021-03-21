@@ -6,8 +6,8 @@ import axios from 'axios';
 import { BINANCE_API_LIMIT_PER_MIN, binanceLimitToWeight } from './BinanceCommon';
 
 export default class BinanceFutures extends Exchange {
-	readonly MARKET: MarketEnum = MarketEnum.CRYPTOCURRENCY;
-	readonly EXCHANGE: ExchangeEnum = ExchangeEnum.BINANCE_FUTURES;
+	MARKET: MarketEnum = MarketEnum.CRYPTOCURRENCY;
+	EXCHANGE: ExchangeEnum = ExchangeEnum.BINANCE_FUTURES;
 
 	constructor(dataManager: DataManager) {
 		super(dataManager);
