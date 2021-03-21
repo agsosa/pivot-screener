@@ -1,6 +1,4 @@
 import express from 'express';
-import * as http from 'http';
-import * as bodyparser from 'body-parser';
 import * as winston from 'winston';
 import * as expressWinston from 'express-winston';
 import cors from 'cors';
@@ -23,7 +21,6 @@ const routes: CommonRoutesConfig[] = [];
 // Express middlewares
 app.use(helmet());
 app.use(compression());
-app.use(bodyparser.json());
 app.use(cors());
 
 // Initialize modules
@@ -33,10 +30,8 @@ const server = sockets.start();
 const binanceFutures: BinanceFutures = new BinanceFutures(dataManager);
 routes.push(new TickersRoutes(app, dataManager));
 
-// Error logger
 app.use(
 	expressWinston.errorLogger({
-		// TODO: Test
 		transports: [new winston.transports.Console()],
 		format: winston.format.combine(winston.format.colorize(), winston.format.json()),
 	})
