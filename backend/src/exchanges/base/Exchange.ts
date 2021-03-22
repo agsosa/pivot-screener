@@ -4,15 +4,14 @@ import DataManager from './../../data/DataManager';
 import ICandlesticks from '../../data/ICandlesticks';
 
 export interface ITimeframe {
-	interval: string;
-	name: string;
+	string: string;
 	limit: number;
 }
 
 export const timeframes: ITimeframe[] = [
-	{ interval: '1d', name: 'daily', limit: 2 },
-	{ interval: '1w', name: 'weekly', limit: 2 },
-	{ interval: '1M', name: 'monthly', limit: 2 },
+	{ string: 'daily', limit: 2 },
+	{ string: 'weekly', limit: 2 },
+	{ string: 'monthly', limit: 2 },
 ];
 
 export default abstract class Exchange {
@@ -22,7 +21,7 @@ export default abstract class Exchange {
 
 	abstract readonly MARKET: MarketEnum;
 	abstract readonly EXCHANGE: ExchangeEnum;
-	abstract fetchSymbolsList(): Promise<string[]>;
+	abstract fetchSymbolsList(): Promise<string[]> | string[];
 	abstract fetchSymbolCandles(symbol: string, timeframe: ITimeframe): Promise<ICandlesticks[]>; // Fetch the candlesticks for a symbol by timeframe
 	abstract initialize(): any; // customize fetchDataInterval and exchange api specific initialization
 
@@ -41,7 +40,7 @@ export default abstract class Exchange {
 			timeframes.forEach((t) => {
 				promises.push(
 					this.fetchSymbolCandles(tickerObj.symbol, t).then((candles) => {
-						this.dataManager.updateCandlesticks(tickerObj, t.name, candles);
+						this.dataManager.updateCandlesticks(tickerObj, t.string, candles);
 					})
 				);
 			});
@@ -52,22 +51,22 @@ export default abstract class Exchange {
 		this.dataManager.emitUpdateEvent();
 	}
 
-	UpdateLoop(): void {
+	async UpdateLoop(): Promise<void> {
 		if (this.initialized) {
-			this.updateCandlesticks().then(() => {
-				setTimeout(() => {
-					this.UpdateLoop();
-				}, 1000 * this.fetchDataInterval);
-			});
+			await this.updateCandlesticks();
+			setTimeout(() => {
+				this.UpdateLoop();
+			}, 1000 * this.fetchDataInterval);
 		} else {
-			this.fetchSymbolsList()
-				.then((symbols) => {
-					symbols.map((q) => !q.includes('_') && this.dataManager.addTicker({ symbol: q, market: this.MARKET, exchange: this.EXCHANGE, candlesticks: {} }));
-					this.initialize();
-					this.initialized = true;
-					this.UpdateLoop();
-				})
-				.catch((error) => console.log(this.MARKET, this.EXCHANGE, ' fetchTickersList() error: ' + error));
+			try {
+				const symbols = await this.fetchSymbolsList();
+				symbols.map((q) => !q.includes('_') && this.dataManager.addTicker({ symbol: q, market: this.MARKET, exchange: this.EXCHANGE, candlesticks: {} }));
+				this.initialize();
+				this.initialized = true;
+				this.UpdateLoop();
+			} catch (error) {
+				console.log(this.MARKET, this.EXCHANGE, ' fetchTickersList() error: ' + error);
+			}
 		}
 	}
 }
