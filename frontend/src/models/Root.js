@@ -35,13 +35,11 @@ const RootModel = types
 
 			socket.on('connect', () => {
 				self.setSocketConnected(true);
-				console.log('socket connected');
 				if (currentQuery != null) socket.emit('request_tickers', JSON.stringify(currentQuery)); // request_tickers with the pending currentQuery
 			});
 
-			socket.on('disconnect', (reason) => {
+			socket.on('disconnect', () => {
 				self.setSocketConnected(false);
-				console.log(`disconnect reason: ${reason}`);
 			});
 
 			socket.on('connect_error', (err) => {
