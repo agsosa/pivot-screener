@@ -1,8 +1,8 @@
 import events from 'events';
 import ITicker from './ITicker';
 import ICandlesticks from './ICandlesticks';
-import MarketEnum from '../exchanges/base/MarketEnum';
-import ExchangeEnum from './../exchanges/base/ExchangeEnum';
+import MarketEnum from './MarketEnum';
+import ExchangeEnum from './ExchangeEnum';
 
 export default class DataManager {
 	eventEmitter: events; // Used to subscribe other modules to data events (i.e. data updated event)
@@ -31,7 +31,7 @@ export default class DataManager {
 	}
 
 	getTickersListByMarketExchange(market: MarketEnum, exchange: ExchangeEnum): ITicker[] {
-		return this._tickersList.filter((q) => q.market === market && q.exchange === exchange);
+		return this._tickersList.filter((q) => market === q.market && exchange === q.exchange);
 	}
 
 	/*
