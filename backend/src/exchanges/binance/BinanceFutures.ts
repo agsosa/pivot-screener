@@ -1,7 +1,6 @@
 import Exchange, { timeframes } from '../base/Exchange';
-import ExchangeEnum from '../base/ExchangeEnum';
-import MarketEnum from '../base/MarketEnum';
-import DataManager from '../../data/DataManager';
+import ExchangeEnum from '../../data/ExchangeEnum';
+import MarketEnum from '../../data/MarketEnum';
 import axios from 'axios';
 import * as BinanceHelper from './BinanceHelper';
 import ICandlesticks from './../../data/ICandlesticks';
@@ -45,7 +44,7 @@ export default class BinanceFutures extends Exchange {
 					const candlesticks: ICandlesticks[] = [];
 
 					// Parse binance candlesticks array
-					data.forEach((c: Array<any>) => {
+					data.forEach((c: any[]) => {
 						candlesticks.push({
 							open: parseFloat(c[1]),
 							high: parseFloat(c[2]),

@@ -1,5 +1,5 @@
-import ExchangeEnum from './ExchangeEnum';
-import MarketEnum from './MarketEnum';
+import ExchangeEnum from '../../data/ExchangeEnum';
+import MarketEnum from '../../data/MarketEnum';
 import DataManager from './../../data/DataManager';
 import ICandlesticks from '../../data/ICandlesticks';
 
