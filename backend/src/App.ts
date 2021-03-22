@@ -7,8 +7,8 @@ import TickersRoutes from './api/tickers.routes.config';
 import helmet from 'helmet';
 import compression from 'compression';
 import DataManager from './data/DataManager';
-import BinanceFutures from './exchanges/BinanceFutures';
 import Sockets from './api/Sockets';
+import { InitializeExchanges } from './exchanges/ExchangesManager';
 
 const app: express.Application = express();
 //const server: http.Server = http.createServer(app); // Using server returned from Sockets.start()
@@ -29,9 +29,9 @@ app.use(
 
 // Initialize modules
 const dataManager: DataManager = new DataManager();
+InitializeExchanges(dataManager);
 const sockets: Sockets = new Sockets(app, dataManager);
 const server = sockets.start();
-const binanceFutures: BinanceFutures = new BinanceFutures(dataManager);
 routes.push(new TickersRoutes(app, dataManager));
 
 app.use(

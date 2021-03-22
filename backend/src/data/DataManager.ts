@@ -1,5 +1,6 @@
 import events from 'events';
 import ITicker from './ITicker';
+import ICandlesticks from './ICandlesticks';
 
 export default class DataManager {
 	eventEmitter: events; // Used to subscribe other modules to data events (i.e. data updated event)
@@ -16,6 +17,10 @@ export default class DataManager {
 
 	addTicker(ticker: ITicker): void {
 		if (!this._tickersList.find((q) => q.symbol === ticker.symbol && q.market === ticker.market && q.exchange === ticker.exchange)) this._tickersList.push(ticker);
+	}
+
+	updateCandlesticks(ticker: ITicker, timeframe: string, candlesticks: ICandlesticks[]): void {
+		ticker.candlesticks[timeframe + 'Candles'] = candlesticks;
 	}
 
 	emitUpdateEvent(): void {
