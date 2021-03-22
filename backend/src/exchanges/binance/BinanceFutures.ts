@@ -3,7 +3,7 @@ import ExchangeEnum from '../base/ExchangeEnum';
 import MarketEnum from '../base/MarketEnum';
 import DataManager from '../../data/DataManager';
 import axios from 'axios';
-import { BINANCE_API_LIMIT_PER_MIN, binanceLimitToWeight } from './BinanceCommon';
+import * as BinanceHelper from './BinanceHelper';
 import ICandlesticks from './../../data/ICandlesticks';
 import { ITimeframe } from './../base/Exchange';
 
@@ -34,7 +34,7 @@ export default class BinanceFutures extends Exchange {
 	}
 
 	fetchSymbolCandles(symbol: string, timeframe: ITimeframe): Promise<ICandlesticks[]> {
-		const url = `https://fapi.binance.com/fapi/v1/klines?symbol=${symbol}&interval=${timeframe.interval}&limit=${timeframe.limit}`;
+		const url = `https://fapi.binance.com/fapi/v1/klines?symbol=${symbol}&interval=${BinanceHelper.getResolutionByTimeframe(timeframe)}&limit=${timeframe.limit}`;
 
 		return new Promise<ICandlesticks[]>((resolve, reject) => {
 			axios
@@ -71,14 +71,14 @@ export default class BinanceFutures extends Exchange {
 	async initialize(): Promise<void> {
 		// Calculate the maximum fetch interval time possible to prevent rate limiting (BINANCE_API_LIMIT_PER_MIN)
 		const totalTickers = this.dataManager.tickersList.length;
-		const weightPerTicker = timeframes.reduce((a, b) => a + (binanceLimitToWeight(b.limit) || 0), 0); // Every ticker will request data for every this.timeframes, and the weight added will depend on the limit parameter
+		const weightPerTicker = timeframes.reduce((a, b) => a + (BinanceHelper.binanceLimitToWeight(b.limit) || 0), 0); // Every ticker will request data for every this.timeframes, and the weight added will depend on the limit parameter
 		const weightTotal = totalTickers * weightPerTicker;
-		const maxFetchPerMinute = BINANCE_API_LIMIT_PER_MIN / weightTotal;
+		const maxFetchPerMinute = BinanceHelper.BINANCE_API_LIMIT_PER_MIN / weightTotal;
 		const fetchInterval = 60 / maxFetchPerMinute;
 		const EXTRA_SECONDS = 3; // Safeguard
 
 		this.fetchDataInterval = fetchInterval + EXTRA_SECONDS;
 
-		console.log(`[BINANCE] Calculated fetch interval: ${this.fetchDataInterval} (total weight per fetch: ${weightTotal}, free weight: ${BINANCE_API_LIMIT_PER_MIN - weightTotal})`);
+		console.log(`[BINANCE] Calculated fetch interval: ${this.fetchDataInterval} (total weight per fetch: ${weightTotal}, free weight: ${BinanceHelper.BINANCE_API_LIMIT_PER_MIN - weightTotal})`);
 	}
 }
