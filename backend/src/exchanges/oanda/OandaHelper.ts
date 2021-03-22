@@ -1,5 +1,6 @@
 import MarketEnum from '../base/MarketEnum';
 import axios from 'axios';
+import { ITimeframe } from './../base/Exchange';
 
 export const FINNHUB_KEY = process.env.FINNHUB_KEY;
 
@@ -42,4 +43,17 @@ async function getOandaSymbols(): Promise<TSymbols> {
 export async function getOandaSymbolsByMarket(market: MarketEnum): Promise<string[]> {
 	const symbols = await getOandaSymbols();
 	return symbols[market];
+}
+
+export function getResolutionByTimeframe(timeframe: ITimeframe) {
+	switch (timeframe.string) {
+		case 'daily':
+			return 'D';
+		case 'weekly':
+			return 'W';
+		case 'monthly':
+			return 'M';
+		default:
+			return '';
+	}
 }
