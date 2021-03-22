@@ -17,8 +17,8 @@ export default abstract class Exchange {
 	abstract readonly MARKET: MarketEnum;
 	abstract readonly EXCHANGE: ExchangeEnum;
 	abstract fetchSymbolsList(): Promise<string[]>;
-	abstract fetchSymbolCandles(symbol: string, timeframe: string, interval: string, limit: number): Promise<ICandlesticks[]>;
-	abstract initialize(): any;
+	abstract fetchSymbolCandles(symbol: string, timeframe: string, interval: string, limit: number): Promise<ICandlesticks[]>; // Fetch the candlesticks for a symbol by timeframe
+	abstract initialize(): any; // customize fetchDataInterval and exchange api specific initialization
 
 	constructor(dataManager: DataManager) {
 		this.dataManager = dataManager;
