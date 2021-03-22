@@ -5,6 +5,7 @@ import DataManager from '../../data/DataManager';
 import axios from 'axios';
 import { BINANCE_API_LIMIT_PER_MIN, binanceLimitToWeight } from './BinanceCommon';
 import ICandlesticks from './../../data/ICandlesticks';
+import { ITimeframe } from './../base/Exchange';
 
 export default class BinanceFutures extends Exchange {
 	MARKET: MarketEnum = MarketEnum.CRYPTOCURRENCY;
@@ -32,8 +33,8 @@ export default class BinanceFutures extends Exchange {
 		});
 	}
 
-	fetchSymbolCandles(symbol: string, timeframe: string, interval: string, limit: number): Promise<ICandlesticks[]> {
-		const url = `https://fapi.binance.com/fapi/v1/klines?symbol=${symbol}&interval=${interval}&limit=${limit}`;
+	fetchSymbolCandles(symbol: string, timeframe: ITimeframe): Promise<ICandlesticks[]> {
+		const url = `https://fapi.binance.com/fapi/v1/klines?symbol=${symbol}&interval=${timeframe.interval}&limit=${timeframe.limit}`;
 
 		return new Promise<ICandlesticks[]>((resolve, reject) => {
 			axios
