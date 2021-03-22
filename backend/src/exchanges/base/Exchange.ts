@@ -53,14 +53,18 @@ export default abstract class Exchange {
 
 	async UpdateLoop(): Promise<void> {
 		if (this.initialized) {
-			await this.updateCandlesticks();
-			setTimeout(() => {
-				this.UpdateLoop();
-			}, 1000 * this.fetchDataInterval);
+			try {
+				await this.updateCandlesticks();
+				setTimeout(() => {
+					this.UpdateLoop();
+				}, 1000 * this.fetchDataInterval);
+			} catch (error) {
+				console.error(this.MARKET, this.EXCHANGE, ' updateCandlesticks() error: ' + error);
+			}
 		} else {
 			try {
 				const symbols = await this.fetchSymbolsList();
-				symbols.map((q) => !q.includes('_') && this.dataManager.addTicker({ symbol: q, market: this.MARKET, exchange: this.EXCHANGE, candlesticks: {} }));
+				symbols.map((q) => this.dataManager.addTicker({ symbol: q, market: this.MARKET, exchange: this.EXCHANGE, candlesticks: {} }));
 				this.initialize();
 				this.initialized = true;
 				this.UpdateLoop();

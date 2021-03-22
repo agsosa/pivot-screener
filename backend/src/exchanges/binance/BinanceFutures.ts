@@ -11,10 +11,6 @@ export default class BinanceFutures extends Exchange {
 	MARKET: MarketEnum = MarketEnum.CRYPTOCURRENCY;
 	EXCHANGE: ExchangeEnum = ExchangeEnum.BINANCE_FUTURES;
 
-	constructor(dataManager: DataManager) {
-		super(dataManager);
-	}
-
 	fetchSymbolsList(): Promise<string[]> {
 		const url = 'https://fapi.binance.com/fapi/v1/ticker/price';
 		return new Promise<string[]>((resolve, reject) => {
@@ -22,7 +18,7 @@ export default class BinanceFutures extends Exchange {
 				.get(url)
 				.then(({ data }) => {
 					if (Array.isArray(data)) {
-						const list: string[] = data.map((q) => q.symbol);
+						const list: string[] = data.map((q) => !q.includes('_') && q.symbol);
 						resolve(list);
 					} else reject(new Error("ticker/price didn't return an array"));
 				})
