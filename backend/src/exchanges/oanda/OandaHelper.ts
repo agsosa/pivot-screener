@@ -1,14 +1,10 @@
 import axios from 'axios';
-import { ITimeframe } from './../base/Exchange';
+import { ITimeframe } from '../Exchange';
 import moment from 'moment';
 import ICandlesticks from '../../data/ICandlesticks';
 
 const FINNHUB_KEY = process.env.FINNHUB_KEY;
-const MAX_CALLS_PER_MIN = 60;
-const MAX_CALLS_PER_SEC = 30;
-let currentPromises: Promise<ICandlesticks[]>[] = [];
-let time: moment.Moment | null = null; // Used to rate limit
-let requests = 0; // Used to rate limit
+let waitTime: moment.Moment = moment(); // Used to rate limit
 
 export function getResolutionByTimeframe(timeframe: ITimeframe) {
 	switch (timeframe.string) {
@@ -23,31 +19,20 @@ export function getResolutionByTimeframe(timeframe: ITimeframe) {
 	}
 }
 
-function ensureRequestLimit() {
-	return new Promise((resolve, reject) => {
-		(function waitCondition() {
-			if (moment().diff(time, 'seconds') >= 65) return resolve(true);
-			setTimeout(waitCondition, 5);
-		})();
+function ensureWaitTime() {
+	return new Promise<void>((resolve, reject) => {
+		function waitCond() {
+			if (moment() > waitTime) {
+				resolve();
+			}
+			setTimeout(waitCond, 1);
+		}
+
+		waitCond();
 	});
 }
 
 export async function fetch(symbol: string, timeframe: ITimeframe): Promise<ICandlesticks[]> {
-	if (currentPromises.length >= MAX_CALLS_PER_SEC / 2) {
-		//console.log('Pre: Waiting MAX_CALLS_PER_SEC');
-		await Promise.all(currentPromises);
-		currentPromises = [];
-		//console.log('Pos: MAX_CALLS_PER_SEC waited');
-	}
-
-	if (requests >= MAX_CALLS_PER_MIN - 1) {
-		//	console.log('Pre: Waiting MAX_CALLS_PER_MIN ' + requests);
-		await ensureRequestLimit();
-		requests = 0;
-		time = moment();
-		//console.log('Pos: MAX_CALLS_PER_MIN waited');
-	} else requests++;
-
 	let timeUnit: moment.unitOfTime.DurationConstructor;
 	switch (timeframe.string) {
 		case 'daily':
@@ -69,23 +54,32 @@ export async function fetch(symbol: string, timeframe: ITimeframe): Promise<ICan
 	const url = `https://finnhub.io/api/v1/forex/candle?symbol=OANDA:${symbol}&resolution=${res}&from=${from}&to=${to}&token=${FINNHUB_KEY}`;
 
 	const prom = new Promise<ICandlesticks[]>((resolve, reject) => {
-		axios
-			.get(url)
-			.then(({ data }: Record<string, any>) => {
-				if (data.c && data.h && data.l && data.t) {
-					const candles: ICandlesticks[] = [];
-					for (let i = 0; i < data.c.length; i += 1) {
-						candles.push({ close: data.c[i], high: data.h[i], low: data.l[i], open: data.o[i], timestamp: data.t[i] });
-					}
-					resolve(candles);
-				} else reject(new Error('Received invalid data'));
-			})
-			.catch((error) => reject(error));
+		async function fetchUrl() {
+			if (moment() < waitTime) {
+				await ensureWaitTime();
+			}
+
+			axios
+				.get(url)
+				.then(({ data }: Record<string, any>) => {
+					if (data.c && data.h && data.l && data.t) {
+						const candles: ICandlesticks[] = [];
+						for (let i = 0; i < data.c.length; i += 1) {
+							candles.push({ close: data.c[i], high: data.h[i], low: data.l[i], open: data.o[i], timestamp: data.t[i] });
+						}
+						resolve(candles);
+					} else reject(new Error('Received invalid data'));
+				})
+				.catch((error) => {
+					if (error.message.includes('429')) {
+						// Handle rate limit by finnhub
+						waitTime = moment().add(10, 'seconds');
+						fetchUrl();
+					} else reject(error);
+				});
+		}
+		fetchUrl();
 	});
-
-	currentPromises.push(prom);
-
-	if (!time) time = moment();
 
 	return prom;
 }

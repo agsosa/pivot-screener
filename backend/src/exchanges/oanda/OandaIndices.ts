@@ -1,12 +1,9 @@
-import Exchange from '../base/Exchange';
-import DataManager from '../../data/DataManager';
+import Exchange from '../Exchange';
 import ExchangeEnum from '../../data/ExchangeEnum';
 import MarketEnum from '../../data/MarketEnum';
-import { ITimeframe } from '../base/Exchange';
+import { ITimeframe } from '../Exchange';
 import ICandlesticks from '../../data/ICandlesticks';
-import axios from 'axios';
 import * as OandaHelper from './OandaHelper';
-import moment from 'moment';
 
 export default class OandaIndices extends Exchange {
 	EXCHANGE = ExchangeEnum.OANDA;
