@@ -1,5 +1,5 @@
 import DataManager from '../data/DataManager';
-import Exchange from './base/Exchange';
+import Exchange from './Exchange';
 import BinanceFutures from './binance/BinanceFutures';
 import OandaIndices from './oanda/OandaIndices';
 import OandaForex from './oanda/OandaForex';

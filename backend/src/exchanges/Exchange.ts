@@ -1,7 +1,7 @@
-import ExchangeEnum from '../../data/ExchangeEnum';
-import MarketEnum from '../../data/MarketEnum';
-import DataManager from './../../data/DataManager';
-import ICandlesticks from '../../data/ICandlesticks';
+import ExchangeEnum from '../data/ExchangeEnum';
+import MarketEnum from '../data/MarketEnum';
+import DataManager from '../data/DataManager';
+import ICandlesticks from '../data/ICandlesticks';
 
 export interface ITimeframe {
 	string: string;
@@ -48,7 +48,7 @@ export default abstract class Exchange {
 
 		await Promise.all(promises);
 
-		this.dataManager.emitUpdateEvent();
+		this.dataManager.emitUpdateEvent(this.MARKET);
 	}
 
 	async UpdateLoop(): Promise<void> {
@@ -56,11 +56,12 @@ export default abstract class Exchange {
 			try {
 				await this.updateCandlesticks();
 				console.log(this.MARKET, this.EXCHANGE, ' updateCandlesticks() done.');
+			} catch (error) {
+				console.error(this.MARKET, this.EXCHANGE, ' updateCandlesticks() error: ' + error);
+			} finally {
 				setTimeout(() => {
 					this.UpdateLoop();
 				}, 1000 * this.fetchDataInterval);
-			} catch (error) {
-				console.error(this.MARKET, this.EXCHANGE, ' updateCandlesticks() error: ' + error);
 			}
 		} else {
 			try {
