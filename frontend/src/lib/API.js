@@ -1,32 +1,27 @@
 import axios from 'axios';
-import { isDev } from './Helpers';
 
-const BASE_URL = isDev() ? 'http://localhost:4001/' : 'https://pivotscreener.herokuapp.com/';
+// TODO: Add support for multiple markets/exchanges, optimize (cache, only update prices and pivot state)
 
-// TODO: Multiple markets/exchanges not supported yet!!! Only binance futures implemented atm
-
-// Get supported list from the backend
-// TODO: Add infinite retry on error
-// TODO: Add market/exchange support
-export function apiFetchSymbolsList(markets = undefined) {
-	const marketsQuery = markets ? `markets=${markets.replaceAll(' ', '')}` : ``;
-
-	const QUERY = `tickers/symbols?${marketsQuery}`;
-
+// Fetch symbols list from Binance Futures (excluding symbols with _ in the name)
+export function apiFetchBinanceFuturesList() {
+	const url = 'https://fapi.binance.com/fapi/v1/ticker/price';
 	return new Promise((resolve, reject) => {
 		axios
-			.get(BASE_URL + QUERY)
-			.then((res) => {
-				resolve(res.data);
+			.get(url)
+			.then(({ data }) => {
+				if (Array.isArray(data)) {
+					const list = data.filter((q) => !q.symbol.includes('_')).map((q) => q.symbol);
+					resolve(list);
+				} else reject(new Error("ticker/price didn't return an array"));
 			})
-			.catch((error) => reject(new Error(error.toString())));
+			.catch((error) => {
+				reject(error);
+			});
 	});
 }
 
 // Get candlesticks for a symbol (currently only binance futures)
-// TODO: Add support for multiple markets/exchanges, optimize (cache, only update prices and pivot state)
-// TODO: Optimize
-export function apiFetchBinanceCandlesticksLocally(symbol) {
+export function apiFetchBinanceFuturesCandles(symbol) {
 	const timeframes = [
 		{ interval: '1d', objectName: 'daily', limit: 2 },
 		{ interval: '1w', objectName: 'weekly', limit: 2 },

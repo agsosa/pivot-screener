@@ -3,7 +3,7 @@ import { observer } from 'mobx-react-lite';
 import { Spin, Button, Space, message, AutoComplete } from 'antd';
 import Chart from './Chart';
 import { useMst } from '../../../models/Root';
-import { apiFetchSymbolsList, apiFetchBinanceCandlesticksLocally } from '../../../lib/API';
+import { apiFetchBinanceFuturesList, apiFetchBinanceFuturesCandles } from '../../../lib/API';
 import ContentContainer from '../../layout/ContentContainer';
 import './ChartPage.css';
 import ChartOptionsMenu from './ChartOptionsMenu';
@@ -26,7 +26,7 @@ const ChartPage = observer(() => {
 	}));
 
 	async function fetchCandles() {
-		const result = await apiFetchBinanceCandlesticksLocally(symbol);
+		const result = await apiFetchBinanceFuturesCandles(symbol);
 		if (symbol === result.symbol && isMounted()) setTickers([{ symbol, market: '', exchange: '', candlesticks: result.candlesticks }]);
 	}
 
@@ -40,7 +40,7 @@ const ChartPage = observer(() => {
 	}
 
 	async function fetchSymbolsList() {
-		let result = await apiFetchSymbolsList();
+		let result = await apiFetchBinanceFuturesList();
 		if (result && Array.isArray(result)) {
 			result = result.map((q) => ({ value: q }));
 			setSymbolsList(result);
