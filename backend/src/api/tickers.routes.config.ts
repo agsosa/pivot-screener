@@ -8,9 +8,7 @@ export default class TickersRoutes extends CommonRoutesConfig {
 	}
 
 	configureRoutes() {
-		// Get symbols list (example: [ "BTCUSDT", "ETHUSDT", "ADAUSDT", ...])
-		// Optional query parameter: markets - comma delimited list of MarketEnum (example: ?markets=cryptocurrency,forex,stocks)
-		this.app.route(`/tickers/symbols`).get((req: express.Request, res: express.Response, next: express.NextFunction) => {
+		/*	this.app.route(`/tickers/symbols`).get((req: express.Request, res: express.Response, next: express.NextFunction) => {
 			try {
 				const { markets } = req.query;
 
@@ -20,7 +18,7 @@ export default class TickersRoutes extends CommonRoutesConfig {
 				res.status(404);
 				next(error);
 			}
-		});
+		});*/
 
 		return this.app;
 	}
