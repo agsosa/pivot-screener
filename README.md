@@ -6,7 +6,7 @@ Cryptocurrency, Forex, Indices, Commodities, Stocks supported.
 
 Made with React.js and Express.js
 
-Live: https://pivotscreener.com - https://pivotscreener.netlify.app
+Live: https://pivotscreener.com
 
 Join our Trading Telegram group: https://t.me/camarillacruisin
 
