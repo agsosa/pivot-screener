@@ -15,7 +15,7 @@ export default function Sidebar() {
 		setCollapsed(x);
 	};
 
-	//! Menu IDS should be the same as Route Path to visually select the corresponding menu when loading a pages directly
+	//! Menu IDS should be the same as Route Path to visually select it on direct URL access
 	return (
 		<Sider theme='dark' style={{}} collapsible collapsed={collapsed} onCollapse={onCollapse}>
 			<Menu className='menu' theme='dark' mode='inline' selectedKeys={[location.pathname]}>

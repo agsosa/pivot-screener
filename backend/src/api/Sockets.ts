@@ -65,7 +65,6 @@ export default class Sockets {
 			const { sockets } = this.io.of('/');
 
 			for (const [key, socket] of sockets.entries()) {
-				console.log(socket.tickersQuery);
 				if (socket.tickersQuery) {
 					if (socket.tickersQuery.markets) {
 						if (socket.tickersQuery.markets.toLowerCase().includes(market.toLowerCase())) {
