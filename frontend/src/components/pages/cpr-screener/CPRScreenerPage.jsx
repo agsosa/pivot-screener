@@ -10,7 +10,7 @@ import ContentContainer from '../../layout/ContentContainer';
 
 const CPRScreenerPage = ({ match }) => {
 	const { market } = match.params;
-	const validMarket = market && isValidMarket(market);
+	const validMarket = () => market && isValidMarket(market);
 	const { TabPane } = Tabs;
 
 	const { startReceivingData, stopReceivingData } = useMst((store) => ({
@@ -19,18 +19,18 @@ const CPRScreenerPage = ({ match }) => {
 	}));
 
 	useEffect(() => {
-		if (validMarket) {
+		if (validMarket()) {
 			startReceivingData('daily, weekly, monthly', market);
 		}
 
 		return () => {
 			stopReceivingData();
 		};
-	}, []);
+	}, [market]);
 
 	return (
 		<ContentContainer breadcrumbItems={['CPR Screener', capitalizeFirstLetter(market)]}>
-			{!validMarket ? (
+			{!validMarket() ? (
 				<Result status='404' title='404' subTitle='Sorry, the page you visited does not exist.' />
 			) : (
 				<>
