@@ -25,9 +25,8 @@ export default class DataManager {
 		ticker.candlesticks[timeframe + 'Candles'] = candlesticks;
 	}
 
-	emitUpdateEvent(): void {
-		console.log('emitUpdateEvent signal, tickers length = ' + this._tickersList.length);
-		this.eventEmitter.emit('data_updated');
+	emitUpdateEvent(market: MarketEnum): void {
+		this.eventEmitter.emit('data_updated', market); // TODO: Add exchange parameter
 	}
 
 	getTickersListByMarketExchange(market: MarketEnum, exchange: ExchangeEnum): ITicker[] {
