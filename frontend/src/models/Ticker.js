@@ -1,8 +1,6 @@
 import { types } from 'mobx-state-tree';
 import { inRange, percentDifference } from '../lib/Helpers';
 
-// TODO: Optimize
-
 const Ticker = types
 	.model({
 		symbol: types.string, // Example: "BTCUSDT"
@@ -24,8 +22,11 @@ const Ticker = types
 				case 'Binance Futures':
 					str = `BINANCE:${self.symbol.toUpperCase()}PERP`;
 					break;
+				case 'OANDA':
+					str = `OANDA:${self.symbol.toUpperCase()}`;
+					break;
 				default:
-					str = `BINANCE:${self.symbol.toUpperCase()}`;
+					str = `${self.symbol.toUpperCase()}`;
 					break;
 			}
 			return str;

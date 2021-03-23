@@ -74,7 +74,7 @@ const RootModel = types
 		};
 
 		function setTickers(data) {
-			self.tickers = data;
+			self.tickers = data.map((q) => ({ ...q, symbol: q.symbol.replace('_', '') }));
 		}
 
 		function setSocketConnected(b) {
