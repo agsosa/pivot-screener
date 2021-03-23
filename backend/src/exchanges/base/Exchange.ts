@@ -55,6 +55,7 @@ export default abstract class Exchange {
 		if (this.initialized) {
 			try {
 				await this.updateCandlesticks();
+				console.log(this.MARKET, this.EXCHANGE, ' updateCandlesticks() done.');
 				setTimeout(() => {
 					this.UpdateLoop();
 				}, 1000 * this.fetchDataInterval);

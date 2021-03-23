@@ -17,12 +17,11 @@ export default class BinanceFutures extends Exchange {
 				.get(url)
 				.then(({ data }) => {
 					if (Array.isArray(data)) {
-						const list: string[] = data.map((q) => !q.includes('_') && q.symbol);
+						const list: string[] = data.filter((q) => !q.symbol.includes('_')).map((q) => q.symbol);
 						resolve(list);
 					} else reject(new Error("ticker/price didn't return an array"));
 				})
 				.catch((error) => {
-					console.log(`Fetch symbol list error: ${error}`);
 					reject(error);
 				});
 		});

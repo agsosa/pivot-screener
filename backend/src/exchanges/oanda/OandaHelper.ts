@@ -34,18 +34,18 @@ function ensureRequestLimit() {
 
 export async function fetch(symbol: string, timeframe: ITimeframe): Promise<ICandlesticks[]> {
 	if (currentPromises.length >= MAX_CALLS_PER_SEC / 2) {
-		console.log('Pre: Waiting MAX_CALLS_PER_SEC');
+		//console.log('Pre: Waiting MAX_CALLS_PER_SEC');
 		await Promise.all(currentPromises);
 		currentPromises = [];
-		console.log('Pos: MAX_CALLS_PER_SEC waited');
+		//console.log('Pos: MAX_CALLS_PER_SEC waited');
 	}
 
 	if (requests >= MAX_CALLS_PER_MIN - 1) {
-		console.log('Pre: Waiting MAX_CALLS_PER_MIN ' + requests);
+		//	console.log('Pre: Waiting MAX_CALLS_PER_MIN ' + requests);
 		await ensureRequestLimit();
 		requests = 0;
 		time = moment();
-		console.log('Pos: MAX_CALLS_PER_MIN waited');
+		//console.log('Pos: MAX_CALLS_PER_MIN waited');
 	} else requests++;
 
 	let timeUnit: moment.unitOfTime.DurationConstructor;
