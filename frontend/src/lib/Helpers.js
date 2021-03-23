@@ -98,7 +98,7 @@ export function percentDifference(a, b) {
 
 // Example: BTCUSDT -> { primary: "BTC", secondary: "USDT"}
 export function getPairObject(symbol) {
-	const QUOTES = ['USDT', 'BUSD', 'BTC', 'ETH', 'BNB', 'USD', 'LTC'];
+	const QUOTES = ['USDT', 'BUSD', 'BTC', 'ETH', 'BNB', 'USD', 'LTC', 'AUD', 'NZD', 'SGD', 'GBP', 'HKD', 'EUR', 'CAD', 'JPY', 'CHF'];
 	const result = { primary: '', secondary: '' };
 
 	for (let i = 0; i < QUOTES.length; i += 1) {
