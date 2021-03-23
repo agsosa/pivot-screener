@@ -242,7 +242,16 @@ const CPRTable = ({ timeframe, market, futureMode }) => {
 
 	const exchangeRenderer = (params) => {
 		const { data, value } = params;
-		return `<a href="https://www.binance.com/en/futures/${data.symbol}" target="_blank" class="external">${value}</a>`;
+		let url;
+		switch (data.exchange) {
+			case 'Binance Futures':
+				url = `https://www.binance.com/en/futures/${data.symbol}`;
+				break;
+			default:
+				url = '';
+				break;
+		}
+		return url ? `<a href=${url} target="_blank" class="external">${value}</a>` : value;
 	};
 
 	return (

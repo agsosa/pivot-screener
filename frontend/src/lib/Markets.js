@@ -1,8 +1,8 @@
 export const markets = [
 	{ market: 'Cryptocurrency', disabled: false },
-	{ market: 'Forex', disabled: true },
-	{ market: 'Commodities', disabled: true },
-	{ market: 'Indices', disabled: true },
+	{ market: 'Forex', disabled: false },
+	{ market: 'Commodities', disabled: false },
+	{ market: 'Indices', disabled: false },
 	{ market: 'Stocks', disabled: true },
 ];
 

@@ -8,6 +8,8 @@ import { isValidMarket } from '../../../lib/Markets';
 import CPRTable from '../../tables/CPRTable';
 import ContentContainer from '../../layout/ContentContainer';
 
+// TODO: Merge with CamScreenerPage
+
 const CPRScreenerPage = ({ match }) => {
 	const { market } = match.params;
 	const validMarket = () => market && isValidMarket(market);
