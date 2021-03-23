@@ -10,7 +10,7 @@ export default class OandaCommodities extends Exchange {
 	MARKET = MarketEnum.COMMODITIES;
 
 	fetchSymbolsList(): string[] {
-		return ['XPT_USD', 'XCU_USD', 'SOYBN_USD', 'XAU_EUR', 'CORN_USD', 'XAG_EUR', 'SUGAR_USD', 'NATGAS_USD', 'BCO_USD', 'XAG_USD', 'XAU_USD', 'WHEAT_USD', 'XPD_USD', 'WTICO_USD'];
+		return ['XPT_USD', 'XCU_USD', 'SOYBN_USD', 'CORN_USD', 'SUGAR_USD', 'NATGAS_USD', 'BCO_USD', 'XAG_USD', 'XAU_USD', 'WHEAT_USD', 'XPD_USD', 'WTICO_USD'];
 	}
 
 	fetchSymbolCandles(symbol: string, timeframe: ITimeframe): Promise<ICandlesticks[]> {
