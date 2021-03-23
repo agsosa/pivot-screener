@@ -3,6 +3,7 @@ import { createServer, Server as httpServer } from 'http';
 import { Server, Socket } from 'socket.io';
 import DataManager from '../data/DataManager';
 import jsonpack from 'jsonpack';
+import MarketEnum from '../data/MarketEnum';
 
 interface Query {
 	timeframes: string; // Examples: "daily, monthly, weekly"; "daily"; "hourly, weekly"
@@ -60,11 +61,18 @@ export default class Sockets {
 
 	// Emit on data_updated event
 	handleIODataManagerEvents(): void {
-		this.dataManager.eventEmitter.on('data_updated', () => {
+		this.dataManager.eventEmitter.on('data_updated', (market: MarketEnum) => {
 			const { sockets } = this.io.of('/');
 
 			for (const [key, socket] of sockets.entries()) {
-				this.emitFilteredTickersTo(socket);
+				console.log(socket.tickersQuery);
+				if (socket.tickersQuery) {
+					if (socket.tickersQuery.markets) {
+						if (socket.tickersQuery.markets.toLowerCase().includes(market.toLowerCase())) {
+							this.emitFilteredTickersTo(socket);
+						}
+					} else this.emitFilteredTickersTo(socket);
+				}
 			}
 		});
 	}
