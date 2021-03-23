@@ -1,10 +1,10 @@
-import Exchange, { timeframes } from '../base/Exchange';
+import Exchange, { timeframes } from '../Exchange';
 import ExchangeEnum from '../../data/ExchangeEnum';
 import MarketEnum from '../../data/MarketEnum';
 import axios from 'axios';
 import * as BinanceHelper from './BinanceHelper';
 import ICandlesticks from './../../data/ICandlesticks';
-import { ITimeframe } from './../base/Exchange';
+import { ITimeframe } from '../Exchange';
 
 export default class BinanceFutures extends Exchange {
 	MARKET: MarketEnum = MarketEnum.CRYPTOCURRENCY;

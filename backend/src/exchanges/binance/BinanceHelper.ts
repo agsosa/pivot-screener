@@ -1,5 +1,5 @@
 // TODO: Implement proxies to bypass binance api limits
-import { ITimeframe } from './../base/Exchange';
+import { ITimeframe } from '../Exchange';
 
 export const BINANCE_API_LIMIT_PER_MIN = 1200;
 
