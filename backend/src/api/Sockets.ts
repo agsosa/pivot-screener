@@ -2,7 +2,6 @@ import express from 'express';
 import { createServer, Server as httpServer } from 'http';
 import { Server, Socket } from 'socket.io';
 import DataManager from '../data/DataManager';
-import jsonpack from 'jsonpack';
 import MarketEnum from '../data/MarketEnum';
 
 interface Query {
@@ -81,7 +80,7 @@ export default class Sockets {
 			const query = socket.tickersQuery;
 			if (query) {
 				const res = this.dataManager.getFilteredTickers(query.timeframes, query.markets, query.symbols);
-				socket.emit('tickers_data', jsonpack.pack(res));
+				socket.emit('tickers_data', res);
 			}
 		}
 	}

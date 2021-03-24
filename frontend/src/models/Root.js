@@ -2,7 +2,6 @@ import { types } from 'mobx-state-tree';
 import { createContext, useContext } from 'react';
 import { persist } from 'mst-persist';
 import { io } from 'socket.io-client';
-import jsonpack from 'jsonpack';
 import Ticker from './Ticker';
 import { calcPercent, isDev } from '../lib/Helpers';
 import ChartOptions from './ChartOptions';
@@ -47,7 +46,7 @@ const RootModel = types
 			});
 
 			socket.on('tickers_data', (data) => {
-				self.setTickers(jsonpack.unpack(data));
+				self.setTickers(data);
 			});
 		}
 
