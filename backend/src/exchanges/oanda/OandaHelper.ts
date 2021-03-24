@@ -1,10 +1,11 @@
 import axios from 'axios';
 import { ITimeframe } from '../Exchange';
-import moment from 'moment';
 import ICandlesticks from '../../data/ICandlesticks';
+import moment from 'moment';
 
 const FINNHUB_KEY = process.env.FINNHUB_KEY;
-let waitTime: moment.Moment = moment(); // Used to rate limit
+const LIMITED_WAIT_SECONDS = 15; // Seconds to wait on rate limited by finnhub
+let shouldWait = false;
 
 export function getResolutionByTimeframe(timeframe: ITimeframe) {
 	switch (timeframe.string) {
@@ -17,19 +18,6 @@ export function getResolutionByTimeframe(timeframe: ITimeframe) {
 		default:
 			return '';
 	}
-}
-
-function ensureWaitTime() {
-	return new Promise<void>((resolve, reject) => {
-		function waitCond() {
-			if (moment() > waitTime) {
-				resolve();
-			}
-			setTimeout(waitCond, 5);
-		}
-
-		waitCond();
-	});
 }
 
 export async function fetch(symbol: string, timeframe: ITimeframe): Promise<ICandlesticks[]> {
@@ -55,8 +43,9 @@ export async function fetch(symbol: string, timeframe: ITimeframe): Promise<ICan
 
 	const prom = new Promise<ICandlesticks[]>((resolve, reject) => {
 		async function fetchUrl() {
-			if (moment() < waitTime) {
-				await ensureWaitTime();
+			if (shouldWait) {
+				await new Promise((done) => setTimeout(done, LIMITED_WAIT_SECONDS * 1000));
+				shouldWait = false;
 			}
 
 			axios
@@ -73,11 +62,12 @@ export async function fetch(symbol: string, timeframe: ITimeframe): Promise<ICan
 				.catch((error) => {
 					if (error.message.includes('429')) {
 						// Handle rate limit by finnhub
-						waitTime = moment().add(15, 'seconds');
+						shouldWait = true;
 						fetchUrl();
 					} else reject(error);
 				});
 		}
+
 		fetchUrl();
 	});
 

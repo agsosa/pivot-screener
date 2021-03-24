@@ -16,6 +16,7 @@
 		"helmet": "^4.4.1",
 		"jsonpack": "^1.1.5",
 		"moment": "^2.29.1",
+		"newrelic": "^7.2.0",
 		"socket.io": "^3.1.2",
 		"winston": "^3.3.3"
 	},
@@ -36,6 +37,7 @@
 	},
 	"scripts": {
 		"start": "tsc && node ./dist/App.js",
+		"profile": "tsc && node --prof ./dist/App.js",
 		"postinstall": "tsc",
 		"deploy": "git add . && git commit -m Heroku && git push heroku master",
 		"test": "echo \"Error: no test specified\" && exit 1",
