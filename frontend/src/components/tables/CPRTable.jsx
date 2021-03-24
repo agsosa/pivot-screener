@@ -1,11 +1,12 @@
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-material.css';
 import { AgGridColumn, AgGridReact } from 'ag-grid-react';
-import { Result, Skeleton, Spin, message } from 'antd';
+import { Skeleton, Spin, message } from 'antd';
 import { autorun } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import React, { useEffect, useState } from 'react';
 import { PropTypes } from 'prop-types';
+import { isAlive } from 'mobx-state-tree';
 import { useMst } from '../../models/Root';
 import { getPairObject } from '../../lib/Helpers';
 import './Table.css';
@@ -47,6 +48,12 @@ const CPRTable = ({ timeframe, market, futureMode }) => {
 		[]
 	);
 
+	useEffect(() => {
+		if (gridApi) {
+			gridApi.setRowData([]);
+		}
+	}, [market]);
+
 	const onGridReady = (params) => {
 		setGridApi(params.api);
 		// setGridColumnApi(params.columnApi);
@@ -62,10 +69,6 @@ const CPRTable = ({ timeframe, market, futureMode }) => {
 
 	function CustomLoadingOverlay() {
 		return <Spin tip='Loading...' />;
-	}
-
-	function CustomNoRowsOverlay() {
-		return <Result status='warning' title='No data found. Please try reloading the page.' />;
 	}
 
 	const distanceGetter = (data, objectStr) => {
@@ -267,10 +270,10 @@ const CPRTable = ({ timeframe, market, futureMode }) => {
 					animateRows
 					onFilterChanged={onFilterChanged}
 					onFirstDataRendered={onFirstDataRendered}
-					immutableData
+					immutableData={(data) => isAlive(data)}
 					tooltipShowDelay={0}
 					frameworkComponents={{
-						customNoRowsOverlay: CustomNoRowsOverlay,
+						customNoRowsOverlay: CustomLoadingOverlay,
 						customLoadingOverlay: CustomLoadingOverlay,
 					}}
 					defaultColDef={{
@@ -285,7 +288,7 @@ const CPRTable = ({ timeframe, market, futureMode }) => {
 					noRowsOverlayComponent='customNoRowsOverlay'
 					rowData={null}
 					enableBrowserTooltips
-					getRowNodeId={(data) => data.symbol}>
+					getRowNodeId={(data) => (isAlive(data) ? data.symbol : '')}>
 					<AgGridColumn width={150} headerName='Symbol' field='symbol' cellRenderer={symbolRenderer} />
 
 					<AgGridColumn width={150} headerName='Exchange' field='exchange' cellRenderer={exchangeRenderer} />
