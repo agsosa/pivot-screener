@@ -24,15 +24,15 @@ export default function Sidebar() {
 				</Menu.Item>
 				<SubMenu key='sub1' icon={<MenuOutlined />} title='CPR Screener'>
 					{markets.map((q) => (
-						<Menu.Item key={`/cpr-screener/${q.market.toLowerCase()}`} disabled={q.disabled}>
-							<NavLink to={`/cpr-screener/${q.market.toLowerCase()}`}>{q.market}</NavLink>
+						<Menu.Item key={`/screener/cpr/${q.market.toLowerCase()}`} disabled={q.disabled}>
+							<NavLink to={`/screener/cpr/${q.market.toLowerCase()}`}>{q.market}</NavLink>
 						</Menu.Item>
 					))}
 				</SubMenu>
 				<SubMenu key='sub2' icon={<LineChartOutlined />} title='Camarilla Screener'>
 					{markets.map((q) => (
-						<Menu.Item key={`/cam-screener/${q.market.toLowerCase()}`} disabled={q.disabled}>
-							<NavLink to={`/cam-screener/${q.market.toLowerCase()}`}>{q.market}</NavLink>
+						<Menu.Item key={`/screener/camarilla/${q.market.toLowerCase()}`} disabled={q.disabled}>
+							<NavLink to={`/screener/camarilla/${q.market.toLowerCase()}`}>{q.market}</NavLink>
 						</Menu.Item>
 					))}
 				</SubMenu>

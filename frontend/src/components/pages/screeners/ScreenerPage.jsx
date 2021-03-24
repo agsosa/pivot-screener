@@ -7,12 +7,30 @@ import { capitalizeFirstLetter } from '../../../lib/Helpers';
 import { isValidMarket } from '../../../lib/Markets';
 import CamTable from './tables/CamTable';
 import ContentContainer from '../../layout/ContentContainer';
+import CPRTable from './tables/CPRTable';
 
-// TODO: Merge with CPRScreenerPage
+const ScreenerPage = ({ match }) => {
+	const { market, screenerType } = match.params;
 
-const CamScreenerPage = ({ match }) => {
-	const { market } = match.params;
 	const validMarket = () => market && isValidMarket(market);
+
+	let TableComponent;
+	let breadcrumbStr;
+
+	switch (screenerType.toLowerCase()) {
+		case 'cpr':
+			TableComponent = CPRTable;
+			breadcrumbStr = 'CPR Screener';
+			break;
+		case 'camarilla':
+			TableComponent = CamTable;
+			breadcrumbStr = 'Camarilla Screener';
+			break;
+		default:
+			TableComponent = null;
+			breadcrumbStr = 'Error';
+	}
+
 	const { TabPane } = Tabs;
 
 	const { startReceivingData, stopReceivingData } = useMst((store) => ({
@@ -31,29 +49,29 @@ const CamScreenerPage = ({ match }) => {
 	}, [market]);
 
 	return (
-		<ContentContainer breadcrumbItems={['Camarilla Screener', capitalizeFirstLetter(market)]}>
-			{!validMarket() ? (
+		<ContentContainer breadcrumbItems={[breadcrumbStr, capitalizeFirstLetter(market)]}>
+			{!validMarket() || !TableComponent ? (
 				<Result status='404' title='404' subTitle='Sorry, the page you visited does not exist.' />
 			) : (
 				<>
 					<Tabs defaultActiveKey='1'>
 						<TabPane tab='Daily' key='1'>
-							<CamTable timeframe='daily' market={market} futureMode={false} />
+							<TableComponent timeframe='daily' market={market} futureMode={false} />
 						</TabPane>
 						<TabPane tab='Weekly' key='2'>
-							<CamTable timeframe='weekly' market={market} futureMode={false} />
+							<TableComponent timeframe='weekly' market={market} futureMode={false} />
 						</TabPane>
 						<TabPane tab='Monthly' key='3'>
-							<CamTable timeframe='monthly' market={market} futureMode={false} />
+							<TableComponent timeframe='monthly' market={market} futureMode={false} />
 						</TabPane>
 						<TabPane tab='Tomorrow' key='4'>
-							<CamTable timeframe='daily' market={market} futureMode />
+							<TableComponent timeframe='daily' market={market} futureMode />
 						</TabPane>
 						<TabPane tab='Next Week' key='5'>
-							<CamTable timeframe='weekly' market={market} futureMode />
+							<TableComponent timeframe='weekly' market={market} futureMode />
 						</TabPane>
 						<TabPane tab='Next Month' key='6'>
-							<CamTable timeframe='monthly' market={market} futureMode />
+							<TableComponent timeframe='monthly' market={market} futureMode />
 						</TabPane>
 					</Tabs>
 				</>
@@ -62,8 +80,8 @@ const CamScreenerPage = ({ match }) => {
 	);
 };
 
-CamScreenerPage.propTypes = {
+ScreenerPage.propTypes = {
 	match: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 
-export default observer(CamScreenerPage);
+export default observer(ScreenerPage);
