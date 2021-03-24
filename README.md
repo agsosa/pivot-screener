@@ -8,6 +8,7 @@ Cryptocurrency, Forex, Indices, Commodities, Stocks supported.
 
 #### Used libs/frameworks
 **- Frontend:** React.js, Mobx State Tree, Hooks, Ant Design, AG Grid, Lightweight Chart
+
 **- Backend:** TypeScript, Node (Express), Websockets, public and private APIs to extract market data
 
 #### Pending
