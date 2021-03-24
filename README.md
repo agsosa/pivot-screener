@@ -4,11 +4,11 @@ Web app to analyze markets pivot point data. Useful to find trade setups based o
 Daily, Weekly and Monthly timeframes supported.
 Cryptocurrency, Forex, Indices, Commodities, Stocks supported.
 
-Made with React.js and Express.js
+##### Live: https://pivotscreener.com
 
-Live: https://pivotscreener.com
-
-Join our Trading Telegram group: https://t.me/camarillacruisin
+#### Used libs/frameworks
+- Frontend: React.js, Mobx State Tree, Hooks, Ant Design, AG Grid, Lightweight Chart
+- Backend: TypeScript, Node.js (Express), Websockets, public and private APIs to extract market data
 
 #### Pending
 - Any Stocks private/public API integration (backend)
