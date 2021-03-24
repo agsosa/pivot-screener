@@ -1,7 +1,7 @@
 import React, { createRef, useEffect, useState } from 'react';
 import { Alert } from 'antd';
 import './Header.css';
-import DailyCloseTime from '../DailyCloseTime';
+import DailyCloseTime from '../misc/DailyCloseTime';
 
 export default function LayoutHeader() {
 	const [scriptMounted, setScriptMounted] = useState(false);

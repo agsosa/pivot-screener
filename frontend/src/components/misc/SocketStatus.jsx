@@ -3,7 +3,7 @@ import { Tag } from 'antd';
 import { observer } from 'mobx-react-lite';
 import { CloseCircleOutlined, CheckCircleOutlined } from '@ant-design/icons';
 import { PropTypes } from 'prop-types';
-import { useMst } from '../models/Root';
+import { useMst } from '../../models/Root';
 
 const SocketStatus = ({ className }) => {
 	const { socketConnected } = useMst((store) => ({

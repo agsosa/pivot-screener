@@ -7,10 +7,10 @@ import { observer } from 'mobx-react-lite';
 import React, { useEffect, useState } from 'react';
 import { PropTypes } from 'prop-types';
 import { isAlive } from 'mobx-state-tree';
-import { useMst } from '../../models/Root';
-import { getPairObject } from '../../lib/Helpers';
+import { useMst } from '../../../../models/Root';
+import { getPairObject } from '../../../../lib/Helpers';
 import './Table.css';
-import CamStats from '../pages/cam-screener/CamStats';
+import CamStats from '../CamStats';
 import FiltersMenu from './FiltersMenu';
 
 // TODO: Merge with CPRTable

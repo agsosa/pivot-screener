@@ -4,12 +4,12 @@ import { HashRouter as Router, Route, Switch } from 'react-router-dom';
 import LayoutFooter from './Footer';
 import LayoutHeader from './Header';
 import CalculatorPage from '../pages/CalculatorPage';
-import CamScreenerPage from '../pages/cam-screener/CamScreenerPage';
+import CamScreenerPage from '../pages/screeners/CamScreenerPage';
 import ChartPage from '../pages/chart/ChartPage';
-import CPRScreenerPage from '../pages/cpr-screener/CPRScreenerPage';
+import CPRScreenerPage from '../pages/screeners/CPRScreenerPage';
 import ErrorPage from '../pages/ErrorPage';
 import Sidebar from './Sidebar';
-import './index.css';
+import './MainLayout.css';
 
 const { Content } = Layout;
 

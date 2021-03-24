@@ -4,7 +4,7 @@ import { FallOutlined, RiseOutlined, ExclamationCircleOutlined, ColumnHeightOutl
 import { observer } from 'mobx-react-lite';
 import { PropTypes } from 'prop-types';
 import { useMst } from '../../../models/Root';
-import '../Stats.css';
+import './Stats.css';
 
 const CamStats = observer(({ timeframe, futureMode }) => {
 	const { tickers, toggleCamStatsPanel, camStatsPanelVisible, camStats } = useMst((store) => ({

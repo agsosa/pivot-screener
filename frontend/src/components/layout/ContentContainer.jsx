@@ -1,6 +1,6 @@
 import React from 'react';
 import { PropTypes } from 'prop-types';
-import Breadcrumb from '../Breadcrumb';
+import Breadcrumb from './Breadcrumb';
 import './ContentContainer.css';
 
 const ContentContainer = ({ breadcrumbItems, children }) => (

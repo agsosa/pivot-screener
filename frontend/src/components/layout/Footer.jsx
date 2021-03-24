@@ -1,6 +1,6 @@
 import { Button, Layout, Modal, Space } from 'antd';
 import React from 'react';
-import Contact from '../Contact';
+import Contact from '../misc/Contact';
 import './Footer.css';
 
 const { Footer } = Layout;

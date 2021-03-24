@@ -4,7 +4,7 @@ import { FallOutlined, RiseOutlined, ExpandOutlined, VerticalAlignMiddleOutlined
 import { observer } from 'mobx-react-lite';
 import { PropTypes } from 'prop-types';
 import { useMst } from '../../../models/Root';
-import '../Stats.css';
+import './Stats.css';
 
 const CPRStats = ({ timeframe, futureMode }) => {
 	const { tickers, cprStats, toggleCPRStatsPanel, cprStatsPanelVisible } = useMst((store) => ({

@@ -2,8 +2,8 @@ import React from 'react';
 import { Space, Button, Badge } from 'antd';
 import './Table.css';
 import { PropTypes } from 'prop-types';
-import { capitalizeFirstLetter } from '../../lib/Helpers';
-import SocketStatus from '../SocketStatus';
+import { capitalizeFirstLetter } from '../../../../lib/Helpers';
+import SocketStatus from '../../../misc/SocketStatus';
 
 const FiltersMenu = ({ tickersCount, market, timeframe, onSaveFilters, onLoadFilters, onClearFilters }) => (
 	<>

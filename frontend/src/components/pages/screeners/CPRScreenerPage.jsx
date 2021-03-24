@@ -5,7 +5,7 @@ import { PropTypes } from 'prop-types';
 import { useMst } from '../../../models/Root';
 import { capitalizeFirstLetter } from '../../../lib/Helpers';
 import { isValidMarket } from '../../../lib/Markets';
-import CPRTable from '../../tables/CPRTable';
+import CPRTable from './tables/CPRTable';
 import ContentContainer from '../../layout/ContentContainer';
 
 // TODO: Merge with CamScreenerPage
