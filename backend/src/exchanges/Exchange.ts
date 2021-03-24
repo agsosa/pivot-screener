@@ -17,7 +17,7 @@ export const timeframes: ITimeframe[] = [
 export default abstract class Exchange {
 	initialized: boolean = false;
 	dataManager: DataManager;
-	fetchDataInterval: number = 3; // Seconds between each UpdateLoop()
+	fetchDataInterval: number = 60; // Seconds between each UpdateLoop()
 
 	abstract readonly MARKET: MarketEnum;
 	abstract readonly EXCHANGE: ExchangeEnum;

@@ -25,7 +25,7 @@ function ensureWaitTime() {
 			if (moment() > waitTime) {
 				resolve();
 			}
-			setTimeout(waitCond, 1);
+			setTimeout(waitCond, 5);
 		}
 
 		waitCond();
@@ -73,7 +73,7 @@ export async function fetch(symbol: string, timeframe: ITimeframe): Promise<ICan
 				.catch((error) => {
 					if (error.message.includes('429')) {
 						// Handle rate limit by finnhub
-						waitTime = moment().add(10, 'seconds');
+						waitTime = moment().add(15, 'seconds');
 						fetchUrl();
 					} else reject(error);
 				});
