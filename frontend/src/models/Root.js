@@ -68,7 +68,6 @@ const RootModel = types
 
 		const stopReceivingData = () => {
 			currentQuery = null;
-			self.tickers.clear();
 			socket.close();
 		};
 
