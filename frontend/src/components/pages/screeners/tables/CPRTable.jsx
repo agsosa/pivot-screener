@@ -110,7 +110,6 @@ const CPRTable = ({ screenerType, timeframe, market, futureMode }) => {
 						enableCellChangeFlash: true,
 						editable: false,
 						sortable: true,
-						// flex: width <= 768 ? 0 : 1,
 						filter: true,
 						resizable: true,
 					}}

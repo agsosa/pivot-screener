@@ -1,31 +1,25 @@
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-material.css';
 import { AgGridColumn, AgGridReact } from 'ag-grid-react';
-import { Spin, message } from 'antd';
 import { autorun } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import React, { useEffect, useState } from 'react';
 import { PropTypes } from 'prop-types';
-import { isAlive } from 'mobx-state-tree';
 import { useMst } from '../../../../models/Root';
-import { getPairObject } from '../../../../lib/Helpers';
 import './Table.css';
 import CamStats from '../CamStats';
 import FiltersMenu from './FiltersMenu';
+import { exchangeRenderer, symbolRenderer, CustomLoadingOverlay } from './CommonTableComponents';
+import { distanceCellStyle, distanceGetter, nearestLevelGetter, distanceFormatter, situationCellStyle, situationGetter } from './CamTableComponents';
 
-// TODO: Merge with CPRTable
-
-const CamTable = ({ futureMode, market, timeframe }) => {
+const CamTable = ({ screenerType, futureMode, market, timeframe }) => {
 	const [gridApi, setGridApi] = useState(null);
-	// const [gridColumnApi, setGridColumnApi] = useState(null);
-	const [filtersEnabled, setFiltersEnabled] = useState(false);
 
-	const { tickers, camTableFilters, setCamTableFilters } = useMst((store) => ({
+	const { tickers } = useMst((store) => ({
 		tickers: store.tickers,
-		camTableFilters: store.camTableFilters,
-		setCamTableFilters: store.setCamTableFilters,
 	}));
 
+	// Update grid row data on tickers update
 	useEffect(() => {
 		const dispose = autorun(() => {
 			if (gridApi && tickers && tickers.length > 0) {
@@ -38,6 +32,7 @@ const CamTable = ({ futureMode, market, timeframe }) => {
 		};
 	});
 
+	// Destroy grid on component unmount
 	useEffect(
 		() => () => {
 			if (gridApi) {
@@ -47,17 +42,18 @@ const CamTable = ({ futureMode, market, timeframe }) => {
 		[]
 	);
 
+	// Remove current grid data on market prop change
 	useEffect(() => {
 		if (gridApi) {
 			gridApi.setRowData([]);
 		}
 	}, [market]);
 
+	// Initialize grid state
 	const onGridReady = (params) => {
 		setGridApi(params.api);
-		// setGridColumnApi(params.columnApi);
 
-		if (tickers && tickers.length > 0) {
+		if (tickers) {
 			params.api.setRowData(tickers);
 		} else params.api.showLoadingOverlay();
 	};
@@ -66,153 +62,20 @@ const CamTable = ({ futureMode, market, timeframe }) => {
 		params.api.hideOverlay();
 	};
 
-	function CustomLoadingOverlay() {
-		return <Spin tip='Loading...' />;
-	}
-
-	const situationGetter = (data) => {
-		const cam = data.getCamarilla(timeframe, futureMode);
-
-		if (cam) {
-			return cam.situation;
-		}
-
-		return 'Unknown';
-	};
-
-	const situationCellStyle = (params) => {
-		const extra = { fontSize: '15px' };
-		const defaultStyle = { ...extra, backgroundColor: 'rgb(103, 124, 135, 0.3)' };
-
-		if (params && params.value) {
-			switch (params.value) {
-				case 'Above H4':
-					return { ...extra, backgroundColor: 'rgba(0, 255, 0, 0.3)' };
-				case 'Above H3':
-					return { ...extra, backgroundColor: 'rgba(249, 211, 101, 0.3)' };
-				case 'Below L3':
-					return { ...extra, backgroundColor: 'rgba(249, 211, 101, 0.3)' };
-				case 'Below L4':
-					return { ...extra, backgroundColor: 'rgba(255, 0, 0, 0.3)' };
-				default:
-					return defaultStyle;
-			}
-		}
-
-		return defaultStyle;
-	};
-
-	const distanceCellStyle = (params, level) => {
-		if (params && params.value && level && level.length >= 2) {
-			const extra = { fontSize: '15px' };
-
-			if (level[0] === 'h') return { ...extra, backgroundColor: 'rgba(33, 150, 243, 0.1)' }; // H4,H5,H3,H6
-			if (level[0] === 'l') return { ...extra, backgroundColor: 'rgba(223, 66, 148, 0.1)' }; // L4,L5,L6,L3
-		}
-
-		return undefined;
-	};
-
-	const distanceGetter = (data, levelStr) => {
-		const dist = data.getCamarilla(timeframe, futureMode).distance;
-		if (dist && dist[levelStr]) {
-			return dist[levelStr];
-		}
-		return undefined;
-	};
-
-	const distanceFormatter = (value) => {
-		if (value) return `${value.toFixed(2)}%`;
-		return undefined;
-	};
-
-	const nearestLevelGetter = (data) => {
-		const { nearest } = data.getCamarilla(timeframe, futureMode);
-
-		if (nearest) {
-			return nearest.toUpperCase();
-		}
-
-		return 'Unknown';
-	};
-
-	const symbolRenderer = (params) => {
-		const { data, value } = params;
-
-		const pair = getPairObject(value);
-		const tv = data.tradingViewTicker;
-		return `<a href="https://www.tradingview.com/chart?symbol=${tv}" target="_blank" class="external"><font size=3 color='black'>${pair.primary}</font> <font color='gray'>${pair.secondary}</font></a>`;
-	};
-
-	const exchangeRenderer = (params) => {
-		const { data, value } = params;
-		let url;
-		switch (data.exchange) {
-			case 'Binance Futures':
-				url = `https://www.binance.com/en/futures/${data.symbol}`;
-				break;
-			default:
-				url = '';
-				break;
-		}
-		return url ? `<a href=${url} target="_blank" class="external">${value}</a>` : value;
-	};
-
-	const saveFilters = () => {
-		if (gridApi) {
-			const filterModel = gridApi.getFilterModel();
-			setCamTableFilters(filterModel);
-			message.success('Filters saved');
-		} else {
-			message.success('The table is not ready');
-		}
-	};
-
-	const loadFilters = () => {
-		if (gridApi) {
-			if (camTableFilters) {
-				gridApi.setFilterModel(camTableFilters);
-				message.success('Filters applied');
-			} else {
-				message.error('No saved filters found');
-			}
-		} else {
-			message.success('The table is not ready');
-		}
-	};
-
-	const clearFilters = () => {
-		if (gridApi) {
-			gridApi.setFilterModel(null);
-		} else {
-			message.success('The table is not ready');
-		}
-	};
-
-	const onFilterChanged = () => {
-		if (gridApi) {
-			setFiltersEnabled(gridApi.isAnyFilterPresent());
-		}
-	};
-
 	return (
 		<div>
 			<CamStats timeframe={timeframe} futureMode={futureMode} />
 
-			<FiltersMenu onSaveFilters={saveFilters} onLoadFilters={loadFilters} onClearFilters={clearFilters} timeframe={timeframe} market={market} tickersCount={tickers.length} />
-
-			{filtersEnabled && <p className='using-filters'>* Using Filters *</p>}
+			{gridApi && <FiltersMenu gridApi={gridApi} screenerType={screenerType} timeframe={timeframe} market={market} tickersCount={tickers.length} />}
 
 			<div className='ag-theme-material ag-main'>
 				<AgGridReact
 					onGridReady={onGridReady}
 					animateRows
-					onFilterChanged={onFilterChanged}
 					onFirstDataRendered={onFirstDataRendered}
-					immutableData={(data) => isAlive(data)}
+					immutableData
 					tooltipShowDelay={0}
 					frameworkComponents={{
-						customNoRowsOverlay: CustomLoadingOverlay,
 						customLoadingOverlay: CustomLoadingOverlay,
 					}}
 					defaultColDef={{
@@ -223,27 +86,26 @@ const CamTable = ({ futureMode, market, timeframe }) => {
 						resizable: true,
 					}}
 					loadingOverlayComponent='customLoadingOverlay'
-					noRowsOverlayComponent='customNoRowsOverlay'
-					rowData={null}
+					noRowsOverlayComponent='customLoadingOverlay'
 					enableBrowserTooltips
-					getRowNodeId={(data) => (isAlive(data) ? data.symbol : '')}>
+					getRowNodeId={(data) => data.symbol}>
 					<AgGridColumn width={150} headerName='Symbol' field='symbol' cellRenderer={symbolRenderer} />
 
 					<AgGridColumn width={140} headerName='Exchange' field='exchange' cellRenderer={exchangeRenderer} />
 
 					<AgGridColumn width={120} headerName='Price' field='price' filter='agNumberColumnFilter' />
 
-					<AgGridColumn width={120} headerName='Nearest' valueGetter={(params) => nearestLevelGetter(params.data)} />
+					<AgGridColumn width={120} headerName='Nearest' valueGetter={(params) => nearestLevelGetter(params, timeframe, futureMode)} />
 
-					<AgGridColumn width={160} headerName='Situation' valueGetter={(params) => situationGetter(params.data)} cellStyle={situationCellStyle} />
+					<AgGridColumn width={160} headerName='Situation' valueGetter={(params) => situationGetter(params, timeframe, futureMode)} cellStyle={situationCellStyle} />
 
 					{['h3', 'h4', 'h5', 'h6', 'l3', 'l4', 'l5', 'l6'].map((q) => (
 						<AgGridColumn
 							key={q}
 							width={115}
 							headerName={`${q.toUpperCase()} Distance`}
-							valueFormatter={(params) => distanceFormatter(params.value)}
-							valueGetter={(params) => distanceGetter(params.data, q)}
+							valueFormatter={(params) => distanceFormatter(params)}
+							valueGetter={(params) => distanceGetter(params, q, timeframe, futureMode)}
 							cellStyle={(params) => distanceCellStyle(params, q)}
 							filter='agNumberColumnFilter'
 						/>
@@ -258,6 +120,7 @@ CamTable.propTypes = {
 	futureMode: PropTypes.bool.isRequired,
 	market: PropTypes.string.isRequired,
 	timeframe: PropTypes.string.isRequired,
+	screenerType: PropTypes.string.isRequired,
 };
 
 export default observer(CamTable);
