@@ -56,22 +56,22 @@ const ScreenerPage = ({ match }) => {
 				<>
 					<Tabs defaultActiveKey='1'>
 						<TabPane tab='Daily' key='1'>
-							<TableComponent timeframe='daily' market={market} futureMode={false} />
+							<TableComponent screenerType={screenerType} timeframe='daily' market={market} futureMode={false} />
 						</TabPane>
 						<TabPane tab='Weekly' key='2'>
-							<TableComponent timeframe='weekly' market={market} futureMode={false} />
+							<TableComponent screenerType={screenerType} timeframe='weekly' market={market} futureMode={false} />
 						</TabPane>
 						<TabPane tab='Monthly' key='3'>
-							<TableComponent timeframe='monthly' market={market} futureMode={false} />
+							<TableComponent screenerType={screenerType} timeframe='monthly' market={market} futureMode={false} />
 						</TabPane>
 						<TabPane tab='Tomorrow' key='4'>
-							<TableComponent timeframe='daily' market={market} futureMode />
+							<TableComponent screenerType={screenerType} timeframe='daily' market={market} futureMode />
 						</TabPane>
 						<TabPane tab='Next Week' key='5'>
-							<TableComponent timeframe='weekly' market={market} futureMode />
+							<TableComponent screenerType={screenerType} timeframe='weekly' market={market} futureMode />
 						</TabPane>
 						<TabPane tab='Next Month' key='6'>
-							<TableComponent timeframe='monthly' market={market} futureMode />
+							<TableComponent screenerType={screenerType} timeframe='monthly' market={market} futureMode />
 						</TabPane>
 					</Tabs>
 				</>
