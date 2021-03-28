@@ -27,7 +27,7 @@ import {
 
 // TODO: Implementar tooltip en las distancias de pivote para mostrar precio del pivote
 
-const CPRTable = ({ timeframe, market, futureMode }) => {
+const CPRTable = ({ screenerType, timeframe, market, futureMode }) => {
 	const [gridApi, setGridApi] = useState(null);
 
 	const { tickers } = useMst((store) => ({
@@ -94,7 +94,7 @@ const CPRTable = ({ timeframe, market, futureMode }) => {
 	return (
 		<div>
 			<CPRStats timeframe={timeframe} futureMode={futureMode} />
-			<FiltersMenu gridApi={gridApi} timeframe={timeframe} market={market} tickersCount={tickers.length} />
+			{gridApi && <FiltersMenu screenerType={screenerType} gridApi={gridApi} timeframe={timeframe} market={market} tickersCount={tickers.length} />}
 
 			<div className='ag-theme-material ag-main'>
 				<AgGridReact
@@ -160,6 +160,7 @@ CPRTable.propTypes = {
 	futureMode: PropTypes.bool.isRequired,
 	market: PropTypes.string.isRequired,
 	timeframe: PropTypes.string.isRequired,
+	screenerType: PropTypes.string.isRequired,
 };
 
 export default observer(CPRTable);
