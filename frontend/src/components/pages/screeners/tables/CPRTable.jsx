@@ -29,16 +29,20 @@ import {
 
 const CPRTable = ({ screenerType, timeframe, market, futureMode }) => {
 	const [gridApi, setGridApi] = useState(null);
+	const [loading, setLoading] = useState(false);
 
 	const { tickers } = useMst((store) => ({
 		tickers: store.tickers,
 	}));
 
+	const isValidTickers = () => tickers && tickers.length > 0 && tickers[0].market.toLowerCase() === market;
+
 	// Update grid row data on tickers update
 	useEffect(() => {
 		const dispose = autorun(() => {
-			if (gridApi && tickers && tickers.length > 0) {
+			if (gridApi && isValidTickers()) {
 				gridApi.setRowData(tickers);
+				setLoading(false);
 			}
 		});
 
@@ -60,6 +64,7 @@ const CPRTable = ({ screenerType, timeframe, market, futureMode }) => {
 	// Remove current grid data on market prop change
 	useEffect(() => {
 		if (gridApi) {
+			setLoading(true);
 			gridApi.setRowData([]);
 		}
 	}, [market]);
@@ -68,9 +73,11 @@ const CPRTable = ({ screenerType, timeframe, market, futureMode }) => {
 	const onGridReady = (params) => {
 		setGridApi(params.api);
 
-		if (tickers) {
+		if (isValidTickers()) {
 			params.api.setRowData(tickers);
-		} else params.api.showLoadingOverlay();
+		} else {
+			params.api.showLoadingOverlay();
+		}
 	};
 
 	const onFirstDataRendered = (params) => {
@@ -93,7 +100,8 @@ const CPRTable = ({ screenerType, timeframe, market, futureMode }) => {
 
 	return (
 		<div>
-			<CPRStats timeframe={timeframe} futureMode={futureMode} />
+			{!gridApi || loading ? <Skeleton /> : <CPRStats timeframe={timeframe} futureMode={futureMode} />}
+
 			{gridApi && <FiltersMenu screenerType={screenerType} gridApi={gridApi} timeframe={timeframe} market={market} tickersCount={tickers.length} />}
 
 			<div className='ag-theme-material ag-main'>
@@ -148,9 +156,10 @@ const CPRTable = ({ screenerType, timeframe, market, futureMode }) => {
 
 					<AgGridColumn width={150} headerName='CPR Width' cellRenderer={cprWidthRenderer} valueGetter={(params) => cprWidthGetter(params, timeframe, futureMode)} />
 				</AgGridReact>
+				)
 			</div>
 
-			{!tickers || tickers.length === 0 ? <Skeleton /> : <InfoRenderer />}
+			{!gridApi || loading ? <Skeleton /> : <InfoRenderer />}
 		</div>
 	);
 };

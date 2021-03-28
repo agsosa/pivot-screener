@@ -5,6 +5,7 @@ import { autorun } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import React, { useEffect, useState } from 'react';
 import { PropTypes } from 'prop-types';
+import { Skeleton } from 'antd';
 import { useMst } from '../../../../models/Root';
 import './Table.css';
 import CamStats from '../CamStats';
@@ -14,16 +15,20 @@ import { distanceCellStyle, distanceGetter, nearestLevelGetter, distanceFormatte
 
 const CamTable = ({ screenerType, futureMode, market, timeframe }) => {
 	const [gridApi, setGridApi] = useState(null);
+	const [loading, setLoading] = useState(false);
 
 	const { tickers } = useMst((store) => ({
 		tickers: store.tickers,
 	}));
 
+	const isValidTickers = () => tickers && tickers.length > 0 && tickers[0].market.toLowerCase() === market;
+
 	// Update grid row data on tickers update
 	useEffect(() => {
 		const dispose = autorun(() => {
-			if (gridApi && tickers && tickers.length > 0) {
+			if (gridApi && isValidTickers()) {
 				gridApi.setRowData(tickers);
+				setLoading(false);
 			}
 		});
 
@@ -45,6 +50,7 @@ const CamTable = ({ screenerType, futureMode, market, timeframe }) => {
 	// Remove current grid data on market prop change
 	useEffect(() => {
 		if (gridApi) {
+			setLoading(true);
 			gridApi.setRowData([]);
 		}
 	}, [market]);
@@ -53,7 +59,7 @@ const CamTable = ({ screenerType, futureMode, market, timeframe }) => {
 	const onGridReady = (params) => {
 		setGridApi(params.api);
 
-		if (tickers) {
+		if (isValidTickers()) {
 			params.api.setRowData(tickers);
 		} else params.api.showLoadingOverlay();
 	};
@@ -64,8 +70,7 @@ const CamTable = ({ screenerType, futureMode, market, timeframe }) => {
 
 	return (
 		<div>
-			<CamStats timeframe={timeframe} futureMode={futureMode} />
-
+			{!gridApi || loading ? <Skeleton /> : <CamStats timeframe={timeframe} futureMode={futureMode} />}
 			{gridApi && <FiltersMenu gridApi={gridApi} screenerType={screenerType} timeframe={timeframe} market={market} tickersCount={tickers.length} />}
 
 			<div className='ag-theme-material ag-main'>
