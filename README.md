@@ -7,8 +7,18 @@ Cryptocurrency, Forex, Indices, Commodities, Stocks supported.
 #### Live: https://pivotscreener.com
 
 #### Used libs/frameworks
-- **Frontend:** React.js, Mobx State Tree, Hooks, Ant Design, AG Grid, Lightweight Chart
-- **Backend:** TypeScript, Node (Express), Websockets, public and private APIs to extract market data
+- **Frontend:** 
+  - React
+  - Mobx State Tree
+  - Hooks
+  - Ant Design
+  - AG Grid
+  - Lightweight Chart
+- **Backend:** 
+  - TypeScript
+  - Node (Express)
+  - Websockets
+  - Public and private APIs to extract market data
 
 #### Pending
 - Any Stocks private/public API integration (backend)
