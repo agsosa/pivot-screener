@@ -1,0 +1,12 @@
+.loading-container {
+  text-align: center;
+  margin-top: 15px;
+}
+
+.space {
+  padding: 20px;
+}
+
+.autocomplete {
+  width: 200px;
+}

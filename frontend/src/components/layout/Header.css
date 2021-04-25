@@ -1,40 +1,40 @@
 .header-title {
-	text-align: center;
-	font-family: monospace;
-	font-weight: bold;
-	color: white;
-	background-color: #001529;
-	background-image: url('../../img/headerbg.png');
-	background-size: cover;
-	background-position-y: center;
-	background-position-x: center;
-	background-repeat: no-repeat;
-	max-height: auto;
+  text-align: center;
+  font-family: monospace;
+  font-weight: bold;
+  color: white;
+  background-color: #001529;
+  background-image: url('../../img/headerbg.png');
+  background-size: cover;
+  background-position-y: center;
+  background-position-x: center;
+  background-repeat: no-repeat;
+  max-height: auto;
 }
 
 .widget_container {
-	size: auto;
+  size: auto;
 }
 
 .left-col {
-	margin-left: 1%;
-	display: flex;
-	justify-content: flex-start;
+  margin-left: 1%;
+  display: flex;
+  justify-content: flex-start;
 }
 
 .center-col {
-	top: -10px;
-	display: flex;
-	justify-content: center;
+  top: -10px;
+  display: flex;
+  justify-content: center;
 }
 
 .promoContainer {
-	align-self: center;
-	padding-top: 15px;
-	padding-bottom: 5px;
+  align-self: center;
+  padding-top: 15px;
+  padding-bottom: 5px;
 }
 
 .header-link {
-	font-size: 32px;
-	color: white;
+  font-size: 32px;
+  color: white;
 }

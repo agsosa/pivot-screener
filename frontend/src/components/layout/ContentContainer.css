@@ -1,10 +1,10 @@
 .content-container {
-	padding: 30px;
-	min-height: 700px;
-	margin-top: 10px;
-	text-align: center;
+  padding: 30px;
+  min-height: 700px;
+  margin-top: 10px;
+  text-align: center;
 }
 
 .ant-layout-content {
-	flex: none;
+  flex: none;
 }
