@@ -1,12 +1,12 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Spin, Button, Space, message, AutoComplete } from 'antd';
-import Chart from 'pages/chart/Chart';
+import Chart from 'components/chart/Chart';
 import { useMst } from 'models/Root';
 import { apiFetchBinanceFuturesList, apiFetchBinanceFuturesCandles } from 'lib/API';
 import ContentContainer from 'components/layout/ContentContainer';
 import './ChartPage.css';
-import ChartOptionsMenu from 'pages/chart/ChartOptionsMenu';
+import ChartOptionsMenu from 'components/chart/ChartOptionsMenu';
 import { useIsMounted } from 'lib/Helpers';
 
 const FETCH_INTERVAL = 1000 * 15;

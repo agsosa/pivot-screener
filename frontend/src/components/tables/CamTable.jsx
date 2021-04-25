@@ -8,9 +8,9 @@ import { PropTypes } from 'prop-types';
 import { Skeleton } from 'antd';
 import { useMst } from 'models/Root';
 import './Table.css';
-import CamStats from 'pages/screeners/CamStats';
-import FiltersMenu from 'pages/screeners/tables/FiltersMenu';
-import { exchangeRenderer, symbolRenderer, CustomLoadingOverlay } from 'pages/screeners/tables/CommonTableComponents';
+import CamStats from 'components/misc/CamStats';
+import FiltersMenu from 'components/tables/FiltersMenu';
+import { exchangeRenderer, symbolRenderer, CustomLoadingOverlay } from 'components/tables/CommonTableComponents';
 import {
   distanceCellStyle,
   distanceGetter,
@@ -18,7 +18,7 @@ import {
   distanceFormatter,
   situationCellStyle,
   situationGetter,
-} from 'pages/screeners/tables/CamTableComponents';
+} from 'components/tables/CamTableComponents';
 
 const CamTable = ({ screenerType, futureMode, market, timeframe }) => {
   const [gridApi, setGridApi] = useState(null);

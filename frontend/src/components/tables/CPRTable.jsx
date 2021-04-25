@@ -8,9 +8,9 @@ import React, { useEffect, useState } from 'react';
 import { PropTypes } from 'prop-types';
 import { useMst } from 'models/Root';
 import './Table.css';
-import CPRStats from 'pages/screeners/CPRStats';
-import FiltersMenu from 'pages/screeners/tables/FiltersMenu';
-import { exchangeRenderer, symbolRenderer, CustomLoadingOverlay } from 'pages/screeners/tables/CommonTableComponents';
+import CPRStats from 'components/misc/CPRStats';
+import FiltersMenu from 'components/tables/FiltersMenu';
+import { exchangeRenderer, symbolRenderer, CustomLoadingOverlay } from 'components/tables/CommonTableComponents';
 import {
   situationCellStyle,
   situationGetter,
@@ -23,7 +23,7 @@ import {
   cprWidthRenderer,
   distanceFormatter,
   distanceGetter,
-} from 'pages/screeners/tables/CPRTableComponents';
+} from 'components/tables/CPRTableComponents';
 
 // TODO: Implementar tooltip en las distancias de pivote para mostrar precio del pivote
 

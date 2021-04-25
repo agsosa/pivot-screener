@@ -5,9 +5,9 @@ import { PropTypes } from 'prop-types';
 import { useMst } from 'models/Root';
 import { capitalizeFirstLetter } from 'lib/Helpers';
 import { isValidMarket } from 'lib/Markets';
-import CamTable from 'pages/screeners/tables/CamTable';
+import CamTable from 'components/tables/CamTable';
 import ContentContainer from 'components/layout/ContentContainer';
-import CPRTable from 'pages/screeners/tables/CPRTable';
+import CPRTable from 'components/tables/CPRTable';
 
 const ScreenerPage = ({ match }) => {
   const { market, screenerType } = match.params;
