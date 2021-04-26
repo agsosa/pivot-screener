@@ -17,6 +17,7 @@ import ShowChartIcon from '@material-ui/icons/ShowChart';
 import AppsIcon from '@material-ui/icons/Apps';
 import DvrIcon from '@material-ui/icons/Dvr';
 import Typography from '@material-ui/core/Typography';
+import { headerSafePadding } from 'material/components/layout/Header';
 
 export const menuWidth = 240;
 
@@ -31,14 +32,13 @@ const useStyles = makeStyles((theme) => ({
   },
   // necessary for content to be below app bar theme.mixins.toolbar
   toolbar: {
-    paddingTop: '95px',
+    paddingTop: headerSafePadding,
   },
   drawerPaper: {
     width: menuWidth,
   },
   title: {
     textAlign: 'center',
-    padding: '5px',
   },
   content: {
     flexGrow: 1,

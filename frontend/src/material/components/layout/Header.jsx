@@ -9,6 +9,8 @@ import TradingViewPrices from 'material/components/misc/TradingViewPrices';
 import HeaderBG from 'img/headerbg.png';
 import Hidden from '@material-ui/core/Hidden';
 
+export const headerSafePadding = 100;
+
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -46,7 +48,7 @@ export default function Header() {
   return (
     <div className={classes.root}>
       {/* App bar */}
-      <AppBar position='static' className={classes.appBar}>
+      <AppBar position='fixed' className={classes.appBar}>
         <TradingViewPrices responsive />
         <Hidden mdUp>
           <Toolbar className={classes.toolbar}>

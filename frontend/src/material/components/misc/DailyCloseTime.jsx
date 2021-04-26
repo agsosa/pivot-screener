@@ -10,6 +10,9 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     textAlign: 'center',
   },
+  grid: {
+    justifyContent: 'center',
+  },
 }));
 
 const getDailyClose = (exchange) => {
@@ -46,7 +49,7 @@ export default function DailyCloseTime() {
 
   return (
     <div className={classes.root}>
-      <Grid container spacing={5}>
+      <Grid container spacing={4} className={classes.grid}>
         <Grid item>
           Binance Daily Close
           <Grid item>{binanceTimeleft.toString()}</Grid>

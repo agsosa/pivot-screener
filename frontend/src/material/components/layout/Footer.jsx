@@ -8,8 +8,6 @@ const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
     [theme.breakpoints.up('md')]: {
       paddingLeft: menuWidth,
     },
@@ -25,6 +23,8 @@ const useStyles = makeStyles((theme) => ({
   textContainer: {
     display: 'flex',
     flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
     color: theme.palette.text.secondary,
   },
 }));

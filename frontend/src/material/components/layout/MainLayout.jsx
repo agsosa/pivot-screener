@@ -1,7 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import MaterialDrawer, { menuWidth } from 'material/components/layout/Drawer';
-import Header from 'material/components/layout/Header';
+import Header, { headerSafePadding } from 'material/components/layout/Header';
 import Footer from 'material/components/layout/Footer';
 import Paper from '@material-ui/core/Paper';
 import Breadcrumbs from 'material/components/layout/Breadcrumbs';
@@ -12,25 +12,26 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
   },
-  alert: {
-    marginBottom: theme.spacing(3),
-    flex: 1,
-    flexDirection: 'row',
-    alignSelf: 'center',
-    display: 'inline-flex',
-  },
   content: {
+    paddingTop: headerSafePadding,
     display: 'flex',
     flexDirection: 'column',
     justifyItems: 'center',
-    marginTop: theme.spacing(3),
     height: '100%',
     [theme.breakpoints.up('md')]: {
       paddingLeft: menuWidth,
     },
+    [theme.breakpoints.down('sm')]: {
+      marginTop: '-5px',
+    },
+    [theme.breakpoints.down('xs')]: {
+      marginTop: '-15px',
+    },
   },
   paperContent: {
     display: 'flex',
+    alignItems: 'center',
+    minHeight: '500px',
     flexDirection: 'column',
     marginTop: theme.spacing(3),
     gap: theme.spacing(3),
