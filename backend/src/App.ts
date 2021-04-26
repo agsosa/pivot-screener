@@ -1,15 +1,16 @@
+import 'module-alias/register';
 require('newrelic');
 import express from 'express';
 import * as winston from 'winston';
 import * as expressWinston from 'express-winston';
 import cors from 'cors';
-import CommonRoutesConfig from './api/common.routes.config';
-import TickersRoutes from './api/tickers.routes.config';
+import CommonRoutesConfig from 'api/common.routes.config';
+import TickersRoutes from 'api/tickers.routes.config';
 import helmet from 'helmet';
 import compression from 'compression';
-import DataManager from './data/DataManager';
-import Sockets from './api/Sockets';
-import { InitializeExchanges } from './exchanges/ExchangesManager';
+import DataManager from 'data/DataManager';
+import Sockets from 'api/Sockets';
+import { InitializeExchanges } from 'exchanges/ExchangesManager';
 
 const app: express.Application = express();
 //const server: http.Server = http.createServer(app); // Using server returned from Sockets.start()
@@ -23,9 +24,9 @@ const routes: CommonRoutesConfig[] = [];
 app.use(helmet());
 app.use(compression());
 app.use(
-	cors({
-		origin: ['https://pivotscreener.com', 'https://pivotscreener.netlify.app', 'http://localhost:3000'],
-	})
+  cors({
+    origin: ['https://pivotscreener.com', 'https://pivotscreener.netlify.app', 'http://localhost:3000'],
+  })
 );
 
 // Initialize modules
@@ -36,20 +37,20 @@ const server = sockets.start();
 routes.push(new TickersRoutes(app, dataManager));
 
 app.use(
-	expressWinston.errorLogger({
-		transports: [new winston.transports.Console()],
-		format: winston.format.combine(winston.format.colorize(), winston.format.json()),
-	})
+  expressWinston.errorLogger({
+    transports: [new winston.transports.Console()],
+    format: winston.format.combine(winston.format.colorize(), winston.format.json()),
+  })
 );
 
 app.get('/', (req: express.Request, res: express.Response) => {
-	res.status(200).send(`OK`);
+  res.status(200).send(`OK`);
 });
 
 server.listen(port, () => {
-	console.log(`Server running at port ${port}`);
+  console.log(`Server running at port ${port}`);
 
-	routes.forEach((route: CommonRoutesConfig) => {
-		console.log(`Routes configured for ${route.getName()}`);
-	});
+  routes.forEach((route: CommonRoutesConfig) => {
+    console.log(`Routes configured for ${route.getName()}`);
+  });
 });

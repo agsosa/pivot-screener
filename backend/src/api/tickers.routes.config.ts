@@ -1,14 +1,14 @@
-import CommonRoutesConfig from './common.routes.config';
+import CommonRoutesConfig from 'api/common.routes.config';
 import express from 'express';
-import DataManager from '../data/DataManager';
+import DataManager from 'data/DataManager';
 
 export default class TickersRoutes extends CommonRoutesConfig {
-	constructor(app: express.Application, dataManager: DataManager) {
-		super(app, dataManager, 'TickersRoutes');
-	}
+  constructor(app: express.Application, dataManager: DataManager) {
+    super(app, dataManager, 'TickersRoutes');
+  }
 
-	configureRoutes() {
-		/*	this.app.route(`/tickers/symbols`).get((req: express.Request, res: express.Response, next: express.NextFunction) => {
+  configureRoutes() {
+    /*	this.app.route(`/tickers/symbols`).get((req: express.Request, res: express.Response, next: express.NextFunction) => {
 			try {
 				const { markets } = req.query;
 
@@ -20,6 +20,6 @@ export default class TickersRoutes extends CommonRoutesConfig {
 			}
 		});*/
 
-		return this.app;
-	}
+    return this.app;
+  }
 }
