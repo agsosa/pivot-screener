@@ -1,11 +1,9 @@
 import 'module-alias/register';
-require('newrelic');
+import 'newrelic';
 import express from 'express';
 import * as winston from 'winston';
 import * as expressWinston from 'express-winston';
 import cors from 'cors';
-import CommonRoutesConfig from 'api/common.routes.config';
-import TickersRoutes from 'api/tickers.routes.config';
 import helmet from 'helmet';
 import compression from 'compression';
 import DataManager from 'data/DataManager';
@@ -13,12 +11,9 @@ import Sockets from 'api/Sockets';
 import { InitializeExchanges } from 'exchanges/ExchangesManager';
 
 const app: express.Application = express();
-//const server: http.Server = http.createServer(app); // Using server returned from Sockets.start()
+// const server: http.Server = http.createServer(app); // Using server returned from Sockets.start()
 let port: any = process.env.PORT;
 if (!port) port = 4001;
-const routes: CommonRoutesConfig[] = [];
-
-// TODO: Add rate limiter
 
 // Express middlewares
 app.use(helmet());
@@ -34,7 +29,6 @@ const dataManager: DataManager = new DataManager();
 InitializeExchanges(dataManager);
 const sockets: Sockets = new Sockets(app, dataManager);
 const server = sockets.start();
-routes.push(new TickersRoutes(app, dataManager));
 
 app.use(
   expressWinston.errorLogger({
@@ -49,8 +43,4 @@ app.get('/', (req: express.Request, res: express.Response) => {
 
 server.listen(port, () => {
   console.log(`Server running at port ${port}`);
-
-  routes.forEach((route: CommonRoutesConfig) => {
-    console.log(`Routes configured for ${route.getName()}`);
-  });
 });
