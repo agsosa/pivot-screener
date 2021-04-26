@@ -1,6 +1,6 @@
 import React from 'react';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
-import Menu, { menuWidth } from 'material/components/layout/Menu';
+import { makeStyles } from '@material-ui/core/styles';
+import MaterialDrawer, { menuWidth } from 'material/components/layout/Drawer';
 import Header from 'material/components/layout/Header';
 import Footer from 'material/components/layout/Footer';
 import Paper from '@material-ui/core/Paper';
@@ -43,7 +43,7 @@ function MainLayout({ Content }) {
   return (
     <div className={classes.root}>
       <Header />
-      <Menu />
+      <MaterialDrawer />
       <main className={classes.content}>
         <TelegramGroupPromo />
         {/* Content container */}
