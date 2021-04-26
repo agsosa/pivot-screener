@@ -16,6 +16,7 @@ import TocIcon from '@material-ui/icons/Toc';
 import ShowChartIcon from '@material-ui/icons/ShowChart';
 import AppsIcon from '@material-ui/icons/Apps';
 import DvrIcon from '@material-ui/icons/Dvr';
+import Typography from '@material-ui/core/Typography';
 
 export const menuWidth = 240;
 
@@ -30,10 +31,14 @@ const useStyles = makeStyles((theme) => ({
   },
   // necessary for content to be below app bar theme.mixins.toolbar
   toolbar: {
-    paddingTop: '150px',
+    paddingTop: '95px',
   },
   drawerPaper: {
     width: menuWidth,
+  },
+  title: {
+    textAlign: 'center',
+    padding: '5px',
   },
   content: {
     flexGrow: 1,
@@ -53,6 +58,11 @@ function Drawer() {
   const drawer = (
     <div>
       <div className={classes.toolbar} />
+      <Hidden smDown>
+        <Typography variant='h6' className={classes.title}>
+          Pivot Screener
+        </Typography>
+      </Hidden>
       <List>
         <ListItem button onClick={() => console.log('home')}>
           <ListItemIcon>{<HomeIcon />}</ListItemIcon>
@@ -112,7 +122,7 @@ function Drawer() {
           {drawer}
         </MaterialDrawer>
       </Hidden>
-      <Hidden xsDown implementation='css'>
+      <Hidden smDown implementation='css'>
         <MaterialDrawer
           classes={{
             paper: classes.drawerPaper,

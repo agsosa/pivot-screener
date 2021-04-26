@@ -7,6 +7,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import MenuIcon from '@material-ui/icons/Menu';
 import TradingViewPrices from 'material/components/misc/TradingViewPrices';
 import HeaderBG from 'img/headerbg.png';
+import Hidden from '@material-ui/core/Hidden';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -25,19 +26,18 @@ const useStyles = makeStyles((theme) => ({
   menuButton: {
     position: 'absolute',
     left: theme.spacing(3),
-    [theme.breakpoints.up('sm')]: {
+    [theme.breakpoints.up('md')]: {
       display: 'none',
     },
   },
   toolbar: {
     display: 'flex',
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       flexDirection: 'column',
       justifyContent: 'center',
       alignItems: 'center',
     },
   },
-  title: { [theme.breakpoints.up('sm')]: { marginLeft: '10px' } },
 }));
 
 export default function Header() {
@@ -47,16 +47,15 @@ export default function Header() {
     <div className={classes.root}>
       {/* App bar */}
       <AppBar position='static' className={classes.appBar}>
-        {/* TV prices widget */}
         <TradingViewPrices responsive />
-        <Toolbar className={classes.toolbar}>
-          <IconButton edge='start' className={classes.menuButton} color='inherit' aria-label='menu'>
-            <MenuIcon />
-          </IconButton>
-          <Typography variant='h5' className={classes.title}>
-            Pivot Screener
-          </Typography>
-        </Toolbar>
+        <Hidden mdUp>
+          <Toolbar className={classes.toolbar}>
+            <IconButton edge='start' className={classes.menuButton} color='inherit' aria-label='menu'>
+              <MenuIcon />
+            </IconButton>
+            <Typography variant='h5'>Pivot Screener</Typography>
+          </Toolbar>
+        </Hidden>
       </AppBar>
     </div>
   );

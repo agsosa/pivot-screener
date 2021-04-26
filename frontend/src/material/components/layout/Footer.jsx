@@ -10,7 +10,9 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingLeft: menuWidth,
+    [theme.breakpoints.up('md')]: {
+      paddingLeft: menuWidth,
+    },
   },
   content: {
     display: 'flex',

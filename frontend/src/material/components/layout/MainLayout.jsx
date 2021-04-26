@@ -23,9 +23,11 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     justifyItems: 'center',
-    paddingLeft: menuWidth,
     marginTop: theme.spacing(3),
     height: '100%',
+    [theme.breakpoints.up('md')]: {
+      paddingLeft: menuWidth,
+    },
   },
   paperContent: {
     display: 'flex',

@@ -79,7 +79,7 @@ function TVWidget() {
 export default function TradingViewPrices({ responsive }) {
   if (responsive)
     return (
-      <Hidden xsDown>
+      <Hidden smDown>
         <TVWidget />
       </Hidden>
     );
