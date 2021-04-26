@@ -2,12 +2,14 @@ import React from 'react';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import { menuWidth } from 'material/components/layout/Menu';
+import DailyCloseTime from 'material/components/misc/DailyCloseTime';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+    justifyContent: 'center',
     paddingLeft: menuWidth,
   },
   content: {
@@ -17,6 +19,11 @@ const useStyles = makeStyles((theme) => ({
     height: '100%',
     padding: theme.spacing(3),
     textAlign: 'center',
+  },
+  textContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    color: theme.palette.text.secondary,
   },
 }));
 
@@ -28,16 +35,19 @@ function Footer() {
   return (
     <div className={classes.root}>
       <main className={classes.content}>
-        <Typography variant='overline'>Disclaimer</Typography>
+        <div className={classes.textContainer}>
+          <DailyCloseTime />
+          <Typography variant='overline'>Disclaimer</Typography>
 
-        <Typography variant='caption'>
-          The information provided on this website does not constitute Investment or trading advice. The sole purpose of
-          this website is informational and/or Educational. <br />
-          PivotScreener.com is not responsible for any misuse of the information presented on this website.
-          <br />
-          <br />
-          Pivot Screener © {year}
-        </Typography>
+          <Typography variant='caption'>
+            The information provided on this website does not constitute Investment or trading advice. The sole purpose
+            of this website is informational and/or Educational. <br />
+            PivotScreener.com is not responsible for any misuse of the information presented on this website.
+            <br />
+            <br />
+            Pivot Screener © {year}
+          </Typography>
+        </div>
       </main>
     </div>
   );
