@@ -4,7 +4,6 @@ import Hidden from '@material-ui/core/Hidden';
 
 const useStyles = makeStyles((theme) => ({
   widgetContainer: {
-    backgroundColor: '#1E222D',
     size: 'auto',
   },
 }));
@@ -45,7 +44,7 @@ const symbols = [
 const widgetOptions = {
   symbols,
   colorTheme: 'dark',
-  isTransparent: false,
+  isTransparent: true,
   showSymbolLogo: true,
   locale: 'en',
 };
