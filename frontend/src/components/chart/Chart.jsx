@@ -136,7 +136,7 @@ const Chart = ({ containerRef }) => {
             text: `${data.symbol} (1h)`,
             fontSize: 38,
             horzAlign: 'right',
-            vertAlign: 'bottom',
+            vertAlign: 'top',
           },
         });
 
