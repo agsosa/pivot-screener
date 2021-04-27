@@ -3,11 +3,12 @@ import React, { useRef, useEffect } from 'react';
 import { reaction } from 'mobx';
 import { useMst } from 'models/Root';
 import { percentage } from 'lib/Helpers';
+import { PropTypes } from 'prop-types';
 
 const marginPctHeight = 0;
 const marginPctWidth = 0;
 
-const Chart = () => {
+const Chart = ({ containerRef }) => {
   const chart = useRef(null);
   const chartRef = useRef(null);
   const series = useRef(null);
@@ -59,8 +60,10 @@ const Chart = () => {
         const color = t[1];
         const showCPR = t[2];
         const showCam = t[3];
+
         // CPR
         const cpr = data.getCPR(label, chartOptions.futureMode);
+
         if (cpr && showCPR) {
           const p = series.current.createPriceLine({
             price: cpr.p,
@@ -70,6 +73,7 @@ const Chart = () => {
             axisLabelVisible: true,
             title: `${label} P`,
           });
+
           const bc = series.current.createPriceLine({
             price: cpr.bc,
             color,
@@ -78,6 +82,7 @@ const Chart = () => {
             axisLabelVisible: true,
             title: `${label} BC`,
           });
+
           const tc = series.current.createPriceLine({
             price: cpr.tc,
             color,
@@ -86,14 +91,19 @@ const Chart = () => {
             axisLabelVisible: true,
             title: `${label} TC`,
           });
+
           drawings.current[`${label}CPR`] = [p, bc, tc];
         }
+
         // Camarilla
         const cam = data.getCamarilla(label, chartOptions.futureMode);
+
         if (cam && showCam) {
           const levels = ['h4', 'h3', 'h5', 'h6', 'l4', 'l3', 'l5', 'l6'];
+
           for (let i = 0; i < levels.length; i += 1) {
             const key = levels[i];
+
             const obj = series.current.createPriceLine({
               price: cam[key],
               color,
@@ -102,6 +112,7 @@ const Chart = () => {
               axisLabelVisible: true,
               title: `${label} ${key.toUpperCase()}`,
             });
+
             drawings.current[`${label}Cam`].push(obj);
           }
         }
@@ -161,7 +172,7 @@ const Chart = () => {
 
   // Create lightweight-chart
   function initializeChart() {
-    const box = document.getElementsByClassName('site-layout-background')[0];
+    const box = containerRef.current; // document.getElementsByClassName('site-layout-background')[0];
     const width = box.offsetWidth - percentage(marginPctWidth, box.offsetWidth);
     const height = box.offsetHeight - percentage(marginPctHeight, box.offsetHeight);
 
@@ -224,7 +235,7 @@ const Chart = () => {
   useEffect(() => {
     initializeChart();
 
-    // Mobx
+    // Mobx reactions (chartOptions, tickers)
     const dispose = reaction(
       () => Object.keys(chartOptions).map((q) => chartOptions[q]),
       () => {
@@ -249,6 +260,11 @@ const Chart = () => {
   }, []);
 
   return <div ref={chartRef} />;
+};
+
+Chart.propTypes = {
+  containerRef: PropTypes.oneOfType([PropTypes.func, PropTypes.shape({ current: PropTypes.instanceOf(Element) })])
+    .isRequired,
 };
 
 export default Chart;
