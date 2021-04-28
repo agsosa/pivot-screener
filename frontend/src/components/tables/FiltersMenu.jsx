@@ -1,12 +1,41 @@
 import * as React from 'react';
-import { Space, Button, Badge, message } from 'antd';
+import { message } from 'antd';
 import './Table.css';
 import { PropTypes } from 'prop-types';
 import { capitalizeFirstLetter } from 'lib/Helpers';
 import SocketStatus from 'components/misc/SocketStatus';
 import { useMst } from 'models/Root';
+import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
+import { makeStyles } from '@material-ui/core/styles';
+
+const useStyles = makeStyles((theme) => ({
+  btnContainer: {
+    display: 'flex',
+    gap: theme.spacing(1),
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: theme.spacing(2),
+    padding: theme.spacing(1),
+  },
+  titleContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: theme.spacing(1),
+    padding: theme.spacing(1),
+  },
+  tickersCount: {
+    backgroundColor: theme.palette.primary.main,
+    color: 'white',
+    borderRadius: '30%',
+    paddingLeft: 5,
+    paddingRight: 5,
+  },
+}));
 
 const FiltersMenu = ({ screenerType, gridApi, tickersCount, market, timeframe }) => {
+  const classes = useStyles();
   const [filtersEnabled, setFiltersEnabled] = React.useState(false);
 
   const { camTableFilters, cprTableFilters, setCprTableFilters, setCamTableFilters } = useMst((store) => ({
@@ -78,19 +107,32 @@ const FiltersMenu = ({ screenerType, gridApi, tickersCount, market, timeframe })
 
   return (
     <div>
-      <Space>
-        <h1>
+      <div className={classes.titleContainer}>
+        <Typography variant='h5'>
           {capitalizeFirstLetter(market)} / {capitalizeFirstLetter(timeframe)}
-        </h1>
-        <Badge className='badge' count={tickersCount} />
+        </Typography>
+        {tickersCount > 0 && (
+          <Typography variant='caption' className={classes.tickersCount}>
+            {tickersCount}
+          </Typography>
+        )}
         <SocketStatus className='socket-status' />
-      </Space>
-      <p className='filter-hint'>You can filter, short and move any column. The data is updated automatically.</p>
-      <Space>
-        <Button onClick={saveFilters}>Save Filters</Button>
-        <Button onClick={loadFilters}>Load Saved Filters</Button>
-        <Button onClick={clearFilters}>Clear Filters</Button>
-      </Space>
+      </div>
+
+      <Typography variant='caption'>
+        You can filter, short and move any column. The data is updated automatically.
+      </Typography>
+      <div className={classes.btnContainer}>
+        <Button size='small' variant='outlined' onClick={saveFilters}>
+          Save Filters
+        </Button>
+        <Button size='small' variant='outlined' onClick={loadFilters}>
+          Load Saved Filters
+        </Button>
+        <Button size='small' variant='outlined' onClick={clearFilters}>
+          Clear Filters
+        </Button>
+      </div>
       {filtersEnabled && <p className='using-filters'>* Using Filters *</p>}
     </div>
   );
