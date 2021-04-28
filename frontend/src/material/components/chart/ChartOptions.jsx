@@ -5,6 +5,7 @@ import Switch from '@material-ui/core/Switch';
 import { observer } from 'mobx-react-lite';
 import { useMst } from 'models/Root';
 import withWidth from '@material-ui/core/withWidth';
+import Button from '@material-ui/core/Button';
 
 const ChartOptions = observer(({ width }) => {
   const timeframes = ['Daily', 'Weekly', 'Monthly'];
@@ -18,6 +19,14 @@ const ChartOptions = observer(({ width }) => {
     if (chartOptions[event.target.name]) {
       chartOptions[event.target.name](event.target.checked);
     }
+  };
+
+  const onToggleOffClick = () => {
+    timeframes.forEach((q) => {
+      chartOptions[`set${q}CPR`](false);
+      chartOptions[`set${q}Cam`](false);
+    });
+    chartOptions.setFutureMode(false);
   };
 
   return (
@@ -51,18 +60,28 @@ const ChartOptions = observer(({ width }) => {
             </FormGroup>
           );
         })}
-      </FormGroup>
-      <FormControlLabel
-        control={
-          <Switch
-            checked={chartOptions.futureMode}
-            onChange={handleChange}
-            name='setFutureMode' // Function name on chartOptions to be called on change
-            color='primary'
+        <FormGroup column={xs ? false : true} style={{ justifyContent: 'center', alignItems: 'center' }}>
+          <FormControlLabel
+            control={
+              <Switch
+                checked={chartOptions.futureMode}
+                onChange={handleChange}
+                name='setFutureMode' // Function name on chartOptions to be called on change
+                color='primary'
+              />
+            }
+            label='Show developing pivots'
           />
-        }
-        label='Show developing pivots'
-      />
+          <Button
+            variant='outlined'
+            size='small'
+            color='primary'
+            style={{ width: '80%', marginBottom: 5 }}
+            onClick={onToggleOffClick}>
+            Toggle off
+          </Button>
+        </FormGroup>
+      </FormGroup>
     </>
   );
 });
