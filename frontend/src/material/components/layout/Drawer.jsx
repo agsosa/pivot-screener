@@ -143,7 +143,7 @@ function Drawer(props, ref) {
         if (openChildren.find((q) => q === navLink.text)) return old.filter((q) => q !== navLink.text);
         else return [...old, navLink.text];
       });
-    else handleDrawerToggle();
+    else if (mobileOpen) handleDrawerToggle();
   }
 
   function RenderNavLink({ navLink, isChildren, hasChildren, isCollapseOpen }) {

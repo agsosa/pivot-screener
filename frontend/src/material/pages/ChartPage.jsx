@@ -10,7 +10,7 @@ import { useMst } from 'models/Root';
 import { apiFetchBinanceFuturesCandles } from 'lib/API';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Breadcrumbs from 'material/components/layout/Breadcrumbs';
-import PageContainer from 'material/components/misc/PageContainer';
+import PageContainer from 'material/components/layout/PageContainer';
 
 const FETCH_INTERVAL = 1000 * 15; // Time (ms) between ticker data updates
 

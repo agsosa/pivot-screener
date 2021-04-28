@@ -1,5 +1,5 @@
 import * as React from 'react';
-import PageContainer from 'material/components/misc/PageContainer';
+import PageContainer from 'material/components/layout/PageContainer';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles';
