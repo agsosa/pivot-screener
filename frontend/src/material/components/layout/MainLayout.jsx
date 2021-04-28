@@ -4,7 +4,6 @@ import MaterialDrawer, { menuWidth } from 'material/components/layout/Drawer';
 import Header, { headerSafePadding } from 'material/components/layout/Header';
 import Footer from 'material/components/layout/Footer';
 import Paper from '@material-ui/core/Paper';
-import Breadcrumbs from 'material/components/layout/Breadcrumbs';
 import TelegramGroupPromo from 'material/components/misc/TelegramGroupPromo';
 
 const useStyles = makeStyles((theme) => ({
@@ -51,7 +50,6 @@ function MainLayout({ Content }) {
         <TelegramGroupPromo />
         {/* Content container */}
         <Paper elevation={0} className={classes.paperContent}>
-          <Breadcrumbs items={['asd', 'lol']} />
           <Content />
         </Paper>
       </main>

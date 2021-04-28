@@ -9,9 +9,18 @@ import withWidth from '@material-ui/core/withWidth';
 import { useMst } from 'models/Root';
 import { apiFetchBinanceFuturesCandles } from 'lib/API';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Breadcrumbs from 'material/components/layout/Breadcrumbs';
 
 const useStyles = makeStyles({
-  root: { textAlign: 'center', width: '100%', minHeight: '900px' },
+  root: {
+    textAlign: 'center',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+    minHeight: '900px',
+  },
 });
 
 const FETCH_INTERVAL = 1000 * 15; // Time (ms) between ticker data updates
@@ -70,6 +79,7 @@ function ChartPage({ width }) {
   // Render
   return (
     <div className={classes.root} ref={containerRef}>
+      <Breadcrumbs items={['Home', 'Chart']} />
       <Grid {...center} spacing={3} container direction='column' style={{ marginBottom: 10 }}>
         {/* Header */}
         <Grid {...center} container direction='column'>

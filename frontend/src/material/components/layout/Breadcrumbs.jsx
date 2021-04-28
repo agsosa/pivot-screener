@@ -7,7 +7,7 @@ function Breadcrumbs({ items }) {
   const validItems = Array.isArray(items) && items.length > 0;
 
   return (
-    <MaterialBreadcrumbs aria-label='breadcrumb'>
+    <MaterialBreadcrumbs aria-label='breadcrumb' style={{ marginBottom: 15 }}>
       {validItems ? (
         items.map((q, i) => {
           let color = 'inherit';
