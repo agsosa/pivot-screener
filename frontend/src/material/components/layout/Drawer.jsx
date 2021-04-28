@@ -38,6 +38,9 @@ const useStyles = makeStyles((theme) => ({
   // necessary for content to be below app bar theme.mixins.toolbar
   toolbar: {
     paddingTop: headerSafePadding,
+    [theme.breakpoints.down('sm')]: {
+      paddingTop: theme.spacing(2),
+    },
   },
   drawerPaper: {
     width: menuWidth,
@@ -70,7 +73,7 @@ const cprScreenersLinks = [
   { text: 'Stocks', path: '/screener/cpr/stocks', disabled: true },
 ];
 
-function Drawer() {
+function Drawer(props, ref) {
   const donateModalRef = React.createRef();
   const history = useHistory();
   const classes = useStyles();
@@ -120,6 +123,10 @@ function Drawer() {
     setMobileOpen(!mobileOpen);
   };
 
+  React.useImperativeHandle(ref, () => ({
+    toggle: handleDrawerToggle,
+  }));
+
   function handleNavLinkClick(navLink) {
     // Handle navLink.path
     if (navLink.path) {
@@ -136,6 +143,7 @@ function Drawer() {
         if (openChildren.find((q) => q === navLink.text)) return old.filter((q) => q !== navLink.text);
         else return [...old, navLink.text];
       });
+    else handleDrawerToggle();
   }
 
   function RenderNavLink({ navLink, isChildren, hasChildren, isCollapseOpen }) {
@@ -165,11 +173,9 @@ function Drawer() {
     <>
       <div className={classes.toolbar} /> {/* Div to position the drawer below the top appbar */}
       {/* Drawer header */}
-      <Hidden smDown>
-        <Typography variant='h5' className={classes.title}>
-          Pivot Screener
-        </Typography>
-      </Hidden>
+      <Typography variant='h5' className={classes.title}>
+        Pivot Screener
+      </Typography>
       {/* Drawer links */}
       <List>
         {navLinks.map((navLink) => {
@@ -236,4 +242,4 @@ function Drawer() {
   );
 }
 
-export default Drawer;
+export default React.forwardRef(Drawer);

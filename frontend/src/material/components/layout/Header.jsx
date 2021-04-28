@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Header() {
+export default function Header({ onMobileMenuClick }) {
   const classes = useStyles();
 
   return (
@@ -52,7 +52,12 @@ export default function Header() {
         <TradingViewPrices responsive />
         <Hidden mdUp>
           <Toolbar className={classes.toolbar}>
-            <IconButton edge='start' className={classes.menuButton} color='inherit' aria-label='menu'>
+            <IconButton
+              edge='start'
+              className={classes.menuButton}
+              color='inherit'
+              aria-label='menu'
+              onClick={onMobileMenuClick}>
               <MenuIcon />
             </IconButton>
             <Typography variant='h5'>Pivot Screener</Typography>
