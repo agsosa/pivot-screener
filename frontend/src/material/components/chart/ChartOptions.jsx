@@ -31,10 +31,10 @@ const ChartOptions = observer(({ width }) => {
 
   return (
     <>
-      <FormGroup row={xs ? false : true}>
+      <FormGroup row={xs ? false : true} style={{ justifyContent: 'center', padding: 5 }}>
         {timeframes.map((q) => {
           return (
-            <FormGroup column={xs ? false : true} key={q}>
+            <FormGroup column={xs ? 'false' : 'true'} key={q}>
               <FormControlLabel
                 control={
                   <Switch
@@ -60,7 +60,7 @@ const ChartOptions = observer(({ width }) => {
             </FormGroup>
           );
         })}
-        <FormGroup column={xs ? false : true} style={{ justifyContent: 'center', alignItems: 'center' }}>
+        <FormGroup column={xs ? 'false' : 'true'} style={{ justifyContent: 'center', alignItems: 'center' }}>
           <FormControlLabel
             control={
               <Switch

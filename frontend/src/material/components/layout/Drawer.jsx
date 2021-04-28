@@ -54,21 +54,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-/* 
-  navLinks items:
-    {
-      icon: Component to render between ListItemIcon (optional)
-      text: String to display as title
-      description: String to display as subtitle
-      disabled: Boolean to indicate if it's disabled (optional)
-      renderDividerBelow: Boolean to render a <Divider/> below this item (optional)
-
-      The following props have to be used individually:
-        onClick: Function to execute on click (optional)
-        path: Path to navigate to (optional)
-        children: Array of navLinks to display as children with <Collapse /> (optional)
-    }
-*/
 const camScreenersLinks = [
   { text: 'Cryptocurrency', path: '/screener/camarilla/cryptocurrency' },
   { text: 'Forex', path: '/screener/camarilla/forex' },
@@ -92,7 +77,24 @@ function Drawer() {
   const theme = useTheme();
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [openChildren, setOpenChildren] = React.useState([]); // Array of strings to know which navLinks with children are open
-  const navLinks = React.useRef([
+
+  /* 
+    navLinks items:
+      {
+        icon: Component to render between ListItemIcon (optional)
+        text: String to display as title
+        description: String to display as subtitle
+        disabled: Boolean to indicate if it's disabled (optional)
+        renderDividerBelow: Boolean to render a <Divider/> below this item (optional)
+
+        The following props have to be used individually:
+          onClick: Function to execute on click (optional)
+          path: Path to navigate to (optional)
+          children: Array of navLinks to display as children with <Collapse /> (optional)
+      }
+  */
+  // This variable is here to be able to use donateModalRef
+  const navLinks = [
     { icon: <HomeIcon />, text: 'Home (Chart)', path: '/' },
     { icon: <TocIcon />, text: 'CPR Screeners', children: cprScreenersLinks },
     {
@@ -112,7 +114,7 @@ function Drawer() {
         if (donateModalRef.current) donateModalRef.current.toggle();
       },
     },
-  ]);
+  ];
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -170,9 +172,9 @@ function Drawer() {
       </Hidden>
       {/* Drawer links */}
       <List>
-        {navLinks.current.map((navLink) => {
+        {navLinks.map((navLink) => {
           const hasChildren = navLink.children && Array.isArray(navLink.children);
-          const isCollapseOpen = openChildren.find((q) => q === navLink.text);
+          const isCollapseOpen = openChildren.find((q) => q === navLink.text) ? true : false;
 
           return (
             <div key={navLink.text}>

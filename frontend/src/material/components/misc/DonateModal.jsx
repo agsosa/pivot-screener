@@ -28,7 +28,7 @@ export default React.forwardRef((props, ref) => {
       <DialogTitle id='alert-dialog-title'>Donations</DialogTitle>
       <DialogContent>
         <DialogContentText id='alert-dialog-description'>
-          <p>Any amount of money can help me to maintain the site. Thank you!</p>
+          Any amount of money can help me to maintain the site. Thank you!
           <ul>
             <li>
               <b>BTC/BCH:</b> 17oGi5Qc3ru599vY8mWgPj723SJgfAqdBn
