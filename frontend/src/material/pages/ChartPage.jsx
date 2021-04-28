@@ -65,7 +65,7 @@ function ChartPage({ width }) {
 
   // Render
   return (
-    <PageContainer breadcrumbsItems={['Tools', 'Chart']} ref={containerRef}>
+    <PageContainer breadcrumbsItems={['Tools', 'Chart']} ref={containerRef} style={{ minHeight: '900px' }}>
       <Grid {...center} spacing={3} container direction='column' style={{ marginBottom: 10 }}>
         {/* Header */}
         <Grid {...center} container direction='column'>

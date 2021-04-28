@@ -9,15 +9,14 @@ const useStyles = makeStyles({
     flexDirection: 'column',
     alignItems: 'center',
     width: '100%',
-    minHeight: '900px',
   },
 });
 
-function PageContainer({ breadcrumbsItems, children }, ref) {
+function PageContainer({ breadcrumbsItems, children, style }, ref) {
   const classes = useStyles();
 
   return (
-    <div className={classes.root} ref={ref}>
+    <div className={classes.root} ref={ref} style={style}>
       <Breadcrumbs items={breadcrumbsItems} />
       {children}
     </div>

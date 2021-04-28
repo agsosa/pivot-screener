@@ -9,6 +9,7 @@ import TelegramGroupPromo from 'material/components/misc/TelegramGroupPromo';
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
+
     flexDirection: 'column',
   },
   content: {
@@ -29,6 +30,7 @@ const useStyles = makeStyles((theme) => ({
   },
   paperContent: {
     display: 'flex',
+    boxShadow: '0 12px 12px -6px rgba(0, 0, 0, 0.05)',
     alignItems: 'center',
     minHeight: '500px',
     flexDirection: 'column',
