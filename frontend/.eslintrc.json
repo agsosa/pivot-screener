@@ -3,13 +3,9 @@
     "browser": true,
     "es2021": true
   },
+  "ignorePatterns": ["**/material/*"],
   "parser": "babel-eslint",
-  "extends": [
-    "plugin:react/recommended",
-    "airbnb",
-    "plugin:react-hooks/recommended",
-    "prettier"
-  ],
+  "extends": ["plugin:react/recommended", "airbnb", "plugin:react-hooks/recommended", "prettier"],
   "parserOptions": {
     "ecmaFeatures": {
       "jsx": true

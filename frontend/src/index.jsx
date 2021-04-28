@@ -1,22 +1,17 @@
+// TODO: Add babel https://material-ui.com/es/guides/minimizing-bundle-size/
+
 import React from 'react';
 import ReactDOM from 'react-dom';
-import 'antd/dist/antd.css';
-import MainLayout from 'components/layout/MainLayout';
 import { Provider, rootStore } from 'models/Root';
-
-function App() {
-  return (
-    <Provider value={rootStore}>
-      <div className='App'>
-        <MainLayout />
-      </div>
-    </Provider>
-  );
-}
+import App from 'material/lib/App';
+import CssBaseline from '@material-ui/core/CssBaseline';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <CssBaseline />
+    <Provider value={rootStore}>
+      <App />
+    </Provider>
   </React.StrictMode>,
   document.getElementById('root')
 );

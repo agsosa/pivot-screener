@@ -34,18 +34,6 @@ const ChartOptions = types
     setMonthlyCam(value) {
       self.monthlyCam = value;
     },
-    toggleAllDaily() {
-      self.dailyCPR = !self.dailyCPR;
-      self.dailyCam = !self.dailyCam;
-    },
-    toggleAllWeekly() {
-      self.weeklyCPR = !self.weeklyCPR;
-      self.weeklyCam = !self.weeklyCam;
-    },
-    toggleAllMonthly() {
-      self.monthlyCPR = !self.monthlyCPR;
-      self.monthlyCam = !self.monthlyCam;
-    },
   }));
 
 export default ChartOptions;
