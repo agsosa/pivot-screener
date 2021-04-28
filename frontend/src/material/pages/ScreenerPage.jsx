@@ -5,12 +5,9 @@ import { useMst } from 'models/Root';
 import { capitalizeFirstLetter } from 'lib/Helpers';
 import { isValidMarket } from 'lib/Markets';
 import PageContainer from 'material/components/layout/PageContainer';
-import { useHistory } from 'react-router';
 import { makeStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import CPRTable from 'components/tables/CPRTable';
 import CamTable from 'components/tables/CamTable';
@@ -46,10 +43,20 @@ function a11yProps(label) {
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
+    width: '100%',
     backgroundColor: theme.palette.background.paper,
   },
   tabsBar: {
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    flexGrow: 1,
     borderBottom: '1px rgb(0,0,0,0.1) solid',
+  },
+  tabContent: {
+    width: '100%',
+    height: '100%',
+    padding: theme.spacing(2),
   },
 }));
 
@@ -117,6 +124,8 @@ function ScreenerPage({ match }) {
         <>
           <div className={classes.tabsBar}>
             <Tabs
+              variant='scrollable'
+              scrollButtons='auto'
               value={activeTab}
               onChange={handleTabChange}
               aria-label='timeframe tabs'
@@ -128,16 +137,19 @@ function ScreenerPage({ match }) {
               ))}
             </Tabs>
           </div>
-          {TAB_ITEMS.map(({ timeframe, futureMode }) => {
-            <TabPanel value={activeTab} index={'timeframe'}>
-              <TableComponent
-                screenerType={screenerType}
-                timeframe={timeframe.toLowerCase()}
-                market={market}
-                futureMode={futureMode || false}
-              />
-            </TabPanel>;
-          })}
+          <div className={classes.tabContent}>
+            {TAB_ITEMS.map(({ timeframe, futureMode }) => {
+              <TabPanel value={activeTab} index={'timeframe'}>
+                <TableComponent
+                  screenerType={screenerType}
+                  timeframe={timeframe.toLowerCase()}
+                  market={market}
+                  futureMode={futureMode || false}
+                />
+              </TabPanel>;
+            })}
+            asd
+          </div>
         </>
       )}
     </PageContainer>
