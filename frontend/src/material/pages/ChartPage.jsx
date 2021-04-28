@@ -1,7 +1,6 @@
 import * as React from 'react';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
 import SymbolsListSelector from 'material/components/misc/SymbolsListSelector';
 import ChartOptions from 'material/components/chart/ChartOptions';
 import Chart from 'components/chart/Chart';
@@ -12,7 +11,7 @@ import { apiFetchBinanceFuturesCandles } from 'lib/API';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 const useStyles = makeStyles({
-  root: { textAlign: 'center', width: '100%', minHeight: '1000px' },
+  root: { textAlign: 'center', width: '100%', minHeight: '900px' },
 });
 
 const FETCH_INTERVAL = 1000 * 15; // Time (ms) between ticker data updates
@@ -71,7 +70,7 @@ function ChartPage({ width }) {
   // Render
   return (
     <div className={classes.root} ref={containerRef}>
-      <Grid {...center} spacing={3} container direction='column'>
+      <Grid {...center} spacing={3} container direction='column' style={{ marginBottom: 10 }}>
         {/* Header */}
         <Grid {...center} container direction='column'>
           <Grid item xs>
