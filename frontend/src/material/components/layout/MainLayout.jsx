@@ -1,6 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import MaterialDrawer, { menuWidth } from 'material/components/layout/Drawer';
+import Drawer, { menuWidth } from 'material/components/layout/Drawer';
 import Header, { headerSafePadding } from 'material/components/layout/Header';
 import Footer from 'material/components/layout/Footer';
 import Paper from '@material-ui/core/Paper';
@@ -43,11 +43,16 @@ const useStyles = makeStyles((theme) => ({
 
 function MainLayout({ Content }) {
   const classes = useStyles();
+  const drawerRef = React.createRef();
+
+  function onMobileMenuClick() {
+    if (drawerRef.current) drawerRef.current.toggle();
+  }
 
   return (
     <div className={classes.root}>
-      <Header />
-      <MaterialDrawer />
+      <Header onMobileMenuClick={onMobileMenuClick} />
+      <Drawer ref={drawerRef} />
       <main className={classes.content}>
         <TelegramGroupPromo />
         {/* Content container */}
