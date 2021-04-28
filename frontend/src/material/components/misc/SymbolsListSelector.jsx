@@ -52,7 +52,7 @@ function SymbolsListSelector({ onSymbolChange }) {
       renderInput={(params) => (
         <TextField
           {...params}
-          label='Symbols'
+          label='Symbol'
           variant='outlined'
           InputProps={{
             ...params.InputProps,

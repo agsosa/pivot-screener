@@ -39,6 +39,9 @@ const useStyles = makeStyles((theme) => ({
   },
   title: {
     textAlign: 'center',
+    padding: 10,
+    // color: theme.palette.primary.dark,
+    fontWeight: 'bold',
   },
   content: {
     flexGrow: 1,
@@ -59,7 +62,7 @@ function Drawer() {
     <div>
       <div className={classes.toolbar} />
       <Hidden smDown>
-        <Typography variant='h6' className={classes.title}>
+        <Typography variant='h5' className={classes.title}>
           Pivot Screener
         </Typography>
       </Hidden>
