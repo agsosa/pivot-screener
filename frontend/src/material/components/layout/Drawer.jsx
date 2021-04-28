@@ -22,6 +22,7 @@ import { useHistory } from 'react-router';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import Collapse from '@material-ui/core/Collapse';
+import DonateModal from 'material/components/misc/DonateModal';
 
 export const menuWidth = 240;
 
@@ -84,28 +85,34 @@ const cprScreenersLinks = [
   { text: 'Stocks', path: '/screener/cpr/stocks', disabled: true },
 ];
 
-const navLinks = [
-  { icon: <HomeIcon />, text: 'Home (Chart)', path: '/' },
-  { icon: <TocIcon />, text: 'CPR Screeners', children: cprScreenersLinks },
-  {
-    icon: <ShowChartIcon />,
-    text: 'CAM Screeners',
-    children: camScreenersLinks,
-    renderDividerBelow: true,
-  },
-  { icon: <DvrIcon />, text: 'Live Feed', path: '/', disabled: true },
-  { icon: <BuildIcon />, text: 'Backtest', path: '/', disabled: true },
-  { icon: <AppsIcon />, text: 'Calculator', path: '/calculator', renderDividerBelow: true },
-  { icon: <TelegramIcon />, text: 'Contact (Telegram)', onClick: () => window.open('https://t.me/xref1x', '_blank') },
-  { icon: <FavoriteIcon />, text: 'Donate Crypto', onClick: () => console.log('hi') },
-];
-
 function Drawer() {
+  const donateModalRef = React.createRef();
   const history = useHistory();
   const classes = useStyles();
   const theme = useTheme();
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [openChildren, setOpenChildren] = React.useState([]); // Array of strings to know which navLinks with children are open
+  const navLinks = React.useRef([
+    { icon: <HomeIcon />, text: 'Home (Chart)', path: '/' },
+    { icon: <TocIcon />, text: 'CPR Screeners', children: cprScreenersLinks },
+    {
+      icon: <ShowChartIcon />,
+      text: 'CAM Screeners',
+      children: camScreenersLinks,
+      renderDividerBelow: true,
+    },
+    { icon: <DvrIcon />, text: 'Live Feed', path: '/', disabled: true },
+    { icon: <BuildIcon />, text: 'Backtest', path: '/', disabled: true },
+    { icon: <AppsIcon />, text: 'Calculator', path: '/calculator', renderDividerBelow: true },
+    { icon: <TelegramIcon />, text: 'Contact (Telegram)', onClick: () => window.open('https://t.me/xref1x', '_blank') },
+    {
+      icon: <FavoriteIcon />,
+      text: 'Donate Crypto',
+      onClick: () => {
+        if (donateModalRef.current) donateModalRef.current.toggle();
+      },
+    },
+  ]);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -130,7 +137,6 @@ function Drawer() {
   }
 
   function RenderNavLink({ navLink, isChildren, hasChildren, isCollapseOpen }) {
-    console.log(navLink.text, isChildren);
     return (
       <ListItem
         button
@@ -164,7 +170,7 @@ function Drawer() {
       </Hidden>
       {/* Drawer links */}
       <List>
-        {navLinks.map((navLink) => {
+        {navLinks.current.map((navLink) => {
           const hasChildren = navLink.children && Array.isArray(navLink.children);
           const isCollapseOpen = openChildren.find((q) => q === navLink.text);
 
@@ -194,34 +200,37 @@ function Drawer() {
   );
 
   return (
-    <nav className={classes.drawer} aria-label='mailbox folders'>
-      {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
-      <Hidden smUp implementation='css'>
-        <MaterialDrawer
-          variant='temporary'
-          anchor={theme.direction === 'rtl' ? 'right' : 'left'}
-          open={mobileOpen}
-          onClose={handleDrawerToggle}
-          classes={{
-            paper: classes.drawerPaper,
-          }}
-          ModalProps={{
-            keepMounted: true, // Better open performance on mobile.
-          }}>
-          {drawer}
-        </MaterialDrawer>
-      </Hidden>
-      <Hidden smDown implementation='css'>
-        <MaterialDrawer
-          classes={{
-            paper: classes.drawerPaper,
-          }}
-          variant='permanent'
-          open>
-          {drawer}
-        </MaterialDrawer>
-      </Hidden>
-    </nav>
+    <>
+      <nav className={classes.drawer} aria-label='mailbox folders'>
+        {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
+        <Hidden smUp implementation='css'>
+          <MaterialDrawer
+            variant='temporary'
+            anchor={theme.direction === 'rtl' ? 'right' : 'left'}
+            open={mobileOpen}
+            onClose={handleDrawerToggle}
+            classes={{
+              paper: classes.drawerPaper,
+            }}
+            ModalProps={{
+              keepMounted: true, // Better open performance on mobile.
+            }}>
+            {drawer}
+          </MaterialDrawer>
+        </Hidden>
+        <Hidden smDown implementation='css'>
+          <MaterialDrawer
+            classes={{
+              paper: classes.drawerPaper,
+            }}
+            variant='permanent'
+            open>
+            {drawer}
+          </MaterialDrawer>
+        </Hidden>
+      </nav>
+      <DonateModal ref={donateModalRef} />
+    </>
   );
 }
 
