@@ -1,9 +1,10 @@
 import React from 'react';
-import { Tag } from 'antd';
 import { observer } from 'mobx-react-lite';
-import { CloseCircleOutlined, CheckCircleOutlined } from '@ant-design/icons';
 import { PropTypes } from 'prop-types';
 import { useMst } from 'models/Root';
+import Chip from '@material-ui/core/Chip';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import CancelIcon from '@material-ui/icons/Cancel';
 
 const SocketStatus = ({ className }) => {
   const { socketConnected } = useMst((store) => ({
@@ -13,13 +14,9 @@ const SocketStatus = ({ className }) => {
   return (
     <div className={className}>
       {socketConnected ? (
-        <Tag icon={<CheckCircleOutlined />} color='success'>
-          <b>ONLINE</b>
-        </Tag>
+        <Chip icon={<CheckCircleIcon />} size='small' label='Online' color='primary' />
       ) : (
-        <Tag icon={<CloseCircleOutlined />} color='error'>
-          <b>OFFLINE</b>
-        </Tag>
+        <Chip icon={<CancelIcon />} size='small' label='Offline' color='secondary' />
       )}
     </div>
   );
