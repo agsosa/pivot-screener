@@ -132,23 +132,26 @@ function ScreenerPage({ match }) {
               indicatorColor='primary'
               textColor='primary'
               centered>
-              {TAB_ITEMS.map(({ timeframe }) => (
-                <Tab key={timeframe} label={timeframe} {...a11yProps(timeframe)} />
+              {TAB_ITEMS.map(({ timeframe }, index) => (
+                <Tab key={timeframe} label={timeframe} {...a11yProps(index)} />
               ))}
             </Tabs>
           </div>
           <div className={classes.tabContent}>
-            {TAB_ITEMS.map(({ timeframe, futureMode }) => {
-              <TabPanel value={activeTab} index={'timeframe'}>
-                <TableComponent
-                  screenerType={screenerType}
-                  timeframe={timeframe.toLowerCase()}
-                  market={market}
-                  futureMode={futureMode || false}
-                />
-              </TabPanel>;
+            {TAB_ITEMS.map((item, index) => {
+              const { timeframe, futureMode } = item;
+
+              return (
+                <TabPanel key={timeframe} value={activeTab} index={index}>
+                  <TableComponent
+                    screenerType={screenerType}
+                    timeframe={timeframe.toLowerCase()}
+                    market={market}
+                    futureMode={futureMode || false}
+                  />
+                </TabPanel>
+              );
             })}
-            asd
           </div>
         </>
       )}
