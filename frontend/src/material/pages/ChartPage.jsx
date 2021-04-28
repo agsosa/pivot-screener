@@ -10,25 +10,12 @@ import { useMst } from 'models/Root';
 import { apiFetchBinanceFuturesCandles } from 'lib/API';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Breadcrumbs from 'material/components/layout/Breadcrumbs';
-
-const useStyles = makeStyles({
-  root: {
-    textAlign: 'center',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '100%',
-    minHeight: '900px',
-  },
-});
+import PageContainer from 'material/components/misc/PageContainer';
 
 const FETCH_INTERVAL = 1000 * 15; // Time (ms) between ticker data updates
 
 function ChartPage({ width }) {
-  // Styles
   const containerRef = React.createRef();
-  const classes = useStyles();
   const xs = width === 'xs';
   const center = { alignItems: 'center', justify: 'center' };
 
@@ -78,8 +65,7 @@ function ChartPage({ width }) {
 
   // Render
   return (
-    <div className={classes.root} ref={containerRef}>
-      <Breadcrumbs items={['Home', 'Chart']} />
+    <PageContainer breadcrumbsItems={['Home', 'Chart']} ref={containerRef}>
       <Grid {...center} spacing={3} container direction='column' style={{ marginBottom: 10 }}>
         {/* Header */}
         <Grid {...center} container direction='column'>
@@ -107,7 +93,7 @@ function ChartPage({ width }) {
       </Grid>
 
       <Chart containerRef={containerRef} />
-    </div>
+    </PageContainer>
   );
 }
 
