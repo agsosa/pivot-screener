@@ -56,7 +56,6 @@ const useStyles = makeStyles((theme) => ({
   tabContent: {
     width: '100%',
     height: '100%',
-    padding: theme.spacing(2),
   },
 }));
 
