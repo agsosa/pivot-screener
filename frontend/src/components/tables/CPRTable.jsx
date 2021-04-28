@@ -1,7 +1,6 @@
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-material.css';
 import { AgGridColumn, AgGridReact } from 'ag-grid-react';
-import { Skeleton } from 'antd';
 import { autorun } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import React, { useEffect, useState } from 'react';
@@ -100,7 +99,7 @@ const CPRTable = ({ screenerType, timeframe, market, futureMode }) => {
 
   return (
     <div>
-      {!gridApi || loading ? <Skeleton /> : <CPRStats timeframe={timeframe} futureMode={futureMode} />}
+      {!gridApi || loading ? 'Skeleton' : <CPRStats timeframe={timeframe} futureMode={futureMode} />}
 
       {gridApi && (
         <FiltersMenu
@@ -182,7 +181,7 @@ const CPRTable = ({ screenerType, timeframe, market, futureMode }) => {
         )
       </div>
 
-      {!gridApi || loading ? <Skeleton /> : <InfoRenderer />}
+      {!gridApi || loading ? 'Skeleton' : <InfoRenderer />}
     </div>
   );
 };

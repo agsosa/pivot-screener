@@ -1,7 +1,3 @@
-.ant-badge-count {
-  background: #2196f3;
-}
-
 a.external {
   background: url('img/external.png') center right no-repeat;
   padding-right: 13px;
@@ -10,34 +6,6 @@ a.external {
 .ag-main {
   height: 700px;
   width: 100%;
-}
-
-.using-filters {
-  margin-top: 10px;
-  color: red;
-  font-weight: bold;
-}
-
-.info {
-  text-align: left;
-  margin-top: 30px;
-  margin-left: 20px;
-}
-
-.badge {
-  margin-bottom: 5px;
-}
-
-sup {
-  font-size: smaller;
-}
-
-.socket-status {
-  margin-bottom: 5px;
-}
-
-.filter-hint {
-  margin-top: 1px;
 }
 
 .ag-theme-material .ag-row .ag-cell-data-changed {
