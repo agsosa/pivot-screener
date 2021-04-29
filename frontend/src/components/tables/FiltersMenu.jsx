@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { message } from 'antd'; // TODO: Replace message
 import './Table.css';
 import { PropTypes } from 'prop-types';
 import { capitalizeFirstLetter } from 'lib/Helpers';
@@ -8,6 +7,12 @@ import { useMst } from 'models/Root';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
+
+function Alert(props) {
+  return <MuiAlert elevation={6} variant='filled' {...props} />;
+}
 
 const useStyles = makeStyles((theme) => ({
   btnContainer: {
@@ -36,6 +41,7 @@ const useStyles = makeStyles((theme) => ({
 const FiltersMenu = ({ screenerType, gridApi, tickersCount, market, timeframe }) => {
   const classes = useStyles();
   const [filtersEnabled, setFiltersEnabled] = React.useState(false);
+  const [snackbarMessage, setSnackbarMessage] = React.useState('');
 
   const { camTableFilters, cprTableFilters, setCprTableFilters, setCamTableFilters } = useMst((store) => ({
     camTableFilters: store.camTableFilters,
@@ -77,9 +83,9 @@ const FiltersMenu = ({ screenerType, gridApi, tickersCount, market, timeframe })
     if (gridApi) {
       const filterModel = gridApi.getFilterModel();
       if (setTableFilters) setTableFilters(filterModel);
-      message.success('Filters saved');
+      setSnackbarMessage('Filters saved');
     } else {
-      message.success('The table is not ready');
+      setSnackbarMessage('The table is not ready');
     }
   };
 
@@ -87,12 +93,12 @@ const FiltersMenu = ({ screenerType, gridApi, tickersCount, market, timeframe })
     if (gridApi) {
       if (getTableFilters) {
         gridApi.setFilterModel(getTableFilters);
-        message.success('Filters applied');
+        setSnackbarMessage('Filters applied');
       } else {
-        message.error('No saved filters found');
+        setSnackbarMessage('No saved filters found');
       }
     } else {
-      message.success('The table is not ready');
+      setSnackbarMessage('The table is not ready');
     }
   };
 
@@ -100,8 +106,16 @@ const FiltersMenu = ({ screenerType, gridApi, tickersCount, market, timeframe })
     if (gridApi) {
       gridApi.setFilterModel(null);
     } else {
-      message.success('The table is not ready');
+      setSnackbarMessage('The table is not ready');
     }
+  };
+
+  const handleSnackbarClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setSnackbarMessage('');
   };
 
   return (
@@ -133,6 +147,12 @@ const FiltersMenu = ({ screenerType, gridApi, tickersCount, market, timeframe })
         </Button>
       </div>
       {filtersEnabled && <p className='using-filters'>* Using Filters *</p>}
+
+      <Snackbar open={snackbarMessage} autoHideDuration={5000} onClose={handleSnackbarClose}>
+        <Alert onClose={handleSnackbarClose} severity='info'>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </div>
   );
 };
