@@ -37,18 +37,20 @@ const CPRStats = ({ timeframe, futureMode }) => {
       </Button>
       {cprStatsPanelVisible ? (
         <>
-          <StatsCardContainer>
-            <StatsCardColumn>
-              <StatsCardItem label='Untested CPR' count={stats.untestedCount} prefix='🧲' />
-              <StatsCardItem label='Above CPR' count={stats.aboveCount} prefix={<TrendingUpIcon />} />
-              <StatsCardItem label='CPR Width < 1%' count={stats.tightCount} prefix={<VerticalAlignCenterIcon />} />
-            </StatsCardColumn>
-            <StatsCardColumn>
-              <StatsCardItem label='Neutral' count={stats.neutralCount} prefix={<PauseIcon />} />
-              <StatsCardItem label='Below CPR' count={stats.belowCount} prefix={<TrendingDownIcon />} />
-              <StatsCardItem label='CPR Width > 1%' count={stats.wideCount} prefix={<FullscreenIcon />} />
-            </StatsCardColumn>
-          </StatsCardContainer>
+          <div style={{ marginBottom: 15, marginTop: 15 }}>
+            <StatsCardContainer>
+              <StatsCardColumn>
+                <StatsCardItem label='Untested CPR' count={stats.untestedCount} prefix='🧲' />
+                <StatsCardItem label='Above CPR' count={stats.aboveCount} prefix={<TrendingUpIcon />} />
+                <StatsCardItem label='CPR Width < 1%' count={stats.tightCount} prefix={<VerticalAlignCenterIcon />} />
+              </StatsCardColumn>
+              <StatsCardColumn>
+                <StatsCardItem label='Neutral' count={stats.neutralCount} prefix={<PauseIcon />} />
+                <StatsCardItem label='Below CPR' count={stats.belowCount} prefix={<TrendingDownIcon />} />
+                <StatsCardItem label='CPR Width > 1%' count={stats.wideCount} prefix={<FullscreenIcon />} />
+              </StatsCardColumn>
+            </StatsCardContainer>
+          </div>
 
           <BullsBearProgress bullsPercent={stats.bullsPercent} bearsPercent={stats.bearsPercent} />
         </>
