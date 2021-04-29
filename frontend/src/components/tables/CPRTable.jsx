@@ -113,7 +113,7 @@ const CPRTable = ({ screenerType, timeframe, market, futureMode }) => {
 
   return (
     <div className={classes.root}>
-      {!gridApi || loading || tickers.length === 0 ? (
+      {!gridApi || loading || tickers.length <= 1 ? (
         <MultilineSkeleton lines={5} style={{ width: '100%', height: 20 }} />
       ) : (
         <CPRStats timeframe={timeframe} futureMode={futureMode} />
@@ -198,7 +198,7 @@ const CPRTable = ({ screenerType, timeframe, market, futureMode }) => {
         </AgGridReact>
       </div>
 
-      {!gridApi || loading || tickers.length === 0 ? (
+      {!gridApi || loading || tickers.length <= 1 ? (
         <MultilineSkeleton lines={5} style={{ width: '100%', height: 20 }} />
       ) : (
         <InfoRenderer />

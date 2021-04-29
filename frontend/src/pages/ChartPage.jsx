@@ -17,6 +17,7 @@ function ChartPage({ width }) {
   const containerRef = React.createRef();
   const xs = width === 'xs';
   const center = { alignItems: 'center', justify: 'center' };
+  const mounted = React.useRef(false);
 
   // State
   const [loading, setLoading] = React.useState(true);
@@ -29,8 +30,11 @@ function ChartPage({ width }) {
 
   async function fetchCandles() {
     const result = await apiFetchBinanceFuturesCandles(symbol);
-    setLoading(false);
-    if (symbol === result.symbol) setTickers([{ symbol, market: '', exchange: '', candlesticks: result.candlesticks }]);
+    if (mounted.current) {
+      setLoading(false);
+      if (symbol === result.symbol)
+        setTickers([{ symbol, market: '', exchange: '', candlesticks: result.candlesticks }]);
+    }
   }
 
   // Start fetch candles for the current symbol, cancel the previous fetch interval
@@ -48,9 +52,11 @@ function ChartPage({ width }) {
 
   // On mount
   React.useEffect(() => {
+    mounted.current = true;
     startFetchCandles();
 
     return () => {
+      mounted.current = false;
       if (fetchCandlesTimeout.current) clearInterval(fetchCandlesTimeout.current);
     };
   }, []);
