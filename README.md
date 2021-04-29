@@ -11,7 +11,7 @@ Cryptocurrency, Forex, Indices, Commodities, Stocks supported.
   - React
   - Mobx State Tree
   - Hooks
-  - Ant Design
+  - Material UI
   - AG Grid
   - Lightweight Chart
 
@@ -24,5 +24,4 @@ Cryptocurrency, Forex, Indices, Commodities, Stocks supported.
 #### Pending
 - Any Stocks private/public API integration (backend)
 - Live feed page and alerts (frontend/backend)
-- Material/Responsive re-design (frontend)
 - Telegram Bot
