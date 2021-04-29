@@ -1,10 +1,10 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Drawer, { menuWidth } from 'material/components/layout/Drawer';
-import Header, { headerSafePadding } from 'material/components/layout/Header';
-import Footer from 'material/components/layout/Footer';
+import Drawer, { menuWidth } from 'components/layout/Drawer';
+import Header, { headerSafePadding } from 'components/layout/Header';
+import Footer from 'components/layout/Footer';
 import Paper from '@material-ui/core/Paper';
-import TelegramGroupPromo from 'material/components/misc/TelegramGroupPromo';
+import TelegramGroupPromo from 'components/misc/TelegramGroupPromo';
 
 const useStyles = makeStyles((theme) => ({
   root: {

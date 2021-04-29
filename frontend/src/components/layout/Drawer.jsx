@@ -17,12 +17,12 @@ import ShowChartIcon from '@material-ui/icons/ShowChart';
 import AppsIcon from '@material-ui/icons/Apps';
 import DvrIcon from '@material-ui/icons/Dvr';
 import Typography from '@material-ui/core/Typography';
-import { headerSafePadding } from 'material/components/layout/Header';
+import { headerSafePadding } from 'components/layout/Header';
 import { useHistory } from 'react-router';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import Collapse from '@material-ui/core/Collapse';
-import DonateModal from 'material/components/misc/DonateModal';
+import DonateModal from 'components/misc/DonateModal';
 
 export const menuWidth = 240;
 

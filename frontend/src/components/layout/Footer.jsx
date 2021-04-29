@@ -1,8 +1,8 @@
 import React from 'react';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
-import { menuWidth } from 'material/components/layout/Drawer';
-import DailyCloseTime from 'material/components/misc/DailyCloseTime';
+import { menuWidth } from 'components/layout/Drawer';
+import DailyCloseTime from 'components/misc/DailyCloseTime';
 
 const useStyles = makeStyles((theme) => ({
   root: {

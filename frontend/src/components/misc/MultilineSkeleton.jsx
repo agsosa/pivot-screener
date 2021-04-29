@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-props-no-spreading */
 import React from 'react';
 import Skeleton from '@material-ui/lab/Skeleton';
 import { PropTypes } from 'prop-types';

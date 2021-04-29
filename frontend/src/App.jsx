@@ -1,9 +1,9 @@
 import React from 'react';
 import { HashRouter as Router, Route, Switch } from 'react-router-dom';
-import ErrorPage from 'material/pages/ErrorPage';
-import MainLayout from 'material/components/layout/MainLayout';
-import Routes from 'material/lib/Routes';
-import CustomTheme from 'material/lib/CustomTheme';
+import ErrorPage from 'pages/ErrorPage';
+import MainLayout from 'components/layout/MainLayout';
+import Routes from 'lib/Routes';
+import CustomTheme from 'lib/CustomTheme';
 import { ThemeProvider } from '@material-ui/core/styles';
 
 export default function App() {

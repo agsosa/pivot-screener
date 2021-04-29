@@ -1,5 +1,3 @@
-import React from 'react';
-import { Spin } from 'antd';
 import { getPairObject } from 'lib/Helpers';
 
 export const symbolRenderer = (params) => {
@@ -23,4 +21,4 @@ export const exchangeRenderer = (params) => {
   return url ? `<a href=${url} target="_blank" class="external">${value}</a>` : value;
 };
 
-export const CustomLoadingOverlay = () => <Spin tip='Loading...' />;
+export const CustomLoadingOverlay = () => 'Loading';

@@ -1,16 +1,14 @@
 import * as React from 'react';
 import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
-import SymbolsListSelector from 'material/components/misc/SymbolsListSelector';
-import ChartOptions from 'material/components/chart/ChartOptions';
+import SymbolsListSelector from 'components/misc/SymbolsListSelector';
+import ChartOptions from 'components/chart/ChartOptions';
 import Chart from 'components/chart/Chart';
 import Grid from '@material-ui/core/Grid';
 import withWidth from '@material-ui/core/withWidth';
 import { useMst } from 'models/Root';
 import { apiFetchBinanceFuturesCandles } from 'lib/API';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import Breadcrumbs from 'material/components/layout/Breadcrumbs';
-import PageContainer from 'material/components/layout/PageContainer';
+import PageContainer from 'components/layout/PageContainer';
 
 const FETCH_INTERVAL = 1000 * 15; // Time (ms) between ticker data updates
 

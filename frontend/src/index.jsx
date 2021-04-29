@@ -3,7 +3,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider, rootStore } from 'models/Root';
-import App from 'material/lib/App';
+import App from 'App';
 import CssBaseline from '@material-ui/core/CssBaseline';
 
 ReactDOM.render(

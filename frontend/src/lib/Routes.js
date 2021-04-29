@@ -1,6 +1,6 @@
-import ChartPage from 'material/pages/ChartPage';
-import CalculatorPage from 'material/pages/CalculatorPage';
-import ScreenerPage from 'material/pages/ScreenerPage';
+import ChartPage from 'pages/ChartPage';
+import CalculatorPage from 'pages/CalculatorPage';
+import ScreenerPage from 'pages/ScreenerPage';
 
 export default [
   { path: '/calculator', component: CalculatorPage },

@@ -9,8 +9,8 @@ import TrendingDownIcon from '@material-ui/icons/TrendingDown';
 import PauseIcon from '@material-ui/icons/Pause';
 import FullscreenIcon from '@material-ui/icons/Fullscreen';
 import VerticalAlignCenterIcon from '@material-ui/icons/VerticalAlignCenter';
-import BullsBearProgress from './BullsBearProgress';
-import { StatsCardItem, StatsCardColumn, StatsCardContainer } from './StatsCard';
+import BullsBearProgress from 'components/stats/BullsBearProgress';
+import { StatsCardItem, StatsCardColumn, StatsCardContainer } from 'components/stats/StatsCard';
 
 const useStyles = makeStyles(() => ({
   root: {

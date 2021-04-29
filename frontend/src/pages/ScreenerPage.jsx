@@ -4,7 +4,7 @@ import { PropTypes } from 'prop-types';
 import { useMst } from 'models/Root';
 import { capitalizeFirstLetter } from 'lib/Helpers';
 import { isValidMarket } from 'lib/Markets';
-import PageContainer from 'material/components/layout/PageContainer';
+import PageContainer from 'components/layout/PageContainer';
 import { makeStyles } from '@material-ui/core/styles';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';

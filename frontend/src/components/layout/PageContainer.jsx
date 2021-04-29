@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Breadcrumbs from 'material/components/layout/Breadcrumbs';
+import Breadcrumbs from 'components/layout/Breadcrumbs';
 
 const useStyles = makeStyles({
   root: {
