@@ -40,13 +40,13 @@ const CPRStats = ({ timeframe, futureMode }) => {
           <StatsCardContainer>
             <StatsCardColumn>
               <StatsCardItem label='Untested CPR' count={stats.untestedCount} prefix='🧲' />
-              <StatsCardItem label='Above CPR' count={30} prefix={<TrendingUpIcon />} />
-              <StatsCardItem label='CPR Width < 1%' count={30} prefix={<VerticalAlignCenterIcon />} />
+              <StatsCardItem label='Above CPR' count={stats.aboveCount} prefix={<TrendingUpIcon />} />
+              <StatsCardItem label='CPR Width < 1%' count={stats.tightCount} prefix={<VerticalAlignCenterIcon />} />
             </StatsCardColumn>
             <StatsCardColumn>
-              <StatsCardItem label='Neutral' count={30} prefix={<PauseIcon />} />
-              <StatsCardItem label='Below CPR' count={30} prefix={<TrendingDownIcon />} />
-              <StatsCardItem label='CPR Width > 1%' count={30} prefix={<FullscreenIcon />} />
+              <StatsCardItem label='Neutral' count={stats.neutralCount} prefix={<PauseIcon />} />
+              <StatsCardItem label='Below CPR' count={stats.belowCount} prefix={<TrendingDownIcon />} />
+              <StatsCardItem label='CPR Width > 1%' count={stats.wideCount} prefix={<FullscreenIcon />} />
             </StatsCardColumn>
           </StatsCardContainer>
 
