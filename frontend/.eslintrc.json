@@ -15,6 +15,7 @@
   },
   "plugins": ["react"],
   "rules": {
+    "react/jsx-props-no-spreading": 0,
     "no-param-reassign": 1
   },
   "settings": {
