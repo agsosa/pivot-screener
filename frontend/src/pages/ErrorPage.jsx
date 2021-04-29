@@ -8,7 +8,7 @@ function ErrorPage() {
       <Typography variant='h3' gutterBottom>
         404 Page not Found
       </Typography>
-      <p>The requested page can't be found</p>
+      <p>The requested page can&apos;t be found</p>
       <Link to='/'>Go to Home</Link>
     </div>
   );

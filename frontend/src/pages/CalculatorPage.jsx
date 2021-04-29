@@ -111,7 +111,7 @@ function CalculatorPage() {
         bc: cpr.bc,
       }));
     } else {
-      //message.error('Please input High, Low and Close prices greater than 0');
+      setErrorMessage('Please input High, Low and Close prices greater than 0');
     }
   };
 

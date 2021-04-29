@@ -12,6 +12,8 @@ import Box from '@material-ui/core/Box';
 import CPRTable from 'components/tables/CPRTable';
 import CamTable from 'components/tables/CamTable';
 
+/* eslint-disable react/forbid-prop-types */
+
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -26,6 +28,10 @@ function TabPanel(props) {
     </div>
   );
 }
+
+TabPanel.defaultProps = {
+  children: null,
+};
 
 TabPanel.propTypes = {
   children: PropTypes.node,

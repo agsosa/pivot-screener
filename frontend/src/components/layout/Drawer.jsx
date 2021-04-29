@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import Divider from '@material-ui/core/Divider';
 import MaterialDrawer from '@material-ui/core/Drawer';
 import Hidden from '@material-ui/core/Hidden';
@@ -18,11 +17,12 @@ import AppsIcon from '@material-ui/icons/Apps';
 import DvrIcon from '@material-ui/icons/Dvr';
 import Typography from '@material-ui/core/Typography';
 import { headerSafePadding } from 'components/layout/Header';
-import { useHistory } from 'react-router';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import Collapse from '@material-ui/core/Collapse';
 import DonateModal from 'components/misc/DonateModal';
+import { PropTypes } from 'prop-types';
+import { useHistory } from 'react-router';
 
 export const menuWidth = 240;
 
@@ -72,6 +72,47 @@ const cprScreenersLinks = [
   { text: 'Indices', path: '/screener/cpr/indices' },
   { text: 'Stocks', path: '/screener/cpr/stocks', disabled: true },
 ];
+
+function RenderNavLink({ navLink, isChildren, hasChildren, isCollapseOpen, onClick }) {
+  return (
+    <ListItem
+      button
+      onClick={() => {
+        if (onClick) onClick(navLink);
+      }}
+      disabled={navLink.disabled}
+      style={isChildren ? { paddingLeft: '8%' } : {}}>
+      <ListItemIcon>{navLink.icon}</ListItemIcon>
+      <ListItemText primary={navLink.text} secondary={navLink.description} />
+      {/* Render expand icon if this navLink has children */}
+      {
+        (() => {
+          // Inline func for this nested condition
+          if (hasChildren) {
+            if (isCollapseOpen) return <ExpandLess />;
+            return <ExpandMore />;
+          }
+          return null;
+        })() /* call the inline func */
+      }
+    </ListItem>
+  );
+}
+
+RenderNavLink.defaultProps = {
+  hasChildren: false,
+  isChildren: false,
+  isCollapseOpen: false,
+  onClick: null,
+};
+
+RenderNavLink.propTypes = {
+  isChildren: PropTypes.bool,
+  hasChildren: PropTypes.bool,
+  isCollapseOpen: PropTypes.bool,
+  onClick: PropTypes.func,
+  navLink: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+};
 
 function Drawer(props, ref) {
   const donateModalRef = React.createRef();
@@ -141,35 +182,12 @@ function Drawer(props, ref) {
       // Toggle (remember than openChildren is an array of strings containing navLink.text if this navLink is open)
       setOpenChildren((old) => {
         if (openChildren.find((q) => q === navLink.text)) return old.filter((q) => q !== navLink.text);
-        else return [...old, navLink.text];
+        return [...old, navLink.text];
       });
     else if (mobileOpen) handleDrawerToggle();
   }
 
-  function RenderNavLink({ navLink, isChildren, hasChildren, isCollapseOpen }) {
-    return (
-      <ListItem
-        button
-        onClick={() => handleNavLinkClick(navLink)}
-        disabled={navLink.disabled}
-        style={isChildren ? { paddingLeft: '8%' } : {}}>
-        <ListItemIcon>{navLink.icon}</ListItemIcon>
-        <ListItemText primary={navLink.text} secondary={navLink.description} />
-        {/* Render expand icon if this navLink has children */}
-        {
-          (() => {
-            // Inline func for this nested condition
-            if (hasChildren) {
-              if (isCollapseOpen) return <ExpandLess />;
-              else return <ExpandMore />;
-            }
-          })() /* call the inline func */
-        }
-      </ListItem>
-    );
-  }
-
-  const drawer = (
+  const drawerContent = (
     <>
       <div className={classes.toolbar} /> {/* Div to position the drawer below the top appbar */}
       {/* Drawer header */}
@@ -180,19 +198,24 @@ function Drawer(props, ref) {
       <List>
         {navLinks.map((navLink) => {
           const hasChildren = navLink.children && Array.isArray(navLink.children);
-          const isCollapseOpen = openChildren.find((q) => q === navLink.text) ? true : false;
+          const isCollapseOpen = openChildren.find((q) => q === navLink.text) ? true : false; // eslint-disable-line no-unneeded-ternary
 
           return (
             <div key={navLink.text}>
               {/* Render nav link */}
-              <RenderNavLink navLink={navLink} hasChildren={hasChildren} isCollapseOpen={isCollapseOpen} />
+              <RenderNavLink
+                onClick={handleNavLinkClick}
+                navLink={navLink}
+                hasChildren={hasChildren}
+                isCollapseOpen={isCollapseOpen}
+              />
 
               {/* Render children array */}
               {hasChildren && (
                 <Collapse in={isCollapseOpen} timeout='auto' unmountOnExit>
                   <List component='div' disablePadding>
                     {navLink.children.map((child) => (
-                      <RenderNavLink key={child.text} navLink={child} isChildren />
+                      <RenderNavLink onClick={handleNavLinkClick} key={child.text} navLink={child} isChildren />
                     ))}
                   </List>
                 </Collapse>
@@ -223,7 +246,7 @@ function Drawer(props, ref) {
             ModalProps={{
               keepMounted: true, // Better open performance on mobile.
             }}>
-            {drawer}
+            {drawerContent}
           </MaterialDrawer>
         </Hidden>
         <Hidden smDown implementation='css'>
@@ -233,7 +256,7 @@ function Drawer(props, ref) {
             }}
             variant='permanent'
             open>
-            {drawer}
+            {drawerContent}
           </MaterialDrawer>
         </Hidden>
       </nav>

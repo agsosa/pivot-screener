@@ -5,6 +5,7 @@ import Header, { headerSafePadding } from 'components/layout/Header';
 import Footer from 'components/layout/Footer';
 import Paper from '@material-ui/core/Paper';
 import TelegramGroupPromo from 'components/misc/TelegramGroupPromo';
+import { PropTypes } from 'prop-types';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -64,5 +65,9 @@ function MainLayout({ Content }) {
     </div>
   );
 }
+
+MainLayout.propTypes = {
+  Content: PropTypes.node.isRequired,
+};
 
 export default MainLayout;

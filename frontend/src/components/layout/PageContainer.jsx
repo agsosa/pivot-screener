@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Breadcrumbs from 'components/layout/Breadcrumbs';
+import { PropTypes } from 'prop-types';
 
 const useStyles = makeStyles({
   root: {
@@ -22,5 +23,17 @@ function PageContainer({ breadcrumbsItems, children, style }, ref) {
     </div>
   );
 }
+
+PageContainer.defaultProps = {
+  breadcrumbsItems: [],
+  children: null,
+  style: {},
+};
+
+PageContainer.propTypes = {
+  breadcrumbsItems: PropTypes.arrayOf(PropTypes.string),
+  children: PropTypes.node,
+  style: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+};
 
 export default React.forwardRef(PageContainer);

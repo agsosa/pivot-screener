@@ -8,6 +8,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import TradingViewPrices from 'components/misc/TradingViewPrices';
 import HeaderBG from 'img/headerbg.png';
 import Hidden from '@material-ui/core/Hidden';
+import { PropTypes } from 'prop-types';
 
 export const headerSafePadding = 100;
 
@@ -42,7 +43,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Header({ onMobileMenuClick }) {
+function Header({ onMobileMenuClick }) {
   const classes = useStyles();
 
   return (
@@ -67,3 +68,13 @@ export default function Header({ onMobileMenuClick }) {
     </div>
   );
 }
+
+Header.defaultProps = {
+  onMobileMenuClick: null,
+};
+
+Header.propTypes = {
+  onMobileMenuClick: PropTypes.func,
+};
+
+export default Header;

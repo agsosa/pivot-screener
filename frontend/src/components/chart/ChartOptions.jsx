@@ -7,6 +7,8 @@ import { useMst } from 'models/Root';
 import withWidth from '@material-ui/core/withWidth';
 import Button from '@material-ui/core/Button';
 
+/* eslint-disable no-unneeded-ternary */
+
 const ChartOptions = observer(({ width }) => {
   const timeframes = ['Daily', 'Weekly', 'Monthly'];
   const xs = width === 'xs';
@@ -32,34 +34,32 @@ const ChartOptions = observer(({ width }) => {
   return (
     <>
       <FormGroup row={xs ? false : true} style={{ justifyContent: 'center', padding: 5 }}>
-        {timeframes.map((q) => {
-          return (
-            <FormGroup column={xs ? 'false' : 'true'} key={q}>
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={chartOptions[`${q.toLowerCase()}CPR`]}
-                    onChange={handleChange}
-                    name={`set${q}CPR`} // Function name on chartOptions to be called on change
-                    color='primary'
-                  />
-                }
-                label={`${q} CPR`}
-              />
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={chartOptions[`${q.toLowerCase()}Cam`]}
-                    onChange={handleChange}
-                    name={`set${q}Cam`} // Function name on chartOptions to be called on change
-                    color='primary'
-                  />
-                }
-                label={`${q} Camarilla`}
-              />
-            </FormGroup>
-          );
-        })}
+        {timeframes.map((q) => (
+          <FormGroup column={xs ? 'false' : 'true'} key={q}>
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={chartOptions[`${q.toLowerCase()}CPR`]}
+                  onChange={handleChange}
+                  name={`set${q}CPR`} // Function name on chartOptions to be called on change
+                  color='primary'
+                />
+              }
+              label={`${q} CPR`}
+            />
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={chartOptions[`${q.toLowerCase()}Cam`]}
+                  onChange={handleChange}
+                  name={`set${q}Cam`} // Function name on chartOptions to be called on change
+                  color='primary'
+                />
+              }
+              label={`${q} Camarilla`}
+            />
+          </FormGroup>
+        ))}
         <FormGroup column={xs ? 'false' : 'true'} style={{ justifyContent: 'center', alignItems: 'center' }}>
           <FormControlLabel
             control={

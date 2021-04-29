@@ -9,6 +9,7 @@ import { useMst } from 'models/Root';
 import { apiFetchBinanceFuturesCandles } from 'lib/API';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import PageContainer from 'components/layout/PageContainer';
+import { PropTypes } from 'prop-types';
 
 const FETCH_INTERVAL = 1000 * 15; // Time (ms) between ticker data updates
 
@@ -55,9 +56,9 @@ function ChartPage({ width }) {
   }, []);
 
   // On symbol select
-  function handleSymbolChange(symbol) {
-    if (symbol) {
-      setSymbol(symbol);
+  function handleSymbolChange(newSymbol) {
+    if (newSymbol) {
+      setSymbol(newSymbol);
     }
   }
 
@@ -94,5 +95,9 @@ function ChartPage({ width }) {
     </PageContainer>
   );
 }
+
+ChartPage.propTypes = {
+  width: PropTypes.string.isRequired,
+};
 
 export default withWidth()(ChartPage);
