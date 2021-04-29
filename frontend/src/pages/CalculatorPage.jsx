@@ -63,7 +63,7 @@ function CalculatorPage() {
   const handleInputChange = (e) => {
     setState((prev) => {
       const result = prev;
-      result[e.target.name] = e.target.value;
+      result[e.target.name] = Number.parseFloat(e.target.value);
       return { ...result };
     });
   };
