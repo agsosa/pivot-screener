@@ -1,56 +1,57 @@
-import { Button, Layout, Modal, Space } from 'antd';
 import React from 'react';
-import Contact from 'components/misc/Contact';
-import './Footer.css';
+import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@material-ui/core/styles';
+import { menuWidth } from 'components/layout/Drawer';
+import DailyCloseTime from 'components/misc/DailyCloseTime';
 
-const { Footer } = Layout;
+const useStyles = makeStyles((theme) => ({
+  root: {
+    display: 'flex',
+    flexDirection: 'column',
+    [theme.breakpoints.up('md')]: {
+      paddingLeft: menuWidth,
+    },
+  },
+  content: {
+    display: 'flex',
+    flexDirection: 'column',
+    height: '100%',
+    padding: theme.spacing(3),
+    textAlign: 'center',
+  },
+  textContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    color: theme.palette.text.secondary,
+  },
+}));
 
-export default function LayoutFooter() {
-  function donateModal() {
-    Modal.info({
-      centered: true,
-      title: 'Donations',
-      content: (
-        <div className='modal-container'>
-          <p>Any amount of money can help me to maintain the site. Thank you!</p>
-          <ul>
-            <li>
-              <b>BTC/BCH:</b> 17oGi5Qc3ru599vY8mWgPj723SJgfAqdBn
-            </li>
-            <li>
-              <b>LTC:</b> LQ2xgCCqzG2AYJLPNarCuap4ZqAV5rLaNE
-            </li>
-            <li>
-              <b>USDT-TRC20:</b> TAuhS3JDzDzK9FhK2EbmeDKJ9JdKUbwGzs
-            </li>
-          </ul>
-        </div>
-      ),
-      onOk() {},
-    });
-  }
+const year = new Date().getFullYear();
+
+function Footer() {
+  const classes = useStyles();
 
   return (
-    <Footer className='footer'>
-      <Space direction='vertical'>
-        <Space>
-          For any suggestion or bug report you can send me a message on
-          <a href='https://t.me/xref1x' target='_blank' rel='noopener noreferrer'>
-            💬 Telegram
-          </a>
-        </Space>
-        <p className='disclaimer'>
-          Disclaimer: The information provided on this website does not constitute Investment or trading advice. The
-          sole purpose of this website is informational and/or Educational. PivotScreener.com is not responsible for any
-          misuse of the information presented on this website.
-        </p>
-        <Button type='link' onClick={donateModal} className='btn'>
-          ❤️ Donate Crypto
-        </Button>
-        <Space>
-          Pivot Screener © 2021 <Contact />
-        </Space>
-      </Space>
-    </Footer>
+    <div className={classes.root}>
+      <main className={classes.content}>
+        <div className={classes.textContainer}>
+          <DailyCloseTime />
+          <Typography variant='overline'>Disclaimer</Typography>
+
+          <Typography variant='caption'>
+            The information provided on this website does not constitute Investment or trading advice. The sole purpose
+            of this website is informational and/or Educational. <br />
+            PivotScreener.com is not responsible for any misuse of the information presented on this website.
+            <br />
+            <br />
+            Pivot Screener © {year}
+          </Typography>
+        </div>
+      </main>
+    </div>
   );
 }
+
+export default Footer;

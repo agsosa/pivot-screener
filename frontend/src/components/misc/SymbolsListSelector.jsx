@@ -3,6 +3,7 @@ import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { apiFetchBinanceFuturesList } from 'lib/API';
+import { PropTypes } from 'prop-types';
 
 function SymbolsListSelector({ onSymbolChange }) {
   const [open, setOpen] = React.useState(false);
@@ -13,7 +14,7 @@ function SymbolsListSelector({ onSymbolChange }) {
     // TODO: Cancel on unmount
     setLoading(true);
 
-    let result = await apiFetchBinanceFuturesList();
+    const result = await apiFetchBinanceFuturesList();
 
     if (result && Array.isArray(result)) {
       setOptions(result);
@@ -57,10 +58,10 @@ function SymbolsListSelector({ onSymbolChange }) {
           InputProps={{
             ...params.InputProps,
             endAdornment: (
-              <React.Fragment>
+              <>
                 {loading ? <CircularProgress color='inherit' size={20} /> : null}
                 {params.InputProps.endAdornment}
-              </React.Fragment>
+              </>
             ),
           }}
         />
@@ -68,5 +69,13 @@ function SymbolsListSelector({ onSymbolChange }) {
     />
   );
 }
+
+SymbolsListSelector.defaultProps = {
+  onSymbolChange: null,
+};
+
+SymbolsListSelector.propTypes = {
+  onSymbolChange: PropTypes.func,
+};
 
 export default SymbolsListSelector;

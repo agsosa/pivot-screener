@@ -5,10 +5,9 @@ import { autorun } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import React, { useEffect, useState } from 'react';
 import { PropTypes } from 'prop-types';
-import { Skeleton } from 'antd';
 import { useMst } from 'models/Root';
 import './Table.css';
-import CamStats from 'components/misc/CamStats';
+import CamStats from 'components/stats/CamStats';
 import FiltersMenu from 'components/tables/FiltersMenu';
 import { exchangeRenderer, symbolRenderer, CustomLoadingOverlay } from 'components/tables/CommonTableComponents';
 import {
@@ -19,8 +18,22 @@ import {
   situationCellStyle,
   situationGetter,
 } from 'components/tables/CamTableComponents';
+import { makeStyles } from '@material-ui/core/styles';
+import MultilineSkeleton from 'components/misc/MultilineSkeleton';
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    flexGrow: 1,
+    gap: theme.spacing(1),
+    flexDirection: 'column',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+}));
 
 const CamTable = ({ screenerType, futureMode, market, timeframe }) => {
+  const classes = useStyles();
   const [gridApi, setGridApi] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -76,8 +89,13 @@ const CamTable = ({ screenerType, futureMode, market, timeframe }) => {
   };
 
   return (
-    <div>
-      {!gridApi || loading ? <Skeleton /> : <CamStats timeframe={timeframe} futureMode={futureMode} />}
+    <div className={classes.root}>
+      {!gridApi || loading || tickers.length <= 1 ? (
+        <MultilineSkeleton lines={5} style={{ width: '100%', height: 20 }} />
+      ) : (
+        <CamStats timeframe={timeframe} futureMode={futureMode} />
+      )}
+
       {gridApi && (
         <FiltersMenu
           gridApi={gridApi}

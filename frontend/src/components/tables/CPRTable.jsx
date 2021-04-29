@@ -1,14 +1,13 @@
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-material.css';
 import { AgGridColumn, AgGridReact } from 'ag-grid-react';
-import { Skeleton } from 'antd';
 import { autorun } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import React, { useEffect, useState } from 'react';
 import { PropTypes } from 'prop-types';
 import { useMst } from 'models/Root';
 import './Table.css';
-import CPRStats from 'components/misc/CPRStats';
+import CPRStats from 'components/stats/CPRStats';
 import FiltersMenu from 'components/tables/FiltersMenu';
 import { exchangeRenderer, symbolRenderer, CustomLoadingOverlay } from 'components/tables/CommonTableComponents';
 import {
@@ -24,10 +23,25 @@ import {
   distanceFormatter,
   distanceGetter,
 } from 'components/tables/CPRTableComponents';
+import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@material-ui/core/styles';
+import MultilineSkeleton from 'components/misc/MultilineSkeleton';
 
 // TODO: Implementar tooltip en las distancias de pivote para mostrar precio del pivote
 
+const useStyles = makeStyles((theme) => ({
+  root: {
+    flexGrow: 1,
+    gap: theme.spacing(1),
+    flexDirection: 'column',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+}));
+
 const CPRTable = ({ screenerType, timeframe, market, futureMode }) => {
+  const classes = useStyles();
   const [gridApi, setGridApi] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -85,22 +99,25 @@ const CPRTable = ({ screenerType, timeframe, market, futureMode }) => {
   };
 
   const InfoRenderer = () => (
-    <div className='info'>
-      <ul>
-        <li>
-          The percentage shown above the <i>Untested</i> label is the closest approximation to the CPR. <i>Example:</i>{' '}
-          Untested <sup>0.1%</sup> means that there was a candle that came within 0.1% of the CPR.
-        </li>
-        <li>P Distance is the distance between the current price and the pivot level.</li>
-        <li>TC Distance is the distance between the current price and the top pivot level.</li>
-        <li>BC Distance is the distance between the current price and the bottom pivot level.</li>
-      </ul>
-    </div>
+    <>
+      <Typography>
+        The percentage shown above the <i>Untested</i> label is the closest approximation to the CPR. <i>Example:</i>{' '}
+        Untested <sup>0.1%</sup> means that there was a candle that came within 0.1% of the CPR.
+      </Typography>
+
+      <Typography>P Distance is the distance between the current price and the pivot level.</Typography>
+      <Typography>TC Distance is the distance between the current price and the top pivot level.</Typography>
+      <Typography>BC Distance is the distance between the current price and the bottom pivot level.</Typography>
+    </>
   );
 
   return (
-    <div>
-      {!gridApi || loading ? <Skeleton /> : <CPRStats timeframe={timeframe} futureMode={futureMode} />}
+    <div className={classes.root}>
+      {!gridApi || loading || tickers.length <= 1 ? (
+        <MultilineSkeleton lines={5} style={{ width: '100%', height: 20 }} />
+      ) : (
+        <CPRStats timeframe={timeframe} futureMode={futureMode} />
+      )}
 
       {gridApi && (
         <FiltersMenu
@@ -179,10 +196,13 @@ const CPRTable = ({ screenerType, timeframe, market, futureMode }) => {
             valueGetter={(params) => cprWidthGetter(params, timeframe, futureMode)}
           />
         </AgGridReact>
-        )
       </div>
 
-      {!gridApi || loading ? <Skeleton /> : <InfoRenderer />}
+      {!gridApi || loading || tickers.length <= 1 ? (
+        <MultilineSkeleton lines={5} style={{ width: '100%', height: 20 }} />
+      ) : (
+        <InfoRenderer />
+      )}
     </div>
   );
 };

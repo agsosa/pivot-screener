@@ -1,11 +1,17 @@
-import { Result } from 'antd';
-import React from 'react';
-import ContentContainer from 'components/layout/ContentContainer';
+import * as React from 'react';
+import { Link } from 'react-router-dom';
+import Typography from '@material-ui/core/Typography';
 
-export default function ErrorPage() {
+function ErrorPage() {
   return (
-    <ContentContainer breadcrumbItems={['Pivot Screener', 'Not found']}>
-      <Result status='404' title='404' subTitle='Sorry, the page you visitedx does not exist.' />
-    </ContentContainer>
+    <div style={{ textAlign: 'center' }}>
+      <Typography variant='h3' gutterBottom>
+        404 Page not Found
+      </Typography>
+      <p>The requested page can&apos;t be found</p>
+      <Link to='/'>Go to Home</Link>
+    </div>
   );
 }
+
+export default ErrorPage;

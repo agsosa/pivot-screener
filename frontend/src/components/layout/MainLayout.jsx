@@ -1,38 +1,73 @@
 import React from 'react';
-import { Layout } from 'antd';
-import { HashRouter as Router, Route, Switch } from 'react-router-dom';
-import LayoutFooter from 'components/layout/Footer';
-import LayoutHeader from 'components/layout/Header';
-import CalculatorPage from 'pages/CalculatorPage';
-import ScreenerPage from 'pages/ScreenerPage';
-import ChartPage from 'pages/ChartPage';
-import ErrorPage from 'pages/ErrorPage';
-import Sidebar from 'components/layout/Sidebar';
-import './MainLayout.css';
+import { makeStyles } from '@material-ui/core/styles';
+import Drawer, { menuWidth } from 'components/layout/Drawer';
+import Header, { headerSafePadding } from 'components/layout/Header';
+import Footer from 'components/layout/Footer';
+import Paper from '@material-ui/core/Paper';
+import TelegramGroupPromo from 'components/misc/TelegramGroupPromo';
+import { PropTypes } from 'prop-types';
 
-const { Content } = Layout;
+const useStyles = makeStyles((theme) => ({
+  root: {
+    display: 'flex',
 
-export default function MainLayout() {
+    flexDirection: 'column',
+  },
+  content: {
+    paddingTop: headerSafePadding,
+    display: 'flex',
+    flexDirection: 'column',
+    justifyItems: 'center',
+    height: '100%',
+    [theme.breakpoints.up('md')]: {
+      paddingLeft: menuWidth,
+    },
+    [theme.breakpoints.down('sm')]: {
+      marginTop: '-5px',
+    },
+    [theme.breakpoints.down('xs')]: {
+      marginTop: '-15px',
+    },
+  },
+  paperContent: {
+    display: 'flex',
+    boxShadow: '0 12px 12px -6px rgba(0, 0, 0, 0.05)',
+    alignItems: 'center',
+    minHeight: '500px',
+    flexDirection: 'column',
+    marginTop: theme.spacing(3),
+    gap: theme.spacing(3),
+    padding: theme.spacing(3),
+    height: '100%',
+  },
+}));
+
+function MainLayout({ Content }) {
+  const classes = useStyles();
+  const drawerRef = React.createRef();
+
+  function onMobileMenuClick() {
+    if (drawerRef.current) drawerRef.current.toggle();
+  }
+
   return (
-    <Router>
-      <Layout className='main-layout'>
-        <Sidebar />
-        <Layout className='site-layout'>
-          <LayoutHeader />
-
-          <Content style={{}}>
-            <Switch>
-              <Route exact path='/calculator' component={CalculatorPage} />
-              <Route exact path='/screener/:screenerType/:market' component={ScreenerPage} />
-              <Route exact path='/screener/:screenerType/:market' component={ScreenerPage} />
-              <Route exact path='/' component={ChartPage} />
-              <Route component={ErrorPage} />
-            </Switch>
-          </Content>
-
-          <LayoutFooter />
-        </Layout>
-      </Layout>
-    </Router>
+    <div className={classes.root}>
+      <Header onMobileMenuClick={onMobileMenuClick} />
+      <Drawer ref={drawerRef} />
+      <main className={classes.content}>
+        <TelegramGroupPromo />
+        {/* Content container */}
+        <Paper elevation={0} className={classes.paperContent}>
+          <Content />
+        </Paper>
+      </main>
+      <Footer />
+    </div>
   );
 }
+
+MainLayout.propTypes = {
+  Content: PropTypes.elementType.isRequired,
+};
+
+export default MainLayout;

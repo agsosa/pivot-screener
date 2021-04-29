@@ -1,19 +1,92 @@
-import { Result, Tabs } from 'antd';
-import React, { useEffect } from 'react';
+import * as React from 'react';
 import { observer } from 'mobx-react-lite';
 import { PropTypes } from 'prop-types';
 import { useMst } from 'models/Root';
 import { capitalizeFirstLetter } from 'lib/Helpers';
 import { isValidMarket } from 'lib/Markets';
-import CamTable from 'components/tables/CamTable';
-import ContentContainer from 'components/layout/ContentContainer';
+import PageContainer from 'components/layout/PageContainer';
+import { makeStyles } from '@material-ui/core/styles';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import Box from '@material-ui/core/Box';
 import CPRTable from 'components/tables/CPRTable';
+import CamTable from 'components/tables/CamTable';
 
-const ScreenerPage = ({ match }) => {
+/* eslint-disable react/forbid-prop-types */
+
+function TabPanel(props) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role='tabpanel'
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}>
+      {value === index && <Box p={3}>{children}</Box>}
+    </div>
+  );
+}
+
+TabPanel.defaultProps = {
+  children: null,
+};
+
+TabPanel.propTypes = {
+  children: PropTypes.node,
+  index: PropTypes.any.isRequired,
+  value: PropTypes.any.isRequired,
+};
+
+function a11yProps(label) {
+  return {
+    id: `simple-tab-${label}`,
+    'aria-controls': `simple-tabpanel-${label}`,
+  };
+}
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    flexGrow: 1,
+    width: '100%',
+    backgroundColor: theme.palette.background.paper,
+  },
+  tabsBar: {
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    flexGrow: 1,
+    borderBottom: '1px rgb(0,0,0,0.1) solid',
+  },
+  tabContent: {
+    width: '100%',
+    height: '100%',
+  },
+}));
+
+function ScreenerPage({ match }) {
+  // Path params
   const { market, screenerType } = match.params;
+  const validMarket = market && isValidMarket(market);
 
-  const validMarket = () => market && isValidMarket(market);
+  // Tab state
+  const TAB_ITEMS = [
+    { timeframe: 'Daily' },
+    { timeframe: 'Weekly' },
+    { timeframe: 'Monthly' },
+    { timeframe: 'Tomorrow', futureMode: true },
+    { timeframe: 'Next Week', futureMode: true },
+    { timeframe: 'Next Month', futureMode: true },
+  ];
+  const [activeTab, setActiveTab] = React.useState(0);
+  const handleTabChange = (event, newTab) => {
+    setActiveTab(newTab);
+  };
 
+  const classes = useStyles();
+
+  // Get TableComponent and breadcrumb depending on path params
   let TableComponent;
   let breadcrumbStr;
 
@@ -31,15 +104,14 @@ const ScreenerPage = ({ match }) => {
       breadcrumbStr = 'Error';
   }
 
-  const { TabPane } = Tabs;
-
+  // Request data from API
   const { startReceivingData, stopReceivingData } = useMst((store) => ({
     startReceivingData: store.startReceivingData,
     stopReceivingData: store.stopReceivingData,
   }));
 
-  useEffect(() => {
-    if (validMarket()) {
+  React.useEffect(() => {
+    if (validMarket) {
       startReceivingData('daily, weekly, monthly', market);
     }
 
@@ -48,37 +120,48 @@ const ScreenerPage = ({ match }) => {
     };
   }, [market]);
 
+  // Render
   return (
-    <ContentContainer breadcrumbItems={[breadcrumbStr, capitalizeFirstLetter(market)]}>
-      {!validMarket() || !TableComponent ? (
-        <Result status='404' title='404' subTitle='Sorry, the page you visited does not exist.' />
+    <PageContainer breadcrumbsItems={[breadcrumbStr, capitalizeFirstLetter(market)]}>
+      {!validMarket || !TableComponent ? (
+        <b>Invalid market</b>
       ) : (
         <>
-          <Tabs defaultActiveKey='1'>
-            <TabPane tab='Daily' key='1'>
-              <TableComponent screenerType={screenerType} timeframe='daily' market={market} futureMode={false} />
-            </TabPane>
-            <TabPane tab='Weekly' key='2'>
-              <TableComponent screenerType={screenerType} timeframe='weekly' market={market} futureMode={false} />
-            </TabPane>
-            <TabPane tab='Monthly' key='3'>
-              <TableComponent screenerType={screenerType} timeframe='monthly' market={market} futureMode={false} />
-            </TabPane>
-            <TabPane tab='Tomorrow' key='4'>
-              <TableComponent screenerType={screenerType} timeframe='daily' market={market} futureMode />
-            </TabPane>
-            <TabPane tab='Next Week' key='5'>
-              <TableComponent screenerType={screenerType} timeframe='weekly' market={market} futureMode />
-            </TabPane>
-            <TabPane tab='Next Month' key='6'>
-              <TableComponent screenerType={screenerType} timeframe='monthly' market={market} futureMode />
-            </TabPane>
-          </Tabs>
+          <div className={classes.tabsBar}>
+            <Tabs
+              variant='scrollable'
+              scrollButtons='auto'
+              value={activeTab}
+              onChange={handleTabChange}
+              aria-label='timeframe tabs'
+              indicatorColor='primary'
+              textColor='primary'>
+              {TAB_ITEMS.map(({ timeframe }, index) => (
+                <Tab key={timeframe} label={timeframe} {...a11yProps(index)} />
+              ))}
+            </Tabs>
+          </div>
+          <div className={classes.tabContent}>
+            {TAB_ITEMS.map((item, index) => {
+              const { timeframe, futureMode } = item;
+
+              return (
+                <TabPanel key={timeframe} value={activeTab} index={index}>
+                  <TableComponent
+                    screenerType={screenerType}
+                    timeframe={timeframe.toLowerCase()}
+                    market={market}
+                    futureMode={futureMode || false}
+                  />
+                </TabPanel>
+              );
+            })}
+          </div>
         </>
       )}
-    </ContentContainer>
+    </PageContainer>
   );
-};
+}
 
 ScreenerPage.propTypes = {
   match: PropTypes.objectOf(PropTypes.any).isRequired,

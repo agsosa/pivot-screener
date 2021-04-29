@@ -1,8 +1,9 @@
 import React, { createRef, useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Hidden from '@material-ui/core/Hidden';
+import { PropTypes } from 'prop-types';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   widgetContainer: {
     size: 'auto',
   },
@@ -76,12 +77,23 @@ function TVWidget() {
   );
 }
 
-export default function TradingViewPrices({ responsive }) {
+function TradingViewPrices({ responsive }) {
   if (responsive)
     return (
       <Hidden smDown>
         <TVWidget />
       </Hidden>
     );
-  else return <TVWidget />;
+
+  return <TVWidget />;
 }
+
+TradingViewPrices.defaultProps = {
+  responsive: false,
+};
+
+TradingViewPrices.propTypes = {
+  responsive: PropTypes.bool,
+};
+
+export default TradingViewPrices;

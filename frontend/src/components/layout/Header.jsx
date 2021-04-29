@@ -1,91 +1,80 @@
-import React, { createRef, useEffect, useState } from 'react';
-import { Alert } from 'antd';
-import './Header.css';
-import DailyCloseTime from 'material/components/misc/DailyCloseTime';
+import React from 'react';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import IconButton from '@material-ui/core/IconButton';
+import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@material-ui/core/styles';
+import MenuIcon from '@material-ui/icons/Menu';
+import TradingViewPrices from 'components/misc/TradingViewPrices';
+import HeaderBG from 'img/headerbg.png';
+import Hidden from '@material-ui/core/Hidden';
+import { PropTypes } from 'prop-types';
 
-export default function LayoutHeader() {
-  const [scriptMounted, setScriptMounted] = useState(false);
+export const headerSafePadding = 100;
 
-  const hRef = createRef();
+const useStyles = makeStyles((theme) => ({
+  root: {
+    flexGrow: 1,
+    gap: theme.spacing(3),
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  appBar: {
+    padding: '5px',
+    backgroundImage: `url(${HeaderBG})`,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    backgroundRepeat: 'no-repeat',
+  },
+  menuButton: {
+    position: 'absolute',
+    left: theme.spacing(3),
+    [theme.breakpoints.up('md')]: {
+      display: 'none',
+    },
+  },
+  toolbar: {
+    display: 'flex',
+    [theme.breakpoints.down('sm')]: {
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+  },
+}));
 
-  useEffect(() => {
-    // TV Widget
-    if (!scriptMounted) {
-      const script = document.createElement('script');
-      script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-tickers.js';
-      script.async = true;
-      script.innerHTML = JSON.stringify({
-        symbols: [
-          {
-            proName: 'FOREXCOM:SPXUSD',
-            title: 'S&P 500',
-          },
-          {
-            proName: 'FOREXCOM:NSXUSD',
-            title: 'Nasdaq 100',
-          },
-          {
-            proName: 'FX_IDC:EURUSD',
-            title: 'EUR/USD',
-          },
-          {
-            description: 'BTC/USDT',
-            proName: 'BINANCE:BTCUSDT',
-          },
-          {
-            description: 'ETH/USDT',
-            proName: 'BINANCE:ETHUSDT',
-          },
-          {
-            description: 'GOLD',
-            proName: 'OANDA:XAUUSD',
-          },
-          {
-            description: 'SILVER',
-            proName: 'OANDA:XAGUSD',
-          },
-        ],
-        colorTheme: 'dark',
-        isTransparent: true,
-        showSymbolLogo: true,
-        locale: 'en',
-      });
-
-      hRef.current.appendChild(script);
-      setScriptMounted(true);
-    }
-  }, [hRef]);
+function Header({ onMobileMenuClick }) {
+  const classes = useStyles();
 
   return (
-    <>
-      <div className='header-title'>
-        <div className='widget_container'>
-          <div className='tradingview-widget-container' ref={hRef}>
-            <div className='tradingview-widget-container__widget' />
-          </div>
-        </div>
-
-        <a href='/' className='header-link'>
-          Pivot Screener
-        </a>
-
-        <DailyCloseTime />
-      </div>
-
-      <div className='promoContainer'>
-        <Alert
-          banner
-          message={
-            <>
-              <b>Camarilla Pivot Trading Telegram</b> •
-              <a href='https://t.me/camarillacruisin' target='_blank' rel='noopener noreferrer'>
-                <b> Click here to join the group!</b>
-              </a>
-            </>
-          }
-          type='warning'
-        />
-      </div>
-    </>
+    <div className={classes.root}>
+      {/* App bar */}
+      <AppBar position='fixed' className={classes.appBar}>
+        <TradingViewPrices responsive />
+        <Hidden mdUp>
+          <Toolbar className={classes.toolbar}>
+            <IconButton
+              edge='start'
+              className={classes.menuButton}
+              color='inherit'
+              aria-label='menu'
+              onClick={onMobileMenuClick}>
+              <MenuIcon />
+            </IconButton>
+            <Typography variant='h5'>Pivot Screener</Typography>
+          </Toolbar>
+        </Hidden>
+      </AppBar>
+    </div>
   );
 }
+
+Header.defaultProps = {
+  onMobileMenuClick: null,
+};
+
+Header.propTypes = {
+  onMobileMenuClick: PropTypes.func,
+};
+
+export default Header;

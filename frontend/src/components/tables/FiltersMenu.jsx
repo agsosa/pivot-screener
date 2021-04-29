@@ -1,13 +1,48 @@
 import * as React from 'react';
-import { Space, Button, Badge, message } from 'antd';
 import './Table.css';
 import { PropTypes } from 'prop-types';
 import { capitalizeFirstLetter } from 'lib/Helpers';
 import SocketStatus from 'components/misc/SocketStatus';
 import { useMst } from 'models/Root';
+import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
+import { makeStyles } from '@material-ui/core/styles';
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
+
+function Alert(props) {
+  return <MuiAlert elevation={6} variant='filled' {...props} />;
+}
+
+const useStyles = makeStyles((theme) => ({
+  btnContainer: {
+    display: 'flex',
+    gap: theme.spacing(1),
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: theme.spacing(2),
+    marginTop: theme.spacing(1),
+    padding: theme.spacing(1),
+  },
+  titleContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: theme.spacing(1),
+    padding: theme.spacing(1),
+  },
+  tickersCount: {
+    border: '1px solid rgb(0,0,0,0.30)',
+    borderRadius: '30%',
+    paddingLeft: 5,
+    paddingRight: 5,
+  },
+}));
 
 const FiltersMenu = ({ screenerType, gridApi, tickersCount, market, timeframe }) => {
+  const classes = useStyles();
   const [filtersEnabled, setFiltersEnabled] = React.useState(false);
+  const [snackbarMessage, setSnackbarMessage] = React.useState('');
 
   const { camTableFilters, cprTableFilters, setCprTableFilters, setCamTableFilters } = useMst((store) => ({
     camTableFilters: store.camTableFilters,
@@ -49,9 +84,9 @@ const FiltersMenu = ({ screenerType, gridApi, tickersCount, market, timeframe })
     if (gridApi) {
       const filterModel = gridApi.getFilterModel();
       if (setTableFilters) setTableFilters(filterModel);
-      message.success('Filters saved');
+      setSnackbarMessage('Filters saved');
     } else {
-      message.success('The table is not ready');
+      setSnackbarMessage('The table is not ready');
     }
   };
 
@@ -59,12 +94,12 @@ const FiltersMenu = ({ screenerType, gridApi, tickersCount, market, timeframe })
     if (gridApi) {
       if (getTableFilters) {
         gridApi.setFilterModel(getTableFilters);
-        message.success('Filters applied');
+        setSnackbarMessage('Filters applied');
       } else {
-        message.error('No saved filters found');
+        setSnackbarMessage('No saved filters found');
       }
     } else {
-      message.success('The table is not ready');
+      setSnackbarMessage('The table is not ready');
     }
   };
 
@@ -72,26 +107,53 @@ const FiltersMenu = ({ screenerType, gridApi, tickersCount, market, timeframe })
     if (gridApi) {
       gridApi.setFilterModel(null);
     } else {
-      message.success('The table is not ready');
+      setSnackbarMessage('The table is not ready');
     }
+  };
+
+  const handleSnackbarClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setSnackbarMessage('');
   };
 
   return (
     <div>
-      <Space>
-        <h1>
+      <div className={classes.titleContainer}>
+        <Typography variant='h5'>
           {capitalizeFirstLetter(market)} / {capitalizeFirstLetter(timeframe)}
-        </h1>
-        <Badge className='badge' count={tickersCount} />
+        </Typography>
+        {tickersCount > 0 && (
+          <Typography variant='caption' className={classes.tickersCount}>
+            {tickersCount}
+          </Typography>
+        )}
         <SocketStatus className='socket-status' />
-      </Space>
-      <p className='filter-hint'>You can filter, short and move any column. The data is updated automatically.</p>
-      <Space>
-        <Button onClick={saveFilters}>Save Filters</Button>
-        <Button onClick={loadFilters}>Load Saved Filters</Button>
-        <Button onClick={clearFilters}>Clear Filters</Button>
-      </Space>
+      </div>
+
+      <Typography variant='caption'>
+        You can filter, short and move any column. The data is updated automatically.
+      </Typography>
+      <div className={classes.btnContainer}>
+        <Button size='small' variant='outlined' onClick={saveFilters}>
+          Save Filters
+        </Button>
+        <Button size='small' variant='outlined' onClick={loadFilters}>
+          Load Saved Filters
+        </Button>
+        <Button size='small' variant='outlined' onClick={clearFilters}>
+          Clear Filters
+        </Button>
+      </div>
       {filtersEnabled && <p className='using-filters'>* Using Filters *</p>}
+
+      <Snackbar open={snackbarMessage} autoHideDuration={5000} onClose={handleSnackbarClose}>
+        <Alert onClose={handleSnackbarClose} severity='info'>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </div>
   );
 };

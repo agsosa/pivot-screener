@@ -1,110 +1,109 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { observer } from 'mobx-react-lite';
-import { Spin, Button, Space, message, AutoComplete } from 'antd';
+import * as React from 'react';
+import Typography from '@material-ui/core/Typography';
+import SymbolsListSelector from 'components/misc/SymbolsListSelector';
+import ChartOptions from 'components/chart/ChartOptions';
 import Chart from 'components/chart/Chart';
+import Grid from '@material-ui/core/Grid';
+import withWidth from '@material-ui/core/withWidth';
 import { useMst } from 'models/Root';
-import { apiFetchBinanceFuturesList, apiFetchBinanceFuturesCandles } from 'lib/API';
-import ContentContainer from 'components/layout/ContentContainer';
-import './ChartPage.css';
-import ChartOptionsMenu from 'components/chart/ChartOptionsMenu';
-import { useIsMounted } from 'lib/Helpers';
+import { apiFetchBinanceFuturesCandles } from 'lib/API';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import PageContainer from 'components/layout/PageContainer';
+import { PropTypes } from 'prop-types';
 
-const FETCH_INTERVAL = 1000 * 15;
+const FETCH_INTERVAL = 1000 * 15; // Time (ms) between ticker data updates
 
-const ChartPage = observer(() => {
-  const isMounted = useIsMounted();
-  const [symbolInput, setSymbolInput] = useState('');
-  const [symbol, setSymbol] = useState('BTCUSDT');
-  const [symbolsList, setSymbolsList] = useState([]);
+function ChartPage({ width }) {
+  const containerRef = React.createRef();
+  const xs = width === 'xs';
+  const center = { alignItems: 'center', justify: 'center' };
+  const mounted = React.useRef(false);
 
-  const fetchCandlesTimeout = useRef(null);
-  const firstLoad = useRef(true);
-
-  const { tickers, setTickers } = useMst((store) => ({
-    tickers: store.tickers,
+  // State
+  const [loading, setLoading] = React.useState(true);
+  const [symbol, setSymbol] = React.useState('BTCUSDT');
+  const { setTickers } = useMst((store) => ({
     setTickers: store.setTickers,
   }));
 
+  const fetchCandlesTimeout = React.useRef(null);
+
   async function fetchCandles() {
     const result = await apiFetchBinanceFuturesCandles(symbol);
-    if (symbol === result.symbol && isMounted())
-      setTickers([{ symbol, market: '', exchange: '', candlesticks: result.candlesticks }]);
-  }
-
-  function startFetchCandles() {
-    if (fetchCandlesTimeout.current) clearInterval(fetchCandlesTimeout.current);
-
-    if (!firstLoad.current) {
-      fetchCandles();
-      fetchCandlesTimeout.current = setInterval(() => fetchCandles(), FETCH_INTERVAL);
-    } else fetchCandles();
-  }
-
-  async function fetchSymbolsList() {
-    let result = await apiFetchBinanceFuturesList();
-    if (result && Array.isArray(result)) {
-      result = result.map((q) => ({ value: q }));
-      setSymbolsList(result);
+    if (mounted.current) {
+      setLoading(false);
+      if (symbol === result.symbol)
+        setTickers([{ symbol, market: '', exchange: '', candlesticks: result.candlesticks }]);
     }
   }
 
-  useEffect(() => {
+  // Start fetch candles for the current symbol, cancel the previous fetch interval
+  function startFetchCandles() {
+    setLoading(true);
+    if (fetchCandlesTimeout.current) clearInterval(fetchCandlesTimeout.current);
+    fetchCandlesTimeout.current = setInterval(() => fetchCandles(), FETCH_INTERVAL);
+    fetchCandles();
+  }
+
+  // On symbol update
+  React.useEffect(() => {
     startFetchCandles();
-    firstLoad.current = false;
   }, [symbol]);
 
-  useEffect(() => {
-    fetchSymbolsList();
+  // On mount
+  React.useEffect(() => {
+    mounted.current = true;
     startFetchCandles();
 
     return () => {
+      mounted.current = false;
       if (fetchCandlesTimeout.current) clearInterval(fetchCandlesTimeout.current);
-      setTickers([]);
     };
   }, []);
 
-  function onChangeSymbolClick() {
-    const input = symbolInput.toUpperCase();
-
-    if (symbolsList.filter((q) => q.value === input).length !== 0) {
-      setSymbol(input);
-      message.loading('Loading symbol data...', 2);
-    } else message.error('Symbol name not found');
+  // On symbol select
+  function handleSymbolChange(newSymbol) {
+    if (newSymbol) {
+      setSymbol(newSymbol);
+    }
   }
 
+  // Render
   return (
-    <ContentContainer breadcrumbItems={['Home', 'Chart']}>
-      <Space direction='vertical' className='space'>
-        <Space direction='vertical'>
-          <h2> CPR + Camarilla Pivots Chart</h2>
-          Displaying the latest 500 hours only. The data is updated automatically.
-        </Space>
-        <Space>
-          <AutoComplete
-            className='autocomplete'
-            options={symbolsList}
-            value={symbolInput}
-            placeholder='BTCUSDT'
-            onChange={(value) => setSymbolInput(value)}
-            filterOption={(inputValue, option) => option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1}
-          />
-          <Button type='primary' onClick={() => onChangeSymbolClick()}>
-            Change Symbol
-          </Button>
-        </Space>
+    <PageContainer breadcrumbsItems={['Tools', 'Chart']} ref={containerRef} style={{ minHeight: '900px' }}>
+      <Grid {...center} spacing={3} container direction='column' style={{ marginBottom: 10 }}>
+        {/* Header */}
+        <Grid {...center} container direction='column'>
+          <Grid item xs>
+            <Typography variant='h6'>CPR + Camarilla Pivots Chart</Typography>
+          </Grid>
+          <Grid item xs zeroMinWidth>
+            <Typography variant='caption'>
+              Displaying the latest 500 hours only. The data is updated automatically.
+            </Typography>
+          </Grid>
+        </Grid>
 
-        {!tickers ||
-          (tickers.length === 0 ? (
-            <div className='loading-container'>
-              <Spin tip='Loading Chart...' />
-            </div>
-          ) : (
-            <ChartOptionsMenu />
-          ))}
-      </Space>
-      <Chart />
-    </ContentContainer>
+        {/* Symbol selector */}
+        <Grid container {...center} spacing={1} direction={xs ? 'column' : 'row'} style={{ marginTop: 15 }}>
+          <Grid item xs={10} sm={5} style={xs ? { width: '100%' } : {}} md={3} xl={2}>
+            <SymbolsListSelector onSymbolChange={handleSymbolChange} />
+          </Grid>
+        </Grid>
+
+        {/* Chart options, chart */}
+        <Grid item xs>
+          {loading ? <CircularProgress /> : <ChartOptions />}
+        </Grid>
+      </Grid>
+
+      <Chart containerRef={containerRef} />
+    </PageContainer>
   );
-});
+}
 
-export default ChartPage;
+ChartPage.propTypes = {
+  width: PropTypes.string.isRequired,
+};
+
+export default withWidth()(ChartPage);
