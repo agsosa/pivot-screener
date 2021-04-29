@@ -13,7 +13,7 @@ const useStyles = makeStyles({
   },
 });
 
-function PageContainer({ breadcrumbsItems, children, style }, ref) {
+const PageContainer = React.forwardRef(({ breadcrumbsItems, children, style }, ref) => {
   const classes = useStyles();
 
   return (
@@ -22,7 +22,7 @@ function PageContainer({ breadcrumbsItems, children, style }, ref) {
       {children}
     </div>
   );
-}
+});
 
 PageContainer.defaultProps = {
   breadcrumbsItems: [],
@@ -36,4 +36,4 @@ PageContainer.propTypes = {
   style: PropTypes.object, // eslint-disable-line react/forbid-prop-types
 };
 
-export default React.forwardRef(PageContainer);
+export default PageContainer;

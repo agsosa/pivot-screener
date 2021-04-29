@@ -67,7 +67,7 @@ function MainLayout({ Content }) {
 }
 
 MainLayout.propTypes = {
-  Content: PropTypes.node.isRequired,
+  Content: PropTypes.elementType.isRequired,
 };
 
 export default MainLayout;

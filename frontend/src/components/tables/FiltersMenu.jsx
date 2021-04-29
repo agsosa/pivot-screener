@@ -21,6 +21,7 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: theme.spacing(2),
+    marginTop: theme.spacing(1),
     padding: theme.spacing(1),
   },
   titleContainer: {

@@ -135,8 +135,7 @@ function ScreenerPage({ match }) {
               onChange={handleTabChange}
               aria-label='timeframe tabs'
               indicatorColor='primary'
-              textColor='primary'
-              centered>
+              textColor='primary'>
               {TAB_ITEMS.map(({ timeframe }, index) => (
                 <Tab key={timeframe} label={timeframe} {...a11yProps(index)} />
               ))}
