@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { message } from 'antd';
+import { message } from 'antd'; // TODO: Replace message
 import './Table.css';
 import { PropTypes } from 'prop-types';
 import { capitalizeFirstLetter } from 'lib/Helpers';
@@ -26,8 +26,7 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(1),
   },
   tickersCount: {
-    backgroundColor: theme.palette.primary.main,
-    color: 'white',
+    border: '1px solid rgb(0,0,0,0.30)',
     borderRadius: '30%',
     paddingLeft: 5,
     paddingRight: 5,

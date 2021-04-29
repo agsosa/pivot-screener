@@ -1,6 +1,7 @@
 a.external {
   background: url('img/external.png') center right no-repeat;
   padding-right: 13px;
+  text-decoration: none;
 }
 
 .ag-main {
