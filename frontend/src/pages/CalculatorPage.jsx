@@ -44,6 +44,9 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     padding: theme.spacing(1),
     gap: theme.spacing(2),
+    [theme.breakpoints.down('xs')]: {
+      flexDirection: 'column',
+    },
   },
   camContainer: { display: 'flex', justifyContent: 'center' },
   camCol: { padding: theme.spacing(1), display: 'flex', flexDirection: 'column', gap: theme.spacing(2) },
