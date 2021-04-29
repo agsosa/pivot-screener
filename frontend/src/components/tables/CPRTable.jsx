@@ -7,7 +7,7 @@ import React, { useEffect, useState } from 'react';
 import { PropTypes } from 'prop-types';
 import { useMst } from 'models/Root';
 import './Table.css';
-import CPRStats from 'components/misc/CPRStats';
+import CPRStats from 'components/stats/CPRStats';
 import FiltersMenu from 'components/tables/FiltersMenu';
 import { exchangeRenderer, symbolRenderer, CustomLoadingOverlay } from 'components/tables/CommonTableComponents';
 import {

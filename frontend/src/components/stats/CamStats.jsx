@@ -1,5 +1,6 @@
+/* eslint-disable */
 import React from 'react';
-import { Card, Statistic, Row, Col, Progress, Skeleton, Button } from 'antd';
+import { Card, Statistic, Row, Col, Progress, Button } from 'antd';
 import { FallOutlined, RiseOutlined, ExclamationCircleOutlined, ColumnHeightOutlined } from '@ant-design/icons';
 import { observer } from 'mobx-react-lite';
 import { PropTypes } from 'prop-types';
@@ -12,8 +13,6 @@ const CamStats = observer(({ timeframe, futureMode }) => {
     camStatsPanelVisible: store.camStatsPanelVisible,
     camStats: store.camStats,
   }));
-
-  if (!tickers || (tickers.length === 0 && camStatsPanelVisible)) return <Skeleton />;
 
   const stats = camStats(timeframe, futureMode);
 
