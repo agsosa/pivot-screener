@@ -27,7 +27,7 @@ const BorderLinearProgress = withStyles(() => ({
 function BullsBearProgress({ bullsPercent, bearsPercent, ...props }) {
   const classes = useStyles();
 
-  if (Number.isNaN(bullsPercent) || Number.isNaN(bearsPercent)) return null;
+  if (Number.isNaN(bullsPercent) || Number.isNaN(bearsPercent) || !bullsPercent || !bearsPercent) return null;
 
   return (
     <div>
