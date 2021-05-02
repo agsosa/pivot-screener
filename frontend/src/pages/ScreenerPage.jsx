@@ -75,9 +75,9 @@ function ScreenerPage({ match }) {
     { timeframe: 'Daily' },
     { timeframe: 'Weekly' },
     { timeframe: 'Monthly' },
-    { timeframe: 'Tomorrow', futureMode: true },
-    { timeframe: 'Next Week', futureMode: true },
-    { timeframe: 'Next Month', futureMode: true },
+    { timeframe: 'Daily', label: 'Tomorrow', futureMode: true },
+    { timeframe: 'Weekly', label: 'Next Week', futureMode: true },
+    { timeframe: 'Monthly', label: 'Next Month', futureMode: true },
   ];
   const [activeTab, setActiveTab] = React.useState(0);
   const handleTabChange = (event, newTab) => {
@@ -136,8 +136,8 @@ function ScreenerPage({ match }) {
               aria-label='timeframe tabs'
               indicatorColor='primary'
               textColor='primary'>
-              {TAB_ITEMS.map(({ timeframe }, index) => (
-                <Tab key={timeframe} label={timeframe} {...a11yProps(index)} />
+              {TAB_ITEMS.map(({ timeframe, label }, index) => (
+                <Tab key={timeframe} label={label || timeframe} {...a11yProps(index)} />
               ))}
             </Tabs>
           </div>
