@@ -12,8 +12,7 @@ import { InitializeExchanges } from 'exchanges/ExchangesManager';
 
 const app: express.Application = express();
 // const server: http.Server = http.createServer(app); // Using server returned from Sockets.start()
-let port: any = process.env.PORT;
-if (!port) port = 4001;
+let port: any = process.env.PORT || 8080;
 
 // Express middlewares
 app.use(helmet());
