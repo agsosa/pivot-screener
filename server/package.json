@@ -1,7 +1,7 @@
 {
-  "name": "pivotscreener-backend",
+  "author": "Alejandro Sosa",
+  "name": "pivot-screener-server",
   "version": "2.0.1",
-  "description": "Backend for PivotScreener.com",
   "main": "App.js",
   "_moduleAliases": {
     "api": "dist/api",
@@ -44,7 +44,5 @@
     "deploy": "git add . && git commit -m Heroku && git push heroku master",
     "test": "echo \"Error: no test specified\" && exit 1",
     "debug": "SET DEBUG=* && npm run start"
-  },
-  "author": "",
-  "license": "ISC"
+  }
 }
