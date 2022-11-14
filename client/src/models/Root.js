@@ -8,7 +8,7 @@ import ChartOptions from 'models/ChartOptions';
 
 // TODO: Move socket logic to /lib/API
 
-const SOCKET_URL = isDev() ? 'http://localhost:4001' : 'https://pivotscreener.herokuapp.com/';
+const SOCKET_URL = isDev() ? 'http://localhost:4001' : 'https://api.pivotscreener.com/';
 
 const RootModel = types
   .model('RootModel', {
