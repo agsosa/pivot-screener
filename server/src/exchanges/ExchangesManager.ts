@@ -9,7 +9,7 @@ let exchanges: Exchange[] = [];
 
 export function InitializeExchanges(dataManager: DataManager) {
   exchanges.push(new BinanceFutures(dataManager));
-  exchanges.push(new OandaIndices(dataManager));
+  /*exchanges.push(new OandaIndices(dataManager));
   exchanges.push(new OandaForex(dataManager));
-  exchanges.push(new OandaCommodities(dataManager));
+  exchanges.push(new OandaCommodities(dataManager));*/
 }
