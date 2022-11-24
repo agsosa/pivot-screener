@@ -1,5 +1,4 @@
 import 'module-alias/register';
-import 'newrelic';
 import express from 'express';
 import * as winston from 'winston';
 import * as expressWinston from 'express-winston';
