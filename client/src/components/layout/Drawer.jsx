@@ -59,17 +59,17 @@ const useStyles = makeStyles((theme) => ({
 
 const camScreenersLinks = [
   { text: 'Cryptocurrency', path: '/screener/camarilla/cryptocurrency' },
-  { text: 'Forex', path: '/screener/camarilla/forex' },
-  { text: 'Commodities', path: '/screener/camarilla/commodities' },
-  { text: 'Indices', path: '/screener/camarilla/indices' },
+  { text: 'Forex', path: '/screener/camarilla/forex', disabled: true  },
+  { text: 'Commodities', path: '/screener/camarilla/commodities', disabled: true  },
+  { text: 'Indices', path: '/screener/camarilla/indices', disabled: true  },
   { text: 'Stocks', path: '/screener/camarilla/stocks', disabled: true },
 ];
 
 const cprScreenersLinks = [
-  { text: 'Cryptocurrency', path: '/screener/cpr/cryptocurrency' },
-  { text: 'Forex', path: '/screener/cpr/forex' },
-  { text: 'Commodities', path: '/screener/cpr/commodities' },
-  { text: 'Indices', path: '/screener/cpr/indices' },
+  { text: 'Cryptocurrency', path: '/screener/cpr/cryptocurrency'  },
+  { text: 'Forex', path: '/screener/cpr/forex', disabled: true  },
+  { text: 'Commodities', path: '/screener/cpr/commodities', disabled: true  },
+  { text: 'Indices', path: '/screener/cpr/indices', disabled: true  },
   { text: 'Stocks', path: '/screener/cpr/stocks', disabled: true },
 ];
 
