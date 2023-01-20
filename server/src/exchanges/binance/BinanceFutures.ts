@@ -11,7 +11,7 @@ export default class BinanceFutures extends Exchange {
   EXCHANGE: ExchangeEnum = ExchangeEnum.BINANCE_FUTURES;
 
   fetchSymbolsList(): Promise<string[]> {
-    const url = 'https://fapi.binance.com/fapi/v1/ticker/price';
+    const url = 'https://api.binance.us/api/v1/ticker/price';
     return new Promise<string[]>((resolve, reject) => {
       axios
         .get(url)
@@ -28,7 +28,7 @@ export default class BinanceFutures extends Exchange {
   }
 
   fetchSymbolCandles(symbol: string, timeframe: ITimeframe): Promise<ICandlesticks[]> {
-    const url = `https://fapi.binance.com/fapi/v1/klines?symbol=${symbol}&interval=${BinanceHelper.getResolutionByTimeframe(
+    const url = `https://api.binance.us/api/v1/klines?symbol=${symbol}&interval=${BinanceHelper.getResolutionByTimeframe(
       timeframe
     )}&limit=${timeframe.limit}`;
 
