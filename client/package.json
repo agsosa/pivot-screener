@@ -1,7 +1,7 @@
 {
   "author": "Alejandro Sosa",
   "name": "pivot-screener",
-  "version": "1.0",
+  "version": "1.0.0",
   "scripts": {
     "analyze": "source-map-explorer 'build/static/js/*.js'",
     "dev": "craco start",
