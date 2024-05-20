@@ -8,7 +8,6 @@ import compression from 'compression';
 import DataManager from 'data/DataManager';
 import Sockets from 'api/Sockets';
 import { InitializeExchanges } from 'exchanges/ExchangesManager';
-import path from 'path'
 
 const app: express.Application = express();
 // const server: http.Server = http.createServer(app); // Using server returned from Sockets.start()
@@ -22,9 +21,6 @@ app.use(
     origin: ['https://pivotscreener.com', 'https://pivotscreener.netlify.app', 'http://localhost:3000'],
   })
 );
-
-const buildPath = path.normalize(path.join(__dirname, '../web/'));
-app.use(express.static(buildPath));
 
 // Initialize modules
 const dataManager: DataManager = new DataManager();
