@@ -5,6 +5,7 @@ import { io } from 'socket.io-client';
 import Ticker from 'models/Ticker';
 import { calcPercent, isDev } from 'lib/Helpers';
 import ChartOptions from 'models/ChartOptions';
+import BinanceFutures from 'lib/node/BinanceFutures';
 
 // TODO: Move socket logic to /lib/API
 
@@ -25,8 +26,62 @@ const RootModel = types
     let socket;
     let currentQuery = null;
 
+    async function test2() {
+
+    }
+
+     const timeframes = [
+      { string: 'daily', limit: 2 },
+      { string: 'weekly', limit: 2 },
+      { string: 'monthly', limit: 2 },
+    ];
+
+    async function test() {
+      const promises = [];
+      
+      const instance = new BinanceFutures();
+
+      console.log("initializing binance")
+
+       instance.initialize();
+
+      console.log("fetching symbols list")
+      const symbols = await instance.fetchSymbolsList();
+      
+      console.log("received symbols", symbols)
+
+      for (const tickerObj of symbols) {
+        console.log("loop for", tickerObj)
+        // For every timeframe grab candlesticks for each ticker
+
+        timeframes.forEach((t) => {
+          console.log("hello")
+          promises.push(
+            instance.fetchSymbolCandles(tickerObj, t).then((candles) => {
+              console.log(candles)
+            })
+          );
+        });
+      }
+
+      console.log("waiting promises")
+
+      await Promise.all(promises);
+
+      // data updated
+
+      console.log("my result",result)
+      self.setTickers(result);
+      test2();
+    }
+
+
     function afterCreate() {
-      socket = io(SOCKET_URL, {
+      console.log("afterCreate")
+
+      test();
+
+     /* socket = io(SOCKET_URL, {
         transports: ['websocket'],
         upgrade: true,
         autoConnect: false,
@@ -34,6 +89,7 @@ const RootModel = types
 
       socket.on('connect', () => {
         self.setSocketConnected(true);
+        console.log(currentQuery," curr")
         if (currentQuery != null) socket.emit('request_tickers', JSON.stringify(currentQuery)); // request_tickers with the pending currentQuery
       });
 
@@ -47,7 +103,7 @@ const RootModel = types
 
       socket.on('tickers_data', (data) => {
         self.setTickers(data);
-      });
+      });*/
     }
 
     function beforeDestroy() {
@@ -60,6 +116,8 @@ const RootModel = types
       if (socket && !socket.connected) socket.connect();
 
       currentQuery = { timeframes, markets, symbols }; // Used on reconnection
+
+      console.log("currentQuery", currentQuery)
 
       if (socket) {
         socket.emit('request_tickers', JSON.stringify(currentQuery));
